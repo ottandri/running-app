@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Training Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F7F6F2; --paper-raised:#FFFFFF; --ink:#1C1B19; --ink-soft:#5B5852; --ink-mute:#8C897F;
+  --line:rgba(28,27,25,0.10); --line-strong:rgba(28,27,25,0.18);
+  --accent:#B23A1C;
+  --c-easy:#1F7A6C; --c-strength:#6D4C9E; --c-quality:#C93B1D; --c-long:#A6740F; --c-rest:#8C897F;
+  --taper:#2B6B4A; --taper-tint:#E4EFE8;
+  --radius:14px;
+  --shadow-sm:0 1px 2px rgba(28,27,25,0.05), 0 3px 8px rgba(28,27,25,0.05);
+  --shadow-md:0 2px 5px rgba(28,27,25,0.06), 0 10px 24px rgba(28,27,25,0.09);
+  --ease:cubic-bezier(.2,.8,.2,1);
+  --font-display:'Oswald',sans-serif; --font-body:'IBM Plex Sans',sans-serif; --font-mono:'IBM Plex Mono',monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --paper:#171613; --paper-raised:#211F1B; --ink:#F2F0EA; --ink-soft:#C8C4B8; --ink-mute:#8C897F;
+    --line:rgba(255,255,255,0.12); --line-strong:rgba(255,255,255,0.20);
+    --c-easy:#5FCDB0; --c-strength:#B79AE0; --c-quality:#F08F5E; --c-long:#EBB84C; --c-rest:#8C897F;
+    --taper:#7FC49E; --taper-tint:#1E3327;
+  }
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--font-body);line-height:1.6;-webkit-font-smoothing:antialiased}
+.wrap{max-width:900px;margin:0 auto;padding:0 20px 90px}
+
+/* ---- Hero ---- */
+.hero-banner{position:relative;overflow:hidden;border-radius:0 0 24px 24px;background:linear-gradient(180deg, var(--paper) 0%, color-mix(in srgb, var(--c-long) 14%, var(--paper)) 100%)}
+.hero-photo{position:relative;width:100%;height:clamp(190px,38vw,340px);overflow:hidden;background:var(--paper-raised)}
+.hero-photo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;display:block;opacity:0;transition:opacity .5s var(--ease)}
+.hero-photo img.is-loaded{opacity:1}
+.hero-photo::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg, rgba(0,0,0,0) 50%, color-mix(in srgb, var(--paper) 94%, transparent) 100%)}
+.photo-credit{position:absolute;right:10px;bottom:10px;z-index:2;font-family:var(--font-mono);font-size:10px;letter-spacing:.02em;color:rgba(255,255,255,0.92);background:rgba(20,18,16,0.38);backdrop-filter:blur(2px);padding:4px 9px;border-radius:999px;text-decoration:none}
+@media (max-width:520px){ .hero-photo{height:clamp(160px,52vw,260px)} }
+.hero-inner{position:relative;padding:28px 20px 34px;max-width:900px;margin:0 auto}
+.eyebrow{font-family:var(--font-mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-mute);margin:0 0 10px}
+h1.hub-title{font-family:var(--font-display);font-weight:600;font-size:clamp(30px,5.5vw,46px);line-height:1.05;margin:0 0 18px;letter-spacing:.01em}
+.quote-card{background:var(--paper-raised);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow-sm);padding:18px 22px;max-width:640px}
+.quote-text{font-family:var(--font-display);font-weight:400;font-style:italic;font-size:18px;line-height:1.4;margin:0 0 8px;color:var(--ink)}
+.quote-attr{font-family:var(--font-mono);font-size:12px;color:var(--ink-mute);margin:0}
+
+/* ---- Sections ---- */
+.section-head{display:flex;align-items:baseline;justify-content:space-between;margin:44px 0 18px}
+.section-head h2{font-family:var(--font-display);font-weight:600;font-size:20px;letter-spacing:.01em;margin:0;text-transform:uppercase}
+.section-count{font-family:var(--font-mono);font-size:12px;color:var(--ink-mute)}
+.plan-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+.empty-state{border:1px dashed var(--line-strong);border-radius:var(--radius);padding:26px;text-align:center;color:var(--ink-mute);font-size:13.5px}
+
+/* ---- Plan card ---- */
+.plan-card{position:relative;background:var(--paper-raised);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow-sm);padding:20px 22px;display:flex;flex-direction:column;gap:10px;transition:transform .18s var(--ease), box-shadow .18s var(--ease)}
+.plan-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-md)}
+.plan-card.is-completed{background:linear-gradient(180deg, var(--taper-tint) 0%, var(--paper-raised) 60%);border-color:var(--taper)}
+.plan-badge{position:absolute;top:16px;right:16px;font-family:var(--font-mono);font-size:10px;letter-spacing:.04em;text-transform:uppercase;padding:3px 9px;border-radius:999px;background:var(--paper);border:1px solid var(--line);color:var(--ink-mute)}
+.plan-card.is-completed .plan-badge{background:var(--taper);border-color:var(--taper);color:#fff}
+.plan-name{font-family:var(--font-display);font-size:19px;font-weight:600;padding-right:70px;margin:0}
+.plan-meta{font-family:var(--font-mono);font-size:12.5px;color:var(--ink-soft);margin:0;display:flex;flex-direction:column;gap:3px}
+.plan-progress-note{font-size:12.5px;color:var(--ink-mute);margin:0}
+.plan-actions{display:flex;align-items:center;gap:10px;margin-top:8px}
+.plan-open-btn{font-family:var(--font-mono);font-size:12.5px;font-weight:500;text-decoration:none;color:#fff;background:var(--accent);padding:9px 16px;border-radius:999px;transition:filter .15s var(--ease)}
+.plan-open-btn:hover{filter:brightness(1.08)}
+.plan-card.is-completed .plan-open-btn{background:var(--taper)}
+.plan-toggle{font-family:var(--font-mono);font-size:11px;color:var(--ink-mute);background:none;border:1px solid var(--line);border-radius:999px;padding:8px 12px;cursor:pointer;transition:background .15s var(--ease), color .15s var(--ease)}
+.plan-toggle:hover{background:var(--paper);color:var(--ink-soft)}
+
+footer.hub-note{margin-top:48px;padding:20px 22px;border:1px solid var(--line);border-radius:16px;background:var(--paper-raised);box-shadow:var(--shadow-sm);font-size:13px;color:var(--ink-soft)}
+footer.hub-note strong{color:var(--ink)}
+
+@media (prefers-reduced-motion: reduce){ *{transition:none !important} }
+</style>
+</head>
+<body>
+
+<div class="hero-banner">
+<div class="hero-photo">
+  <img id="hero-photo-img" alt="" role="presentation" width="1600" height="640">
+  <a class="photo-credit" id="photo-credit" href="https://unsplash.com" target="_blank" rel="noopener"></a>
+</div>
+
+  <div class="hero-inner">
+    <p class="eyebrow">Training Hub</p>
+    <h1 class="hub-title">Every plan, one place.</h1>
+    <div class="quote-card">
+      <p class="quote-text" id="quote-text">&ldquo;No human is limited.&rdquo;</p>
+      <p class="quote-attr" id="quote-attr">&mdash; Eliud Kipchoge</p>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <div class="section-head">
+    <h2>Active plans</h2>
+    <span class="section-count" id="active-count"></span>
+  </div>
+  <div class="plan-grid" id="active-grid"></div>
+  <div class="empty-state" id="active-empty" style="display:none">No active plans right now &mdash; start one and it'll show up here.</div>
+
+  <div class="section-head">
+    <h2>Completed plans</h2>
+    <span class="section-count" id="completed-count"></span>
+  </div>
+  <div class="plan-grid" id="completed-grid"></div>
+  <div class="empty-state" id="completed-empty" style="display:none">Nothing here yet &mdash; finish a plan and it'll land in this section.</div>
+
+  <footer class="hub-note">
+    <strong>Adding a new plan?</strong> Ask Claude to build it, then add one entry to the <code>PLANS</code> array at the top of this file's script (id, name, race, dates, goal, and the filename) &mdash; it'll appear here automatically. Completion status is saved on this device via this page's local storage, shared with each plan file's own &ldquo;mark complete&rdquo; button.
+  </footer>
+</div>
+
+<script>
+(function(){
+  var PLANS = [
+    {
+      id: 'lausanne-hm-2026',
+      name: 'Lausanne Half Marathon',
+      race: 'Lausanne Half Marathon',
+      raceDate: '25 Oct 2026',
+      goal: '1:29:59',
+      weeks: 11,
+      href: 'lausanne_hm_training_plan.html',
+      defaultStatus: 'active'
+    }
+  ];
+
+  var QUOTES = [
+    { text: 'No human is limited.', attr: 'Eliud Kipchoge' },
+    { text: 'To give anything less than your best is to sacrifice the gift.', attr: 'Steve Prefontaine' },
+    { text: 'Somebody may beat me, but they are going to have to bleed to do it.', attr: 'Steve Prefontaine' },
+    { text: 'If you want to win something, run 100 meters. If you want to experience something, run a marathon.', attr: 'Emil Z\u00e1topek' },
+    { text: 'The miracle isn\u2019t that I finished. The miracle is that I had the courage to start.', attr: 'John Bingham' },
+    { text: 'If you are losing faith in human nature, go out and watch a marathon.', attr: 'Kathrine Switzer' },
+    { text: 'Run when you can, walk if you have to, crawl if you must; just never give up.', attr: 'Dean Karnazes' },
+    { text: 'If you have a body, you are an athlete.', attr: 'Bill Bowerman' },
+    { text: 'It always seems impossible until it\u2019s done.', attr: 'Nelson Mandela' },
+    { text: 'Champions aren\u2019t made in the gyms. Champions are made from something they have deep inside them \u2014 a desire, a dream, a vision.', attr: 'Muhammad Ali' }
+  ];
+
+  var q = QUOTES[Math.floor(Math.random() * QUOTES.length)];
+  document.getElementById('quote-text').textContent = '\u201c' + q.text + '\u201d';
+  document.getElementById('quote-attr').textContent = '\u2014 ' + q.attr;
+
+  var PHOTOS = [
+    { file: 'images/hero-1.jpg', credit: 'sporlab' },
+    { file: 'images/hero-2.jpg', credit: 'Arnaud Steckle' },
+    { file: 'images/hero-3.jpg', credit: 'Fitsum Admasu' },
+    { file: 'images/hero-4.jpg', credit: 'Venti Views' },
+    { file: 'images/hero-5.jpg', credit: 'Miguel A Amutio' },
+    { file: 'images/hero-6.jpg', credit: 'Jeremy Lapak' },
+    { file: 'images/hero-7.jpg', credit: 'Steven Lelham' },
+    { file: 'images/hero-8.jpg', credit: 'Florian Kurrasch' }
+  ];
+
+  var p = PHOTOS[Math.floor(Math.random() * PHOTOS.length)];
+  var heroImg = document.getElementById('hero-photo-img');
+  heroImg.addEventListener('load', function(){ heroImg.classList.add('is-loaded'); });
+  heroImg.src = p.file;
+  var creditEl = document.getElementById('photo-credit');
+  creditEl.textContent = p.credit + ' / Unsplash';
+
+  var registry = {};
+
+  function loadRegistry(){
+    try{
+      var raw = localStorage.getItem('plan-registry');
+      if(raw) registry = JSON.parse(raw) || {};
+    }catch(e){ registry = {}; }
+  }
+
+  function saveRegistry(){
+    try{ localStorage.setItem('plan-registry', JSON.stringify(registry)); }
+    catch(e){ /* private-browsing or storage disabled; UI still reflects local state */ }
+  }
+
+  function statusFor(plan){
+    return (registry[plan.id] && registry[plan.id].status) || plan.defaultStatus;
+  }
+
+  function completedDateFor(plan){
+    return registry[plan.id] && registry[plan.id].completedAt
+      ? new Date(registry[plan.id].completedAt).toLocaleDateString(undefined, {day:'numeric', month:'short', year:'numeric'})
+      : null;
+  }
+
+  function cardHtml(plan, completed){
+    var badge = completed ? 'Completed' : 'Active';
+    var metaExtra = completed && completedDateFor(plan)
+      ? '<p class="plan-progress-note">Finished ' + completedDateFor(plan) + '</p>'
+      : '<p class="plan-progress-note">' + plan.weeks + '-week block \u00b7 goal ' + plan.goal + '</p>';
+    var toggleLabel = completed ? 'Reopen' : 'Mark complete';
+    return '' +
+      '<div class="plan-card' + (completed ? ' is-completed' : '') + '" data-plan-id="' + plan.id + '">' +
+        '<span class="plan-badge">' + badge + '</span>' +
+        '<p class="plan-name">' + plan.name + '</p>' +
+        '<p class="plan-meta"><span>' + plan.race + '</span><span>' + plan.raceDate + '</span></p>' +
+        metaExtra +
+        '<div class="plan-actions">' +
+          '<a class="plan-open-btn" href="' + plan.href + '">Open plan</a>' +
+          '<button class="plan-toggle" data-toggle="' + plan.id + '">' + toggleLabel + '</button>' +
+        '</div>' +
+      '</div>';
+  }
+
+  function render(){
+    var activeGrid = document.getElementById('active-grid');
+    var completedGrid = document.getElementById('completed-grid');
+    var activePlans = PLANS.filter(function(p){ return statusFor(p) !== 'completed'; });
+    var completedPlans = PLANS.filter(function(p){ return statusFor(p) === 'completed'; });
+
+    activeGrid.innerHTML = activePlans.map(function(p){ return cardHtml(p, false); }).join('');
+    completedGrid.innerHTML = completedPlans.map(function(p){ return cardHtml(p, true); }).join('');
+
+    document.getElementById('active-count').textContent = activePlans.length;
+    document.getElementById('completed-count').textContent = completedPlans.length;
+    document.getElementById('active-empty').style.display = activePlans.length ? 'none' : 'block';
+    document.getElementById('completed-empty').style.display = completedPlans.length ? 'none' : 'block';
+  }
+
+  document.addEventListener('click', function(e){
+    var btn = e.target.closest('[data-toggle]');
+    if(!btn) return;
+    var id = btn.getAttribute('data-toggle');
+    var current = registry[id] || {};
+    var wasCompleted = current.status === 'completed';
+    registry[id] = wasCompleted
+      ? { status: 'active', completedAt: null }
+      : { status: 'completed', completedAt: new Date().toISOString() };
+    saveRegistry();
+    render();
+  });
+
+  (function init(){
+    loadRegistry();
+    render();
+  })();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,1867 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lausanne Half Marathon &mdash; 11-week plan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F7F6F2; --paper-raised:#FFFFFF; --ink:#1C1B19; --ink-soft:#5B5852; --ink-mute:#8C897F;
+  --line:rgba(28,27,25,0.10); --line-strong:rgba(28,27,25,0.18);
+  --accent:#B23A1C;
+  --foundation:#1C4E80; --foundation-tint:#E7EEF5;
+  --build:#B23A1C; --build-tint:#F6E7E1;
+  --peak:#B8791A; --peak-tint:#F5EBDA;
+  --peaked:#9C2B54; --peaked-tint:#F5E1EA;
+  --taper:#2B6B4A; --taper-tint:#E4EFE8;
+  --c-easy:#1F7A6C; --c-strength:#6D4C9E; --c-quality:#C93B1D; --c-long:#A6740F; --c-rest:#8C897F;
+  --radius:14px;
+  --shadow-sm:0 1px 2px rgba(28,27,25,0.05), 0 3px 8px rgba(28,27,25,0.05);
+  --shadow-md:0 2px 5px rgba(28,27,25,0.06), 0 10px 24px rgba(28,27,25,0.09);
+  --ease:cubic-bezier(.2,.8,.2,1);
+  --font-display:'Oswald',sans-serif; --font-body:'IBM Plex Sans',sans-serif; --font-mono:'IBM Plex Mono',monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --paper:#171613; --paper-raised:#211F1B; --ink:#F2F0EA; --ink-soft:#C8C4B8; --ink-mute:#8C897F;
+    --line:rgba(255,255,255,0.12); --line-strong:rgba(255,255,255,0.20);
+    --foundation:#6FA3D8; --foundation-tint:#1E2C3B;
+    --build:#E08862; --build-tint:#3A2620;
+    --peak:#E8B65C; --peak-tint:#3A2E18;
+    --peaked:#E896B4; --peaked-tint:#3A1E28;
+    --taper:#7FC49E; --taper-tint:#1E3327;
+    --c-easy:#5FCDB0; --c-strength:#B79AE0; --c-quality:#F08F5E; --c-long:#EBB84C; --c-rest:#8C897F;
+    --shadow-sm:0 1px 2px rgba(0,0,0,0.3), 0 3px 10px rgba(0,0,0,0.25);
+    --shadow-md:0 2px 6px rgba(0,0,0,0.35), 0 12px 28px rgba(0,0,0,0.32);
+  }
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--font-body);line-height:1.6;-webkit-font-smoothing:antialiased}
+.wrap{max-width:840px;margin:0 auto;padding:0 20px 80px}
+.hero{padding:76px 0 28px;border-bottom:1px solid var(--line)}
+.eyebrow{font-family:var(--font-mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-mute);margin:0 0 10px}
+.back-btn{position:fixed;top:16px;left:16px;z-index:50;display:inline-flex;align-items:center;gap:6px;font-family:var(--font-mono);font-size:12.5px;font-weight:500;color:var(--ink-soft);text-decoration:none;background:var(--paper-raised);border:1px solid var(--line);border-radius:999px;padding:9px 16px;box-shadow:var(--shadow-md);transition:transform .15s var(--ease), box-shadow .15s var(--ease), background .15s var(--ease)}
+.back-btn:hover{transform:translateY(-1px);background:var(--paper)}
+h1{font-family:var(--font-display);font-weight:600;font-size:clamp(28px,5vw,42px);line-height:1.08;margin:0 0 6px;letter-spacing:.01em}
+.hero-sub{color:var(--ink-soft);font-size:15px;margin:0 0 28px;max-width:56ch}
+.stat-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:16px;overflow:hidden;box-shadow:var(--shadow-sm)}
+.stat{background:var(--paper-raised);padding:18px 18px}
+.predict-card{background:var(--paper-raised);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow-sm);padding:18px 20px;margin-top:12px}
+.predict-chart{display:block;width:100%;height:52px;margin:10px 0 4px}
+.predict-goal-line{stroke:var(--taper);stroke-width:1.5;stroke-dasharray:4 3}
+.predict-baseline-line{stroke:var(--ink-mute);stroke-width:1.1}
+.predict-line{fill:none;stroke:var(--c-long);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.predict-dot{fill:var(--c-long)}
+.predict-dot-latest{stroke:var(--paper-raised);stroke-width:1.5}
+.predict-chart-labels{display:flex;justify-content:space-between;font-family:var(--font-mono);font-size:10.5px;color:var(--ink-mute)}
+.predict-footnote{font-size:11px;color:var(--ink-mute);margin:10px 0 0;font-style:italic}
+.stat-label{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-mute);margin:0 0 6px}
+.stat-num{font-family:var(--font-mono);font-weight:600;font-size:22px;margin:0;font-variant-numeric:tabular-nums}
+.stat-note{font-size:12px;color:var(--ink-mute);margin:4px 0 0}
+.legend{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0 0}
+.legend-item{display:flex;align-items:center;gap:7px;font-size:13px;color:var(--ink-soft);background:var(--paper-raised);border:1px solid var(--line);border-radius:999px;padding:5px 12px 5px 8px}
+.legend-dot{width:9px;height:9px;border-radius:50%;flex:none}
+.legend-caption{font-family:var(--font-mono);font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-mute);margin:22px 0 0}
+.overview-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(148px,1fr));gap:10px;margin:26px 0 8px}
+.overview-card{display:block;text-decoration:none;color:inherit;background:var(--paper-raised);border:1px solid var(--line);border-left:3px solid var(--phase-color);border-radius:12px;padding:12px 14px;box-shadow:var(--shadow-sm);transition:transform .18s var(--ease), box-shadow .18s var(--ease);position:relative}
+.overview-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-md)}
+.overview-card.is-current{border:2px solid var(--accent);border-left-width:2px;box-shadow:0 0 0 4px color-mix(in srgb, var(--accent) 14%, transparent), var(--shadow-md)}
+.ov-current-badge{display:none;position:absolute;top:-9px;right:12px;background:var(--accent);color:#fff;font-family:var(--font-mono);font-size:10px;letter-spacing:.04em;text-transform:uppercase;padding:2px 8px;border-radius:999px}
+.overview-card.is-current .ov-current-badge{display:inline-block}
+.ov-top{display:flex;justify-content:space-between;align-items:baseline;gap:6px;margin:0 0 5px}
+.ov-week{font-family:var(--font-display);font-size:15px;font-weight:600}
+.ov-phase{font-family:var(--font-mono);font-size:10px;letter-spacing:.04em;text-transform:uppercase;color:var(--phase-color);white-space:nowrap}
+.ov-stats{font-family:var(--font-mono);font-size:12px;color:var(--ink-soft);display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:0 0 6px}
+.ov-dot{color:var(--ink-mute)}
+.ov-tag{font-size:10px;letter-spacing:.03em;text-transform:uppercase;background:var(--phase-tint);color:var(--phase-color);border-radius:999px;padding:1px 7px;margin-left:auto}
+.ov-tag-race{background:var(--taper-tint);color:var(--taper)}
+.ov-focus{font-size:12.5px;color:var(--ink-mute);margin:0;line-height:1.45}
+.zones{margin:28px 0 0;border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;background:var(--paper-raised);box-shadow:var(--shadow-sm)}
+.zones summary{cursor:pointer;padding:14px 18px;font-family:var(--font-display);font-size:14px;letter-spacing:.03em;text-transform:uppercase;list-style:none;display:flex;justify-content:space-between;align-items:center;color:var(--ink-soft);transition:background .15s var(--ease)}
+.zones summary:hover{background:var(--paper)}
+.zones summary::-webkit-details-marker{display:none}
+.zones summary::after{content:'+';font-family:var(--font-mono);font-size:16px}
+.zones[open] summary::after{content:'\2212'}
+.zone-table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+table.zone-table{width:100%;min-width:520px;border-collapse:collapse;font-size:13px}
+table.zone-table th,table.zone-table td{text-align:left;padding:9px 18px;border-top:1px solid var(--line)}
+table.zone-table th{font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-mute);font-weight:500}
+table.zone-table td.mono{font-family:var(--font-mono);font-variant-numeric:tabular-nums}
+.zone-source{font-size:12px;color:var(--ink-mute);padding:12px 18px 16px;margin:0;border-top:1px solid var(--line)}
+.progress-wrap{margin:28px 0 0}
+.progress-label{display:flex;justify-content:space-between;font-size:12px;color:var(--ink-mute);margin:0 0 6px;font-family:var(--font-mono)}
+.progress-track{height:6px;background:var(--line);border-radius:4px;overflow:hidden;position:relative}
+.progress-fill{height:100%;background:linear-gradient(90deg, var(--accent) 0%, #D4623F 100%);width:0%;transition:width .5s var(--ease)}
+.progress-track.km-track{overflow:visible}
+.progress-fill.km-fill{background:linear-gradient(90deg, var(--c-long) 0%, #C99A2E 100%);border-radius:4px}
+.progress-marker{position:absolute;top:-4px;bottom:-4px;width:2px;background:var(--ink);left:0%;transition:left .5s var(--ease)}
+.progress-marker::after{content:'';position:absolute;top:-3px;left:50%;transform:translateX(-50%);width:6px;height:6px;border-radius:50%;background:var(--ink)}
+.progress-caption{font-size:11.5px;color:var(--ink-mute);margin:8px 0 0;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.progress-caption .swatch{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:5px;vertical-align:middle}
+.km-delta{font-family:var(--font-mono);font-size:13px;font-weight:500;color:var(--ink-soft);margin:10px 0 0}
+.km-delta.ahead{color:var(--taper)}
+.km-delta.behind{color:var(--c-quality)}
+.plan{padding-top:8px}
+details.week{border-bottom:1px solid var(--line)}
+details.week summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:16px;padding:22px 4px;border-radius:12px;transition:background .15s var(--ease)}
+details.week summary:hover{background:var(--paper-raised)}
+details.week summary::-webkit-details-marker{display:none}
+.bib{display:flex;align-items:center;gap:14px;flex:1;min-width:0}
+.bib-num{font-family:var(--font-display);font-weight:600;font-size:30px;color:var(--phase-color);border:2px solid var(--phase-color);border-radius:12px;width:56px;height:56px;display:flex;align-items:center;justify-content:center;flex:none;background:var(--phase-tint);transition:box-shadow .2s var(--ease)}
+details.week.is-current-week .bib-num{box-shadow:0 0 0 3px color-mix(in srgb, var(--accent) 22%, transparent);border-color:var(--accent)}
+.bib-meta{min-width:0}
+.bib-phase{font-family:var(--font-display);font-size:16px;letter-spacing:.02em;text-transform:uppercase;display:flex;align-items:center;gap:8px}
+.bib-dates{font-size:13px;color:var(--ink-mute);font-family:var(--font-mono)}
+.badge-cutback{font-family:var(--font-mono);font-size:10px;letter-spacing:.04em;text-transform:uppercase;background:var(--phase-tint);color:var(--phase-color);border:1px solid var(--phase-color);border-radius:999px;padding:2px 8px}
+.week-volume{font-family:var(--font-mono);text-align:right;flex:none}
+.vol-num{font-size:22px;font-weight:600}
+.vol-unit{font-size:12px;color:var(--ink-mute);margin-left:2px}
+.chev{width:10px;height:10px;border-right:2px solid var(--ink-mute);border-bottom:2px solid var(--ink-mute);transform:rotate(-45deg);flex:none;transition:transform .2s ease;margin-left:4px}
+details.week[open] .chev{transform:rotate(45deg)}
+.tile-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px;padding:4px 0 28px}
+.race-grid{grid-template-columns:repeat(auto-fit,minmax(190px,1fr))}
+.tile{position:relative;background:var(--paper-raised);border:1px solid var(--line);border-left:4px solid var(--tile-color, var(--line-strong));border-radius:var(--radius);padding:18px;display:flex;flex-direction:column;gap:7px;box-shadow:var(--shadow-sm);transition:transform .18s var(--ease), box-shadow .18s var(--ease)}
+.tile:hover{transform:translateY(-2px);box-shadow:var(--shadow-md)}
+.tile-easy{--tile-color:var(--c-easy)}
+.tile-strength{--tile-color:var(--c-strength);background:transparent;border-style:dashed;border-left-style:solid}
+.tile-quality{--tile-color:var(--c-quality);grid-column:1 / -1}
+.tile-long{--tile-color:var(--c-long);border-color:var(--tile-color);grid-column:1 / -1}
+.tile-rest{--tile-color:var(--c-rest);background:transparent;border-style:dashed;border-left-style:solid;opacity:.85}
+.tile-race{grid-column:1/-1;border:2px solid var(--c-long)}
+.tile-head{display:flex;align-items:center;gap:10px}
+.tile-icon{width:32px;height:32px;border-radius:50%;flex:none;display:flex;align-items:center;justify-content:center;color:var(--tile-color, var(--ink-mute));background:color-mix(in srgb, var(--tile-color, var(--ink-mute)) 15%, var(--paper-raised))}
+.tile-icon svg{width:17px;height:17px}
+.tile-headtext{min-width:0}
+.tile-check{position:absolute;top:14px;right:14px;cursor:pointer}
+.tile-check input{position:absolute;opacity:0;width:40px;height:40px;top:50%;left:50%;transform:translate(-50%,-50%);margin:0;cursor:pointer}
+.tile-check .box{display:block;width:20px;height:20px;border:1.5px solid var(--line-strong);border-radius:6px;background:var(--paper-raised);transition:background .15s var(--ease), border-color .15s var(--ease), transform .15s var(--ease)}
+.tile-check input:checked + .box{background:var(--tile-color, var(--accent));border-color:var(--tile-color, var(--accent));transform:scale(1.06)}
+.tile-check input:checked + .box::after{content:'';display:block;width:5px;height:9px;border-right:2px solid #fff;border-bottom:2px solid #fff;transform:rotate(40deg);margin:2px 0 0 6px}
+.tile-check input:focus-visible + .box{outline:2px solid var(--accent);outline-offset:2px}
+.tile.done{opacity:.55}
+.tile.done .tile-name{text-decoration:line-through}
+.tile-day{font-family:var(--font-mono);font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--tile-color, var(--ink-mute));font-weight:600}
+.tile-name{font-family:var(--font-display);font-size:15px;letter-spacing:.01em;padding-right:24px}
+.tile-dist{font-family:var(--font-mono);font-weight:600;font-size:20px;font-variant-numeric:tabular-nums}
+.tile-actual{font-family:var(--font-mono);font-weight:500;font-size:12px;color:var(--taper)}
+.tile-row{display:flex;gap:6px;flex-wrap:wrap}
+.tag{font-family:var(--font-mono);font-size:11px;padding:3px 8px;border-radius:999px;background:var(--paper);border:1px solid var(--line);color:var(--ink-soft);white-space:normal;max-width:100%}
+.tag.fuel{background:var(--taper-tint);border-color:var(--taper);color:var(--taper)}
+.badge-peak{background:var(--peaked-tint);color:var(--peaked);border-color:var(--peaked)}
+.tile-tip{font-size:12.5px;color:var(--ink-mute);margin:2px 0 0;font-style:italic;line-height:1.5}
+.quality-note{font-size:12.5px;color:var(--ink-soft);background:var(--paper);border-left:3px solid var(--c-quality);border-radius:0 8px 8px 0;padding:8px 10px;margin:0}
+.alt-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:4px}
+.alt-card{border:1px solid var(--line);border-radius:10px;padding:12px;display:flex;flex-direction:column;gap:5px;background:var(--paper)}
+.alt-label{font-family:var(--font-mono);font-size:11px;letter-spacing:.04em;text-transform:uppercase;color:var(--c-quality);font-weight:600}
+.alt-detail{font-size:12.5px;color:var(--ink-soft);margin:0}
+@media (max-width:520px){
+  .alt-grid{grid-template-columns:1fr}
+  .bib-num{width:44px;height:44px;font-size:22px}
+  details.week summary{gap:10px}
+  .stat-row{grid-template-columns:1fr 1fr}
+  .stat-row .stat:last-child:nth-child(odd){grid-column:1 / -1}
+}
+footer.note{margin-top:40px;padding:22px;border:1px solid var(--line);border-radius:16px;background:var(--paper-raised);font-size:13.5px;color:var(--ink-soft);box-shadow:var(--shadow-sm)}
+footer.note strong{color:var(--ink)}
+
+.complete-section{position:relative;overflow:visible;margin-top:20px;padding:36px 28px;border-radius:20px;text-align:center;background:linear-gradient(180deg, color-mix(in srgb, var(--accent) 6%, var(--paper-raised)), var(--paper-raised));border:1px solid var(--line);box-shadow:var(--shadow-sm);transition:background .3s var(--ease), border-color .3s var(--ease)}
+.complete-section.is-complete{background:linear-gradient(180deg, color-mix(in srgb, var(--taper) 10%, var(--paper-raised)), var(--paper-raised));border-color:var(--taper)}
+.complete-eyebrow{font-family:var(--font-mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-mute);margin:0 0 8px}
+.complete-title{font-family:var(--font-display);font-weight:600;font-size:26px;margin:0 0 8px}
+.complete-sub{font-size:13.5px;color:var(--ink-soft);margin:0 0 22px;max-width:44ch;margin-left:auto;margin-right:auto}
+.complete-btn{position:relative;z-index:2;font-family:var(--font-display);font-size:16px;letter-spacing:.02em;color:#fff;background:var(--accent);border:none;border-radius:999px;padding:15px 34px;cursor:pointer;display:inline-flex;align-items:center;gap:10px;box-shadow:var(--shadow-md);transition:transform .12s var(--ease), background .3s var(--ease)}
+.complete-btn:hover{transform:translateY(-2px)}
+.complete-btn:active{transform:scale(.96)}
+.complete-section.is-complete .complete-btn{background:var(--taper)}
+.complete-btn-icon{font-size:19px;line-height:1}
+.hub-link{display:block;margin-top:18px;font-family:var(--font-mono);font-size:12px;color:var(--ink-mute);text-decoration:none}
+.hub-link:hover{color:var(--ink-soft)}
+.confetti-layer{position:absolute;inset:0;pointer-events:none;overflow:visible;z-index:1}
+.confetti-piece{position:absolute;top:40%;width:7px;height:12px;border-radius:2px;opacity:0;animation:confetti-fall ease-out forwards}
+@keyframes confetti-fall{
+  0%{opacity:1;transform:translate(0,0) rotate(0deg)}
+  100%{opacity:0;transform:translate(var(--drift),220px) rotate(var(--rot))}
+}
+@media (prefers-reduced-motion: reduce){ *{transition:none !important} .confetti-piece{animation:none !important;display:none} }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <a href="training_hub.html" class="back-btn">&larr; Back to Training Hub</a>
+
+  <div class="hero">
+    <p class="eyebrow">Training plan &middot; 8 Aug &ndash; 25 Oct 2026</p>
+    <h1>Lausanne Half Marathon</h1>
+    <p class="hero-sub">11 weeks, 4 runs a week, 2 strength sessions. Polarized 80/20 intensity, progressive long runs 14&rarr;25 km, a deload every 4 weeks, and an 8-day taper into race day.</p>
+
+    <div class="stat-row">
+      <div class="stat"><p class="stat-label">Race day</p><p class="stat-num">25 Oct</p><p class="stat-note" id="days-out">&ndash;</p></div>
+      <div class="stat"><p class="stat-label">Goal</p><p class="stat-num">1:29:59</p><p class="stat-note">PB 1:31:14</p></div>
+      <div class="stat"><p class="stat-label">Peak week</p><p class="stat-num">75 km</p><p class="stat-note">week 10, before 8-day taper</p></div>
+    </div>
+
+    <div class="predict-card">
+      <p class="stat-label">Predicted half marathon &middot; Garmin</p>
+      <p class="stat-num">1:32:39</p>
+      <p class="stat-note">today, 11 Aug &middot; 8 Aug baseline was 1:32:27 &middot; goal 1:29:59</p>
+      <svg class="predict-chart" viewBox="0 0 260 60" preserveAspectRatio="none" aria-hidden="true">
+        <line x1="8" y1="46.5" x2="252" y2="46.5" class="predict-goal-line"/>
+        <line x1="8" y1="13.9" x2="252" y2="13.9" class="predict-baseline-line"/>
+        <polyline points="8.0,13.9 252.0,11.3" class="predict-line"/>
+        <circle cx="8.0" cy="13.9" r="3" class="predict-dot"/>
+        <circle cx="252.0" cy="11.3" r="3.5" class="predict-dot predict-dot-latest"/>
+      </svg>
+      <div class="predict-chart-labels"><span>8 Aug &middot; plan start</span><span>11 Aug &middot; today</span></div>
+      <p class="progress-caption">
+        <span><span class="swatch" style="background:var(--c-long)"></span>Predicted time</span>
+        <span><span class="swatch" style="background:var(--ink-mute);border-radius:0;height:2px;width:10px"></span>Baseline 8 Aug (1:32:27)</span>
+        <span><span class="swatch" style="background:var(--taper);border-radius:0;height:2px;width:10px"></span>Goal 1:29:59</span>
+      </p>
+      <p class="predict-footnote">Snapshot as of each check-in, not live &mdash; more points fill in as the block progresses.</p>
+    </div>
+
+    <div class="overview-grid">
+<a class="overview-card" href="#week-1" data-start="2026-08-10" data-end="2026-08-16" style="--phase-color:#1C4E80">
+      <span class="ov-current-badge">This week</span>
+      <div class="ov-top"><span class="ov-week">W01</span><span class="ov-phase">Foundation</span></div>
+      <div class="ov-stats"><span>48 km</span><span class="ov-dot">&middot;</span><span>LR 14 km</span></div>
+      <p class="ov-focus">Rebuild volume, pure GA1</p>
+    </a>
+<a class="overview-card" href="#week-2" data-start="2026-08-17" data-end="2026-08-23" style="--phase-color:#1C4E80">
+      <span class="ov-current-badge">This week</span>
+      <div class="ov-top"><span class="ov-week">W02</span><span class="ov-phase">Foundation</span></div>
+      <div class="ov-stats"><span>54 km</span><span class="ov-dot">&middot;</span><span>LR 16 km</span></div>
+      <p class="ov-focus">Volume ticks up, still easy</p>
+    </a>
+<a class="overview-card" href="#week-3" data-start="2026-08-24" data-end="2026-08-30" style="--phase-color:#B23A1C">
+      <span class="ov-current-badge">This week</span>
+      <div class="ov-top"><span class="ov-week">W03</span><span class="ov-phase">EB build</span></div>
+      <div class="ov-stats"><span>60 km</span><span class="ov-dot">&middot;</span><span>LR 18 km</span></div>
+      <p class="ov-focus">First EB threshold session</p>
+    </a>
+<a class="overview-card" href="#week-4" data-start="2026-08-31" data-end="2026-09-06" style="--phase-color:#B23A1C">
+      <span class="ov-current-badge">This week</span>
+      <div class="ov-top"><span class="ov-week">W04</span><span class="ov-phase">EB build</span></div>
+      <div class="ov-stats"><span>48 km</span><span class="ov-dot">&middot;</span><span>LR 15 km</span><span class="ov-tag">Deload</span></div>
+      <p class="ov-focus">Deload</p>
+    </a>
+<a class="overview-card" href="#week-5" data-start="2026-09-07" data-end="2026-09-13" style="--phase-color:#B23A1C">
+      <span class="ov-current-badge">This week</span>
+      <div class="ov-top"><span class="ov-week">W05</span><span class="ov-phase">EB build</span></div>
+      <div class="ov-stats"><span>64 km</span><span class="ov-dot">&middot;</span><span>LR 19 km</span></div>
+      <p class="ov-focus">EB reps, shorter recovery</p>
+    </a>
+<a class="overview-card" href="#week-6" data-start="2026-09-14" data-end="2026-09-20" style="--phase-color:#B23A1C">
+      <span class="ov-current-badge">This week</span>
+      <div class="ov-top"><span class="ov-week">W06</span><span class="ov-phase">EB build</span></div>
+      <div class="ov-stats"><span>68 km</span><span class="ov-dot">&middot;</span><span>LR 21 km</span></div>
+      <p class="ov-focus">Long EB reps + 5 km @ pace</p>
+    </a>
+<a class="overview-card" href="#week-7" data-start="2026-09-21" data-end="2026-09-27" style="--phase-color:#B8791A">
+      <span class="ov-current-badge">This week</span>
+      <div class="ov-top"><span class="ov-week">W07</span><span class="ov-phase">Race-specific</span></div>
+      <div class="ov-stats"><span>70 km</span><span class="ov-dot">&middot;</span><span>LR 22 km</span></div>
+      <p class="ov-focus">First INT session</p>
+    </a>
+<a class="overview-card" href="#week-8" data-start="2026-09-28" data-end="2026-10-04" style="--phase-color:#B8791A">
+      <span class="ov-current-badge">This week</span>
+      <div class="ov-top"><span class="ov-week">W08</span><span class="ov-phase">Race-specific</span></div>
+      <div class="ov-stats"><span>52 km</span><span class="ov-dot">&middot;</span><span>LR 17 km</span><span class="ov-tag">Deload</span></div>
+      <p class="ov-focus">Deload — or 10K tune-up race</p>
+    </a>
+<a class="overview-card" href="#week-9" data-start="2026-10-05" data-end="2026-10-11" style="--phase-color:#B8791A">
+      <span class="ov-current-badge">This week</span>
+      <div class="ov-top"><span class="ov-week">W09</span><span class="ov-phase">Race-specific</span></div>
+      <div class="ov-stats"><span>72 km</span><span class="ov-dot">&middot;</span><span>LR 23 km</span></div>
+      <p class="ov-focus">2×4 km @ pace in the long run</p>
+    </a>
+<a class="overview-card" href="#week-10" data-start="2026-10-12" data-end="2026-10-18" style="--phase-color:#9C2B54">
+      <span class="ov-current-badge">This week</span>
+      <div class="ov-top"><span class="ov-week">W10</span><span class="ov-phase">Peak</span></div>
+      <div class="ov-stats"><span>75 km</span><span class="ov-dot">&middot;</span><span>LR 25 km</span><span class="ov-tag ov-tag-peak">Peak</span></div>
+      <p class="ov-focus">Peak: 25 km, 15 km @ pace</p>
+    </a>
+<a class="overview-card" href="#week-11" data-start="2026-10-19" data-end="2026-10-25" style="--phase-color:#2B6B4A">
+      <span class="ov-current-badge">This week</span>
+      <div class="ov-top"><span class="ov-week">W11</span><span class="ov-phase">Race week</span></div>
+      <div class="ov-stats"><span>34 km</span><span class="ov-dot">&middot;</span><span>Race 21.1 km</span><span class="ov-tag ov-tag-race">Race day</span></div>
+      <p class="ov-focus">Race week — 8-day taper</p>
+    </a>
+</div>
+
+    <p class="legend-caption">Phase</p>
+    <div class="legend">
+      <span class="legend-item"><span class="legend-dot" style="background:var(--foundation)"></span>Foundation &middot; wk 1&ndash;2</span>
+      <span class="legend-item"><span class="legend-dot" style="background:var(--build)"></span>EB build &middot; wk 3&ndash;6</span>
+      <span class="legend-item"><span class="legend-dot" style="background:var(--peak)"></span>Race-specific &middot; wk 7&ndash;9</span>
+      <span class="legend-item"><span class="legend-dot" style="background:var(--peaked)"></span>Peak &middot; wk 10</span>
+      <span class="legend-item"><span class="legend-dot" style="background:var(--taper)"></span>Taper &middot; wk 11</span>
+    </div>
+    <p class="legend-caption">Session type</p>
+    <div class="legend">
+      <span class="legend-item"><span class="legend-dot" style="background:var(--c-easy)"></span>Easy</span>
+      <span class="legend-item"><span class="legend-dot" style="background:var(--c-strength)"></span>Strength</span>
+      <span class="legend-item"><span class="legend-dot" style="background:var(--c-quality)"></span>Quality</span>
+      <span class="legend-item"><span class="legend-dot" style="background:var(--c-long)"></span>Long run</span>
+      <span class="legend-item"><span class="legend-dot" style="background:var(--c-rest)"></span>Rest</span>
+    </div>
+
+    <details class="zones">
+      <summary>Heart rate &amp; pace reference<span></span></summary>
+      <div class="zone-table-wrap">
+      <table class="zone-table">
+        <tr><th>Zone</th><th>Effort</th><th>Heart rate</th><th>Pace guide</th><th>Duration</th></tr>
+        <tr><td>REG</td><td>Recovery</td><td class="mono">130&ndash;138 bpm</td><td class="mono">6:40&ndash;7:53/km</td><td>30&ndash;40 min</td></tr>
+        <tr><td>GA1</td><td>Easy / base</td><td class="mono">138&ndash;152 bpm</td><td class="mono">5:33&ndash;6:40/km</td><td>60&ndash;120 min</td></tr>
+        <tr><td>GA2</td><td>Steady</td><td class="mono">152&ndash;169 bpm</td><td class="mono">4:32&ndash;5:33/km</td><td>40&ndash;50 min</td></tr>
+        <tr><td>EB</td><td>Threshold / development</td><td class="mono">169&ndash;183 bpm</td><td class="mono">3:55&ndash;4:32/km</td><td>1&times;30 min or 4&times;8 min</td></tr>
+        <tr><td>INT</td><td>VO2max / interval</td><td class="mono">183&ndash;197 bpm</td><td class="mono">&lt;3:55/km</td><td>3&ndash;4&times;1&ndash;3 min</td></tr>
+        <tr><td>HM race pace</td><td>Goal effort</td><td class="mono">172&ndash;178 bpm</td><td class="mono">4:16/km</td><td>Race day</td></tr>
+      </table>
+      </div>
+      <p class="zone-source">Zones are from your clinical lactate test (Leistungsdiagnostik SOMC Schulthess Klinik, 02.06.2025): an 8-stage treadmill lactate profile with your lab-measured threshold of 178&nbsp;bpm at 14.5&nbsp;km/h, and max HR of 197&nbsp;bpm reached at exhaustion. This matches Garmin's independently auto-detected lactate threshold of 178&nbsp;bpm exactly, and the lab's VO2max estimate (58&nbsp;ml/kg/min) is nearly identical to Garmin's (57&ndash;58) &mdash; strong agreement between both sources.</p>
+      <p class="zone-source"><strong>Polarized 80/20:</strong> roughly 80% of weekly running time stays in REG/GA1/GA2 (genuinely easy to steady), and about 20% is spent at EB/INT (genuinely hard) &mdash; deliberately minimizing time in the mushy "medium-hard" zone most recreational runners default to. It's the pattern most elite endurance athletes, Kipchoge included, actually train by.</p>
+    </details>
+
+    <div class="progress-wrap">
+      <div class="progress-label"><span id="progress-text">0 / 64 sessions logged</span><span id="progress-pct">0%</span></div>
+      <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+    </div>
+
+    <div class="progress-wrap">
+      <div class="progress-label"><span id="km-text">0 / 645 km run</span><span id="km-asof">as of &ndash;</span></div>
+      <div class="progress-track km-track">
+        <div class="progress-fill km-fill" id="km-fill"></div>
+        <div class="progress-marker" id="km-marker"></div>
+      </div>
+      <p class="km-delta" id="km-delta"></p>
+      <p class="progress-caption">
+        <span><span class="swatch" style="background:var(--c-long)"></span>Actual km run (Garmin)</span>
+        <span><span class="swatch" style="background:var(--ink)"></span>marker: where the plan expects you today</span>
+      </p>
+    </div>
+  </div>
+
+  <div class="plan">
+
+    <details class="week" id="week-1" data-start="2026-08-10" data-end="2026-08-16" style="--phase-color:#1C4E80;--phase-tint:#E7EEF5" open>
+      <summary>
+        <div class="bib">
+          <div class="bib-num">01</div>
+          <div class="bib-meta">
+            <div class="bib-phase">Foundation </div>
+            <div class="bib-dates">10–16 Aug</div>
+          </div>
+        </div>
+        <div class="week-volume"><span class="vol-num">48</span><span class="vol-unit">km</span></div>
+        <i class="chev" aria-hidden="true"></i>
+      </summary>
+      <div class="tile-grid">
+        
+      <div class="tile tile-easy" data-sid="w1-easy1">
+      <label class="tile-check"><input type="checkbox" data-sid="w1-easy1" aria-label="Mark Easy run (GA1) done"><span class="box"></span></label>
+      <div class="tile-head">
+        <span class="tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></span>
+        <div class="tile-headtext">
+          <div class="tile-day">Monday</div>
+          <div class="tile-name">Easy run (GA1)</div>
+        </div>
+      </div>
+      <div class="tile-dist">12 km <span class="tile-actual">(actual 12.0 km)</span></div>
+      <div class="tile-row"><span class="tag hr">HR 138–152 bpm</span><span class="tag pace">5:33–6:40/km</span><span class="tag time">~1:13 h</span></div>
+      
+      <p class="tile-tip">Pure GA1 — if you can&#x27;t hold a conversation, you&#x27;re going too fast.</p>
+    </div>
+      <div class="tile tile-strength" data-sid="w1-str1">
+      <label class="tile-check"><input type="checkbox" data-sid="w1-str1" aria-label="Mark Strength done"><span class="box"></span></label>
+      <div class="tile-head">
+        <span class="tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="9" width="4" height="6" rx="1"/><rect x="18" y="9" width="4" height="6" rx="1"/><line x1="6" y1="12" x2="18" y2="12"/><line x1="6" y1="10" x2="6" y2="14"/><line x1="18" y1="10" x2="18" y2="14"/></svg></span>
+        <div class="tile-headtext">
+          <div class="tile-day">Tuesday</div>
+          <div class="tile-name">Strength</div>
+        </div>
+      </div>
+      <div class="tile-dist">20 min</div>
+      <p class="tile-tip">Focus on control, not reps — single-leg balance work matters most here.</p>
+    </div>
+      <div class="tile tile-quality" data-sid="w1-quality">
+      <label class="tile-check"><input type="checkbox" data-sid="w1-quality" aria-label="Mark quality session done"><span class="box"></span></label>
+      <div class="tile-head">
+        <span class="tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></span>
+        <div class="tile-headtext">
+          <div class="tile-day">Wednesday</div>
+          <div class="tile-name">Quality session</div>
+        </div>
+      </div>
+      <div class="tile-dist">≈10 km total</div>
+      
+      <div class="alt-grid">
+        <div class="alt-card">
+          <div class="alt-label">Track (preferred)</div>
+          <p class="alt-detail">15 min warm-up + 8×200m @ 3:50–4:05/km, 75s jog recovery + 15 min cool-down</p>
+          <div class="tile-row"><span class="tag hr">HR 160–185 bpm (brief spikes)</span><span class="tag pace">≈3:50–4:05/km on reps</span><span class="tag time">~46 min</span></div>
+          <p class="tile-tip">Strides should feel fast but relaxed — smooth form, not a sprint.</p>
+        </div>
+        <div class="alt-card">
+          <div class="alt-label">Hill (alt)</div>
+          <p class="alt-detail">15 min warm-up + 8×45s hard uphill, 75s jog-down recovery + 15 min cool-down</p>
+          <div class="tile-row"><span class="tag hr">HR 160–185 bpm (brief spikes)</span><span class="tag pace">Effort-based — hard up, easy down</span><span class="tag time">~46 min</span></div>
+          <p class="tile-tip">Hard uphill effort, easy jog down — let gravity do the recovery.</p>
+        </div>
+      </div>
+    </div>
+      <div class="tile tile-strength" data-sid="w1-str2">
+      <label class="tile-check"><input type="checkbox" data-sid="w1-str2" aria-label="Mark Strength done"><span class="box"></span></label>
+      <div class="tile-head">
+        <span class="tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="9" width="4" height="6" rx="1"/><rect x="18" y="9" width="4" height="6" rx="1"/><line x1="6" y1="12" x2="18" y2="12"/><line x1="6" y1="10" x2="6" y2="14"/><line x1="18" y1="10" x2="18" y2="14"/></svg></span>
+        <div class="tile-headtext">
+          <div class="tile-day">Thursday</div>
+          <div class="tile-name">Strength</div>
+        </div>
+      </div>
+      <div class="tile-dist">20 min</div>
+      <p class="tile-tip">Focus on control, not reps — single-leg balance work matters most here.</p>
+    </div>
+      <div class="tile tile-easy" data-sid="w1-easy2">
+      <label class="tile-check"><input type="checkbox" data-sid="w1-easy2" aria-label="Mark Steady run (GA2) done"><span class="box"></span></label>
+      <div class="tile-head">
+        <span class="tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></span>
+        <div class="tile-headtext">
+          <div class="tile-day">Friday</div>
+          <div class="tile-name">Steady run (GA2)</div>
+        </div>
+      </div>
+      <div class="tile-dist">12 km</div>
+      <div class="tile-row"><span class="tag hr">HR 152–169 bpm</span><span class="tag pace">4:32–5:33/km</span><span class="tag time">~1:00 h</span></div>
+      
+      <p class="tile-tip">A notch quicker than Monday — comfortably moving, not gasping. This is GA2.</p>
+    </div>
+      <div class="tile tile-rest">
+      <div class="tile-head">
+        <span class="tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></span>
+        <div class="tile-headtext">
+          <div class="tile-day">Saturday</div>
+          <div class="tile-name">Rest day</div>
+        </div>
+      </div>
+      <div class="tile-dist">Off</div>
+      <p class="tile-tip">Full rest — no training. This is what lets Sunday’s long run actually count.</p>
+    </div>
+      <div class="tile tile-long" data-sid="w1-long">
+      <label class="tile-check"><input type="checkbox" data-sid="w1-long" aria-label="Mark Long run (GA1) done"><span class="box"></span></label>
+      <div class="tile-head">
+        <span class="tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="22" x2="4" y2="3"/><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/></svg></span>
+        <div class="tile-headtext">
+          <div class="tile-day">Sunday</div>
+          <div class="tile-name">Long run (GA1)</div>
+        </div>
+      </div>
+      <div class="tile-dist">14 km</div>
+      <div class="tile-row"><span class="tag hr">HR 138–152 bpm</span><span class="tag pace">5:33–6:40/km</span><span class="tag time">~1:26 h</span></div>
+      
+      <p class="tile-tip">Pure GA1 effort throughout — no pace work yet, just easy aerobic time on your feet.</p>
+    </div>
+    
+      </div>
+    </details>
+
+    <details class="week" id="week-2" data-start="2026-08-17" data-end="2026-08-23" style="--phase-color:#1C4E80;--phase-tint:#E7EEF5" open>
+      <summary>
+        <div class="bib">
+          <div class="bib-num">02</div>
+          <div class="bib-meta">
+            <div class="bib-phase">Foundation </div>
+            <div class="bib-dates">17–23 Aug</div>
+          </div>
+        </div>
+        <div class="week-volume"><span class="vol-num">54</span><span class="vol-unit">km</span></div>
+        <i class="chev" aria-hidden="true"></i>
+      </summary>
+      <div class="tile-grid">
+        
+      <div class="tile tile-easy" data-sid="w2-easy1">
+      <label class="tile-check"><input type="checkbox" data-sid="w2-easy1" aria-label="Mark Easy run (GA1) done"><span class="box"></span></label>
+      <div class="tile-head">
+        <span class="tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></span>
+        <div class="tile-headtext">
+          <div class="tile-day">Monday</div>
+          <div class="tile-name">Easy run (GA1)</div>
+        </div>
+      </div>
+      <div class="tile-dist">13 km</div>
+      <div class="tile-row"><span class="tag hr">HR 138–152 bpm</span><span class="tag pace">5:33–6:40/km</span><span class="tag time">~1:19 h</span></div>
+      
+      <p class="tile-tip">Pure GA1 — if you can&#x27;t hold a conversation, you&#x27;re going too fast.</p>
+    </div>
+      <div class="tile tile-strength" data-sid="w2-str1">
+      <label class="tile-check"><input type="checkbox" data-sid="w2-str1" aria-label="Mark Strength done"><span class="box"></span></label>
+      <div class="tile-head">
+        <span class="tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="9" width="4" height="6" rx="1"/><rect x="18" y="9" width="4" height="6" rx="1"/><line x1="6" y1="12" x2="18" y2="12"/><line x1="6" y1="10" x2="6" y2="14"/><line x1="18" y1="10" x2="18" y2="14"/></svg></span>
+        <div class="tile-headtext">
+          <div class="tile-day">Tuesday</div>
+          <div class="tile-name">Strength</div>
+        </div>
+      </div>
+      <div class="tile-dist">20 min</div>
+      <p class="tile-tip">Focus on control, not reps — single-leg balance work matters most here.</p>
+    </div>
+      <div class="tile tile-quality" data-sid="w2-quality">
+      <label class="tile-check"><input type="checkbox" data-sid="w2-quality" aria-label="Mark quality session done"><span class="box"></span></label>
+      <div class="tile-head">
+        <span class="tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></span>
+        <div class="tile-headtext">
+          <div class="tile-day">Wednesday</div>
+          <div class="tile-name">Quality session</div>
+        </div>
+      </div>
+      <div class="tile-dist">≈12 km total</div>
+      
+      <div class="alt-grid">
+        <div class="alt-card">
+          <div class="alt-label">Track (preferred)</div>
+          <p class="alt-detail">15 min warm-up + 10×200m @ 3:50–4:05/km, 75s jog recovery + 15 min cool-down</p>
+          <div class="tile-row"><span class="tag hr">HR 165–188 bpm (brief spikes)</span><span class="tag pace">≈3:50–4:05/km on reps</span><span class="tag time">~50 min</span></div>
+          <p class="tile-tip">Same drill, two more reps — notice if the last ones feel easier than week 1.</p>
+        </div>
+        <div class="alt-card">
+          <div class="alt-label">Hill (alt)</div>
+          <p class="alt-detail">15 min warm-up + 10×45s hard uphill, 75s jog-down recovery + 15 min cool-down</p>
+          <div class="tile-row"><span class="tag hr">HR 165–188 bpm (brief spikes)</span><span class="tag pace">Effort-based — hard up, easy down</span><span class="tag time">~50 min</span></div>
+          <p class="tile-tip">Same hill, two more reps — should still feel controlled at the top.</p>
+        </div>
+      </div>
+    </div>
+      <div class="tile tile-strength" data-sid="w2-str2">
+      <label class="tile-check"><input type="checkbox" data-sid="w2-str2" aria-label="Mark Strength done"><span class="box"></span></label>
+      <div class="tile-head">
+        <span class="tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="9" width="4" height="6" rx="1"/><rect x="18" y="9" width="4" height="6" rx="1"/><line x1="6" y1="12" x2="18" y2="12"/><line x1="6" y1="10" x2="6" y2="14"/><line x1="18" y1="10" x2="18" y2="14"/></svg></span>
+        <div class="tile-headtext">
+          <div class="tile-day">Thursday</div>
+          <div class="tile-name">Strength</div>
+        </div>
+      </div>
+      <div class="tile-dist">20 min</div>
+      <p class="tile-tip">Focus on control, not reps — single-leg balance work matters most here.</p>
+    </div>
+      <div class="tile tile-easy" data-sid="w2-easy2">
+      <label class="tile-check"><input type="checkbox" data-sid="w2-easy2" aria-label="Mark Steady run (GA2) done"><span class="box"></span></label>
+      <div class="tile-head">
+        <span class="tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></span>
+        <div class="tile-headtext">
+          <div class="tile-day">Friday</div>
+          <div class="tile-name">Steady run (GA2)</div>
+        </div>
+      </div>
+      <div class="tile-dist">13 km</div>
+      <div class="tile-row"><span class="tag hr">HR 152–169 bpm</span><span class="tag pace">4:32–5:33/km</span><span class="tag time">~1:06 h</span></div>
+      
+      <p class="tile-tip">A notch quicker than Monday — comfortably moving, not gasping. This is GA2.</p>
+    </div>
+      <div class="tile tile-rest">
+      <div class="tile-head">
+        <span class="tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></span>
+        <div class="tile-headtext">
+          <div class="tile-day">Saturday</div>
+          <div class="tile-name">Rest day</div>
+        </div>
+      </div>
+      <div class="tile-dist">Off</div>
+      <p class="tile-tip">Full rest — no training. This is what lets Sunday’s long run actually count.</p>
+    </div>
+      <div class="tile tile-long" data-sid="w2-long">
+      <label class="tile-check"><input type="checkbox" data-sid="w2-long" aria-label="Mark Long run (GA1) done"><span class="box"></span></label>
+      <div class="tile-head">
+        <span class="tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="22" x2="4" y2="3"/><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/></svg></span>
+        <div class="tile-headtext">
+          <div class="tile-day">Sunday</div>
+          <div class="tile-name">Long run (GA1)</div>
+        </div>
+      </div>
+      <div class="tile-dist">16 km</div>
+      <div class="tile-row"><span class="tag hr">HR 138–152 bpm</span><span class="tag pace">5:33–6:40/km</span><span class="tag time">~1:38 h</span></div>
+      <div class="tile-row"><span class="tag fuel">Fuel from 15 km</span></div>
+      <p class="tile-tip">One km longer than last week, still pure GA1 — fuel from 15 km onward: start practicing race-day nutrition.</p>
+    </div>
+    
+      </div>
+    </details>
+
+    <details class="week" id="week-3" data-start="2026-08-24" data-end="2026-08-30" style="--phase-color:#B23A1C;--phase-tint:#F6E7E1" open>
+      <summary>
+        <div class="bib">
+          <div class="bib-num">03</div>
+          <div class="bib-meta">
+            <div class="bib-phase">EB build </div>
+            <div class="bib-dates">24–30 Aug</div>
+          </div>
+        </div>
+        <div class="week-volume"><span class="vol-num">60</span><span class="vol-unit">km</span></div>
+        <i class="chev" aria-hidden="true"></i>
+      </summary>
+      <div class="tile-grid">
+        
+      <div class="tile tile-easy" data-sid="w3-easy1">
+      <label class="tile-check"><input type="checkbox" data-sid="w3-easy1" aria-label="Mark Easy run (GA1) done"><span class="box"></span></label>
+      <div class="tile-head">
+        <span class="tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></span>
+        <div class="tile-headtext">
+          <div class="tile-day">Monday</div>
+          <div class="tile-name">Easy run (GA1)</div>
+        </div>
+      </div>
+      <div class="tile-dist">14 km</div>
+      <div class="tile-row"><span class="tag hr">HR 138–152 bpm</span><span class="tag pace">5:33–6:40/km</span><span class="tag time">~1:26 h</span></div>
+      
+      <p class="tile-tip">Still GA1, even as volume grows — this is the 80% of the 80/20 split. Resist the urge to push it.</p>
+    </div>
+      <div class="tile tile-strength" data-sid="w3-str1">
+      <label class="tile-check"><input type="checkbox" data-sid="w3-str1" aria-label="Mark Strength done"><span class="box"></span></label>
+      <div class="tile-head">
+        <span class="tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="9" width="4" height="6" rx="1"/><rect x="18" y="9" width="4" height="6" rx="1"/><line x1="6" y1="12" x2="18" y2="12"/><line x1="6" y1="10" x2="6" y2="14"/><line x1="18" y1="10" x2="18" y2="14"/></svg></span>
+        <div class="tile-headtext">
+          <div class="tile-day">Tuesday</div>
+          <div class="tile-name">Strength</div>
+        </div>
+      </div>
+      <div class="tile-dist">20 min</div>
+      <p class="tile-tip">Add tempo to step-ups and lunges — this is what keeps you at 4 runs/week without breaking down.</p>
+    </div>
+      <div class="tile tile-quality" data-sid="w3-quality">
+      <label class="tile-check"><input type="checkbox" data-sid="w3-quality" aria-label="Mark quality session done"><span class="box"></span></label>
+      <div class="tile-head">
+        <span class="tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></span>
+        <div class="tile-headtext">
+          <div class="tile-day">Wednesday</div>
+          <div class="tile-name">Quality session (EB)</div>
+        </div>
+      </div>
+      <div class="tile-dist">≈14 km total</div>
+      
+      <div class="alt-grid">
+        <div class="alt-card">
+          <div class="alt-label">Track (preferred)</div>
+          <p class="alt-detail">15 min warm-up + 5×1000m @ threshold pace, 90s jog recovery + 15 min cool-down</p>
+          <div class="tile-row"><span class="tag hr">HR 169–183 bpm (EB)</span><span class="tag pace">4:00–4:15/km</span><span class="tag time">~57 min</span></div>
+          <p class="tile-tip">First EB (threshold) session — “comfortably hard,” matched to your lab-tested 178 bpm threshold.</p>
+        </div>
+        <div class="alt-card">
+          <div class="alt-label">Hill (alt)</div>
+          <p class="alt-detail">15 min warm-up + 5×3 min steady hard uphill, jog-down recovery + 15 min cool-down</p>
+          <div class="tile-row"><span class="tag hr">HR 169–183 bpm (EB)</span><span class="tag pace">Effort-based — steady hard climb</span><span class="tag time">~57 min</span></div>
+          <p class="tile-tip">Sustained hill effort builds the same engine as track intervals — arguably more strength.</p>
+        </div>
+      </div>
+    </div>
+      <div class="tile tile-strength" data-sid="w3-str2">
+      <label class="tile-check"><input type="checkbox" data-sid="w3-str2" aria-label="Mark Strength done"><span class="box"></span></label>
+      <div class="tile-head">
+        <span class="tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="9" width="4" height="6" rx="1"/><rect x="18" y="9" width="4" height="6" rx="1"/><line x1="6" y1="12" x2="18" y2="12"/><line x1="6" y1="10" x2="6" y2="14"/><line x1="18" y1="10" x2="18" y2="14"/></svg></span>
+        <div class="tile-headtext">
+          <div class="tile-day">Thursday</div>
+          <div class="tile-name">Strength</div>
+        </div>
+      </div>
+      <div class="tile-dist">20 min</div>
+      <p class="tile-tip">Add tempo to step-ups and lunges — this is what keeps you at 4 runs/week without breaking down.</p>
+    </div>
+      <div class="tile tile-easy" data-sid="w3-easy2">
+      <label class="tile-check"><input type="checkbox" data-sid="w3-easy2" aria-label="Mark Steady run (GA2) done"><span class="box"></span></label>
+      <div class="tile-head">
+        <span class="tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></span>
+        <div class="tile-headtext">
+          <div class="tile-day">Friday</div>
+          <div class="tile-name">Steady run (GA2)</div>
+        </div>
+      </div>
+      <div class="tile-dist">14 km</div>
+      <div class="tile-row"><span class="tag hr">HR 152–169 bpm</span><span class="tag pace">4:32–5:33/km</span><span class="tag time">~1:11 h</span></div>
+      
+      <p class="tile-tip">GA2 effort — purposeful but still well short of threshold.</p>
+    </div>
+      <div class="tile tile-rest">
+      <div class="tile-head">
+        <span class="tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></span>
+        <div class="tile-headtext">
+          <div class="tile-day">Saturday</div>
+          <div class="tile-name">Rest day</div>
+        </div>
+      </div>
+      <div class="tile-dist">Off</div>
+      <p class="tile-tip">Full rest — no training. This is what lets Sunday’s long run actually count.</p>
+    </div>
+      <div class="tile tile-long" data-sid="w3-long">
+      <label class="tile-check"><input type="checkbox" data-sid="w3-long" aria-label="Mark Long run (GA1) done"><span class="box"></span></label>
+      <div class="tile-head">
+        <span class="tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="22" x2="4" y2="3"/><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/></svg></span>
+        <div class="tile-headtext">
+          <div class="tile-day">Sunday</div>
+          <div class="tile-name">Long run (GA1)</div>
+        </div>
+      </div>
+      <div class="tile-dist">18 km</div>
+      <div class="tile-row"><span class="tag hr">HR 138–152 bpm</span><span class="tag pace">5:33–6:40/km</span><span class="tag time">~1:50 h</span></div>
+      <div class="tile-row"><span class="tag fuel">Fuel from 15 km</span></div>
+      <p class="tile-tip">Last easy-only long run before pace work begins next week — enjoy the simplicity.</p>
+    </div>
+    
+      </div>
+    </details>
+
+    <details class="week" id="week-4" data-start="2026-08-31" data-end="2026-09-06" style="--phase-color:#B23A1C;--phase-tint:#F6E7E1" open>
+      <summary>
+        <div class="bib">
+          <div class="bib-num">04</div>
+          <div class="bib-meta">
+            <div class="bib-phase">EB build <span class="badge-cutback">deload</span></div>
+            <div class="bib-dates">31 Aug–6 Sep</div>
+          </div>
+        </div>
+        <div class="week-volume"><span class="vol-num">48</span><span class="vol-unit">km</span></div>
+        <i class="chev" aria-hidden="true"></i>
+      </summary>
+      <div class="tile-grid">
+        
+      <div class="tile tile-easy" data-sid="w4-easy1">
+      <label class="tile-check"><input type="checkbox" data-sid="w4-easy1" aria-label="Mark Easy run (GA1) done"><span class="box"></span></label>
+      <div class="tile-head">
+        <span class="tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></span>
+        <div class="tile-headtext">
+          <div class="tile-day">Monday</div>
+          <div class="tile-name">Easy run (GA1)</div>
+        </div>
+      </div>
+      <div class="tile-dist">11 km</div>
+      <div class="tile-row"><span class="tag hr">HR 138–152 bpm</span><span class="tag pace">5:33–6:40/km</span><span class="tag time">~1:07 h</span></div>
+      
+      <p class="tile-tip">Still GA1, even as volume grows — this is the 80% of the 80/20 split. Resist the urge to push it.</p>
+    </div>
+      <div class="tile tile-strength" data-sid="w4-str1">
+      <label class="tile-check"><input type="checkbox" data-sid="w4-str1" aria-label="Mark Strength done"><span class="box"></span></label>
+      <div class="tile-head">
+        <span class="tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="9" width="4" height="6" rx="1"/><rect x="18" y="9" width="4" height="6" rx="1"/><line x1="6" y1="12" x2="18" y2="12"/><line x1="6" y1="10" x2="6" y2="14"/><line x1="18" y1="10" x2="18" y2="14"/></svg></span>
+        <div class="tile-headtext">
+          <div class="tile-day">Tuesday</div>
+          <div class="tile-name">Strength</div>
+        </div>
+      </div>
+      <div class="tile-dist">20 min</div>
+      <p class="tile-tip">Add tempo to step-ups and lunges — this is what keeps you at 4 runs/week without breaking down.</p>
+    </div>
+      <div class="tile tile-quality" data-sid="w4-quality">
+      <label class="tile-check"><input type="checkbox" data-sid="w4-quality" aria-label="Mark quality session done"><span class="box"></span></label>
+      <div class="tile-head">
+        <span class="tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></span>
+        <div class="tile-headtext">
+          <div class="tile-day">Wednesday</div>
+          <div class="tile-name">Quality session (EB)</div>
+        </div>
+      </div>
+      <div class="tile-dist">≈11 km total</div>
+      
+      <div class="alt-grid">
+        <div class="alt-card">
+          <div class="alt-label">Track (preferred)</div>
+          <p class="alt-detail">15 min warm-up + 4×1000m @ threshold pace, 90s jog recovery + 15 min cool-down</p>
+          <div class="tile-row"><span class="tag hr">HR 169–183 bpm (EB)</span><span class="tag pace">4:00–4:15/km</span><span class="tag time">~51 min</span></div>
+          <p class="tile-tip">Deload week — same EB pace, fewer reps. Let this one feel easy to hold.</p>
+        </div>
+        <div class="alt-card">
+          <div class="alt-label">Hill (alt)</div>
+          <p class="alt-detail">15 min warm-up + 4×3 min hill tempo, jog-down recovery + 15 min cool-down</p>
+          <div class="tile-row"><span class="tag hr">HR 169–183 bpm (EB)</span><span class="tag pace">Effort-based — steady hard climb</span><span class="tag time">~51 min</span></div>
+          <p class="tile-tip">Deload — same effort, fewer reps.</p>
+        </div>
+      </div>
+    </div>
+      <div class="tile tile-strength" data-sid="w4-str2">
+      <label class="tile-check"><input type="checkbox" data-sid="w4-str2" aria-label="Mark Strength done"><span class="box"></span></label>
+      <div class="tile-head">
+        <span class="tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="9" width="4" height="6" rx="1"/><rect x="18" y="9" width="4" height="6" rx="1"/><line x1="6" y1="12" x2="18" y2="12"/><line x1="6" y1="10" x2="6" y2="14"/><line x1="18" y1="10" x2="18" y2="14"/></svg></span>
+        <div class="tile-headtext">
+          <div class="tile-day">Thursday</div>
+          <div class="tile-name">Strength</div>
+        </div>
+      </div>
+      <div class="tile-dist">20 min</div>
+      <p class="tile-tip">Add tempo to step-ups and lunges — this is what keeps you at 4 runs/week without breaking down.</p>
+    </div>
+      <div class="tile tile-easy" data-sid="w4-easy2">
+      <label class="tile-check"><input type="checkbox" data-sid="w4-easy2" aria-label="Mark Steady run (GA2) done"><span class="box"></span></label>
+      <div class="tile-head">
+        <span class="tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></span>
+        <div class="tile-headtext">
+          <div class="tile-day">Friday</div>
+          <div class="tile-name">Steady run (GA2)</div>
+        </div>
+      </div>
+      <div class="tile-dist">11 km</div>
+      <div class="tile-row"><span class="tag hr">HR 152–169 bpm</span><span class="tag pace">4:32–5:33/km</span><span class="tag time">~55 min</span></div>
+      
+      <p class="tile-tip">GA2 effort — purposeful but still well short of threshold.</p>
+    </div>
+      <div class="tile tile-rest">
+      <div class="tile-head">
+        <span class="tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></span>
+        <div class="tile-headtext">
+          <div class="tile-day">Saturday</div>
+          <div class="tile-name">Rest day</div>
+        </div>
+      </div>
+      <div class="tile-dist">Off</div>
+      <p class="tile-tip">Full rest — no training. This is what lets Sunday’s long run actually count.</p>
+    </div>
+      <div class="tile tile-long" data-sid="w4-long">
+      <label class="tile-check"><input type="checkbox" data-sid="w4-long" aria-label="Mark Long run (GA1 + pace) done"><span class="box"></span></label>
+      <div class="tile-head">
+        <span class="tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="22" x2="4" y2="3"/><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/></svg></span>
+        <div class="tile-headtext">
+          <div class="tile-day">Sunday</div>
+          <div class="tile-name">Long run (GA1 + pace)</div>
+        </div>
+      </div>
+      <div class="tile-dist">15 km</div>
+      <div class="tile-row"><span class="tag hr">HR 138–152 bpm easy, 172–178 bpm on pace block</span><span class="tag pace">5:33–6:40/km + 2 km @ 4:16/km</span><span class="tag time">~1:28 h</span></div>
+      <div class="tile-row"><span class="tag fuel">Fuel from 15 km</span></div>
+      <p class="tile-tip">Deload week, but this is your first taste of goal pace — 2 km at 4:16/km mid-run, then straight back to easy.</p>
+    </div>
+    
+      </div>
+    </details>
+
+    <details class="week" id="week-5" data-start="2026-09-07" data-end="2026-09-13" style="--phase-color:#B23A1C;--phase-tint:#F6E7E1" open>
+      <summary>
+        <div class="bib">
+          <div class="bib-num">05</div>
+          <div class="bib-meta">
+            <div class="bib-phase">EB build </div>
+            <div class="bib-dates">7–13 Sep</div>
+          </div>
+        </div>
+        <div class="week-volume"><span class="vol-num">64</span><span class="vol-unit">km</span></div>
+        <i class="chev" aria-hidden="true"></i>
+      </summary>
+      <div class="tile-grid">
+        
+      <div class="tile tile-easy" data-sid="w5-easy1">
+      <label class="tile-check"><input type="checkbox" data-sid="w5-easy1" aria-label="Mark Easy run (GA1) done"><span class="box"></span></label>
+      <div class="tile-head">
+        <span class="tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></span>
+        <div class="tile-headtext">
+          <div class="tile-day">Monday</div>
+          <div class="tile-name">Easy run (GA1)</div>
+        </div>
+      </div>
+      <div class="tile-dist">15 km</div>
+      <div class="tile-row"><span class="tag hr">HR 138–152 bpm</span><span class="tag pace">5:33–6:40/km</span><span class="tag time">~1:32 h</span></div>
+      
+      <p class="tile-tip">Still GA1, even as volume grows — this is the 80% of the 80/20 split. Resist the urge to push it.</p>
+    </div>
+      <div class="tile tile-strength" data-sid="w5-str1">
+      <label class="tile-check"><input type="checkbox" data-sid="w5-str1" aria-label="Mark Strength done"><span class="box"></span></label>
+      <div class="tile-head">
+        <span class="tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="9" width="4" height="6" rx="1"/><rect x="18" y="9" width="4" height="6" rx="1"/><line x1="6" y1="12" x2="18" y2="12"/><line x1="6" y1="10" x2="6" y2="14"/><line x1="18" y1="10" x2="18" y2="14"/></svg></span>
+        <div class="tile-headtext">
+          <div class="tile-day">Tuesday</div>
+          <div class="tile-name">Strength</div>
+        </div>
+      </div>
+      <div class="tile-dist">20 min</div>
+      <p class="tile-tip">Add tempo to step-ups and lunges — this is what keeps you at 4 runs/week without breaking down.</p>
+    </div>
+      <div class="tile tile-quality" data-sid="w5-quality">
+      <label class="tile-check"><input type="checkbox" data-sid="w5-quality" aria-label="Mark quality session done"><span class="box"></span></label>
+      <div class="tile-head">
+        <span class="tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></span>
+        <div class="tile-headtext">
+          <div class="tile-day">Wednesday</div>
+          <div class="tile-name">Quality session (EB)</div>
+        </div>
+      </div>
+      <div class="tile-dist">≈15 km total</div>
+      
+      <div class="alt-grid">
+        <div class="alt-card">
+          <div class="alt-label">Track (preferred)</div>
+          <p class="alt-detail">15 min warm-up + 6×1000m @ threshold pace, 75s jog recovery + 15 min cool-down</p>
+          <div class="tile-row"><span class="tag hr">HR 169–183 bpm (EB)</span><span class="tag pace">4:00–4:15/km</span><span class="tag time">~1:01 h</span></div>
+          <p class="tile-tip">Shorter recovery between EB reps this week — if reps 5–6 fall apart, that’s useful data, not failure.</p>
+        </div>
+        <div class="alt-card">
+          <div class="alt-label">Hill (alt)</div>
+          <p class="alt-detail">15 min warm-up + 6×3 min hill tempo, shorter jog-down recovery + 15 min cool-down</p>
+          <div class="tile-row"><span class="tag hr">HR 169–183 bpm (EB)</span><span class="tag pace">Effort-based — steady hard climb</span><span class="tag time">~1:01 h</span></div>
+          <p class="tile-tip">Shorter rest between reps — expect it to bite by the last one or two.</p>
+        </div>
+      </div>
+    </div>
+      <div class="tile tile-strength" data-sid="w5-str2">
+      <label class="tile-check"><input type="checkbox" data-sid="w5-str2" aria-label="Mark Strength done"><span class="box"></span></label>
+      <div class="tile-head">
+        <span class="tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="9" width="4" height="6" rx="1"/><rect x="18" y="9" width="4" height="6" rx="1"/><line x1="6" y1="12" x2="18" y2="12"/><line x1="6" y1="10" x2="6" y2="14"/><line x1="18" y1="10" x2="18" y2="14"/></svg></span>
+        <div class="tile-headtext">
+          <div class="tile-day">Thursday</div>
+          <div class="tile-name">Strength</div>
+        </div>
+      </div>
+      <div class="tile-dist">20 min</div>
+      <p class="tile-tip">Add tempo to step-ups and lunges — this is what keeps you at 4 runs/week without breaking down.</p>
+    </div>
+      <div class="tile tile-easy" data-sid="w5-easy2">
+      <label class="tile-check"><input type="checkbox" data-sid="w5-easy2" aria-label="Mark Steady run (GA2) done"><span class="box"></span></label>
+      <div class="tile-head">
+        <span class="tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></span>
+        <div class="tile-headtext">
+          <div class="tile-day">Friday</div>
+          <div class="tile-name">Steady run (GA2)</div>
+        </div>
+      </div>
+      <div class="tile-dist">15 km</div>
+      <div class="tile-row"><span class="tag hr">HR 152–169 bpm</span><span class="tag pace">4:32–5:33/km</span><span class="tag time">~1:16 h</span></div>
+      
+      <p class="tile-tip">GA2 effort — purposeful but still well short of threshold.</p>
+    </div>
+      <div class="tile tile-rest">
+      <div class="tile-head">
+        <span class="tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></span>
+        <div class="tile-headtext">
+          <div class="tile-day">Saturday</div>
+          <div class="tile-name">Rest day</div>
+        </div>
+      </div>
+      <div class="tile-dist">Off</div>
+      <p class="tile-tip">Full rest — no training. This is what lets Sunday’s long run actually count.</p>
+    </div>
+      <div class="tile tile-long" data-sid="w5-long">
+      <label class="tile-check"><input type="checkbox" data-sid="w5-long" aria-label="Mark Long run (GA1 + pace) done"><span class="box"></span></label>
+      <div class="tile-head">
+        <span class="tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="22" x2="4" y2="3"/><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/></svg></span>
+        <div class="tile-headtext">
+          <div class="tile-day">Sunday</div>
+          <div class="tile-name">Long run (GA1 + pace)</div>
+        </div>
+      </div>
+      <div class="tile-dist">19 km</div>
+      <div class="tile-row"><span class="tag hr">HR 138–152 bpm easy, 172–178 bpm on pace block</span><span class="tag pace">5:33–6:40/km + 3 km @ 4:16/km</span><span class="tag time">~1:51 h</span></div>
+      <div class="tile-row"><span class="tag fuel">Fuel from 15 km</span></div>
+      <p class="tile-tip">3 km at goal pace this time — notice how it feels compared to last week’s 2 km.</p>
+    </div>
+    
+      </div>
+    </details>
+
+    <details class="week" id="week-6" data-start="2026-09-14" data-end="2026-09-20" style="--phase-color:#B23A1C;--phase-tint:#F6E7E1" open>
+      <summary>
+        <div class="bib">
+          <div class="bib-num">06</div>
+          <div class="bib-meta">
+            <div class="bib-phase">EB build </div>
+            <div class="bib-dates">14–20 Sep</div>
+          </div>
+        </div>
+        <div class="week-volume"><span class="vol-num">68</span><span class="vol-unit">km</span></div>
+        <i class="chev" aria-hidden="true"></i>
+      </summary>
+      <div class="tile-grid">
+        
+      <div class="tile tile-easy" data-sid="w6-easy1">
+      <label class="tile-check"><input type="checkbox" data-sid="w6-easy1" aria-label="Mark Easy run (GA1) done"><span class="box"></span></label>
+      <div class="tile-head">
+        <span class="tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></span>
+        <div class="tile-headtext">
+          <div class="tile-day">Monday</div>
+          <div class="tile-name">Easy run (GA1)</div>
+        </div>
+      </div>
+      <div class="tile-dist">16 km</div>
+      <div class="tile-row"><span class="tag hr">HR 138–152 bpm</span><span class="tag pace">5:33–6:40/km</span><span class="tag time">~1:38 h</span></div>
+      
+      <p class="tile-tip">Still GA1, even as volume grows — this is the 80% of the 80/20 split. Resist the urge to push it.</p>
+    </div>
+      <div class="tile tile-strength" data-sid="w6-str1">
+      <label class="tile-check"><input type="checkbox" data-sid="w6-str1" aria-label="Mark Strength done"><span class="box"></span></label>
+      <div class="tile-head">
+        <span class="tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="9" width="4" height="6" rx="1"/><rect x="18" y="9" width="4" height="6" rx="1"/><line x1="6" y1="12" x2="18" y2="12"/><line x1="6" y1="10" x2="6" y2="14"/><line x1="18" y1="10" x2="18" y2="14"/></svg></span>
+        <div class="tile-headtext">
+          <div class="tile-day">Tuesday</div>
+          <div class="tile-name">Strength</div>
+        </div>
+      </div>
+      <div class="tile-dist">20 min</div>
+      <p class="tile-tip">Add tempo to step-ups and lunges — this is what keeps you at 4 runs/week without breaking down.</p>
+    </div>
+      <div class="tile tile-quality" data-sid="w6-quality">
+      <label class="tile-check"><input type="checkbox" data-sid="w6-quality" aria-label="Mark quality session done"><span class="box"></span></label>
+      <div class="tile-head">
+        <span class="tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></span>
+        <div class="tile-headtext">
+          <div class="tile-day">Wednesday</div>
+          <div class="tile-name">Quality session (EB)</div>
+        </div>
+      </div>
+      <div class="tile-dist">≈15 km total</div>
+      
+      <div class="alt-grid">
+        <div class="alt-card">
+          <div class="alt-label">Track (preferred)</div>
+          <p class="alt-detail">15 min warm-up + 4×1600m @ threshold pace, 2 min jog recovery + 15 min cool-down</p>
+          <div class="tile-row"><span class="tag hr">HR 169–183 bpm (EB)</span><span class="tag pace">4:00–4:15/km</span><span class="tag time">~1:02 h</span></div>
+          <p class="tile-tip">Longer EB reps test pacing discipline — even splits matter more than a fast first one.</p>
+        </div>
+        <div class="alt-card">
+          <div class="alt-label">Hill (alt)</div>
+          <p class="alt-detail">15 min warm-up + 20 min continuous hard hill circuit + 15 min cool-down</p>
+          <div class="tile-row"><span class="tag hr">HR 169–183 bpm (EB)</span><span class="tag pace">Effort-based — steady hard climb</span><span class="tag time">~1:02 h</span></div>
+          <p class="tile-tip">One continuous hard circuit — pace yourself, don’t blow up on the first climb.</p>
+        </div>
+      </div>
+    </div>
+      <div class="tile tile-strength" data-sid="w6-str2">
+      <label class="tile-check"><input type="checkbox" data-sid="w6-str2" aria-label="Mark Strength done"><span class="box"></span></label>
+      <div class="tile-head">
+        <span class="tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="9" width="4" height="6" rx="1"/><rect x="18" y="9" width="4" height="6" rx="1"/><line x1="6" y1="12" x2="18" y2="12"/><line x1="6" y1="10" x2="6" y2="14"/><line x1="18" y1="10" x2="18" y2="14"/></svg></span>
+        <div class="tile-headtext">
+          <div class="tile-day">Thursday</div>
+          <div class="tile-name">Strength</div>
+        </div>
+      </div>
+      <div class="tile-dist">20 min</div>
+      <p class="tile-tip">Add tempo to step-ups and lunges — this is what keeps you at 4 runs/week without breaking down.</p>
+    </div>
+      <div class="tile tile-easy" data-sid="w6-easy2">
+      <label class="tile-check"><input type="checkbox" data-sid="w6-easy2" aria-label="Mark Steady run (GA2) done"><span class="box"></span></label>
+      <div class="tile-head">
+        <span class="tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></span>
+        <div class="tile-headtext">
+          <div class="tile-day">Friday</div>
+          <div class="tile-name">Steady run (GA2)</div>
+        </div>
+      </div>
+      <div class="tile-dist">16 km</div>
+      <div class="tile-row"><span class="tag hr">HR 152–169 bpm</span><span class="tag pace">4:32–5:33/km</span><span class="tag time">~1:21 h</span></div>
+      
+      <p class="tile-tip">GA2 effort — purposeful but still well short of threshold.</p>
+    </div>
+      <div class="tile tile-rest">
+      <div class="tile-head">
+        <span class="tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></span>
+        <div class="tile-headtext">
+          <div class="tile-day">Saturday</div>
+          <div class="tile-name">Rest day</div>
+        </div>
+      </div>
+      <div class="tile-dist">Off</div>
+      <p class="tile-tip">Full rest — no training. This is what lets Sunday’s long run actually count.</p>
+    </div>
+      <div class="tile tile-long" data-sid="w6-long">
+      <label class="tile-check"><input type="checkbox" data-sid="w6-long" aria-label="Mark Long run (GA1 + pace) done"><span class="box"></span></label>
+      <div class="tile-head">
+        <span class="tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="22" x2="4" y2="3"/><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/></svg></span>
+        <div class="tile-headtext">
+          <div class="tile-day">Sunday</div>
+          <div class="tile-name">Long run (GA1 + pace)</div>
+        </div>
+      </div>
+      <div class="tile-dist">21 km</div>
+      <div class="tile-row"><span class="tag hr">HR 138–152 bpm easy, 172–178 bpm on pace block</span><span class="tag pace">5:33–6:40/km + 5 km @ 4:16/km</span><span class="tag time">~1:59 h</span></div>
+      <div class="tile-row"><span class="tag fuel">Fuel from 15 km</span></div>
+      <p class="tile-tip">5 km continuous at goal pace — this is where race pace starts to feel like real work.</p>
+    </div>
+    
+      </div>
+    </details>
+
+    <details class="week" id="week-7" data-start="2026-09-21" data-end="2026-09-27" style="--phase-color:#B8791A;--phase-tint:#F5EBDA" open>
+      <summary>
+        <div class="bib">
+          <div class="bib-num">07</div>
+          <div class="bib-meta">
+            <div class="bib-phase">Race-specific </div>
+            <div class="bib-dates">21–27 Sep</div>
+          </div>
+        </div>
+        <div class="week-volume"><span class="vol-num">70</span><span class="vol-unit">km</span></div>
+        <i class="chev" aria-hidden="true"></i>
+      </summary>
+      <div class="tile-grid">
+        
+      <div class="tile tile-easy" data-sid="w7-easy1">
+      <label class="tile-check"><input type="checkbox" data-sid="w7-easy1" aria-label="Mark Easy run (GA1) done"><span class="box"></span></label>
+      <div class="tile-head">
+        <span class="tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></span>
+        <div class="tile-headtext">
+          <div class="tile-day">Monday</div>
+          <div class="tile-name">Easy run (GA1)</div>
+        </div>
+      </div>
+      <div class="tile-dist">16 km</div>
+      <div class="tile-row"><span class="tag hr">HR 138–152 bpm</span><span class="tag pace">5:33–6:40/km</span><span class="tag time">~1:38 h</span></div>
+      
+      <p class="tile-tip">GA1, unchanged — save the effort for Wednesday and Sunday.</p>
+    </div>
+      <div class="tile tile-strength" data-sid="w7-str1">
+      <label class="tile-check"><input type="checkbox" data-sid="w7-str1" aria-label="Mark Strength done"><span class="box"></span></label>
+      <div class="tile-head">
+        <span class="tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="9" width="4" height="6" rx="1"/><rect x="18" y="9" width="4" height="6" rx="1"/><line x1="6" y1="12" x2="18" y2="12"/><line x1="6" y1="10" x2="6" y2="14"/><line x1="18" y1="10" x2="18" y2="14"/></svg></span>
+        <div class="tile-headtext">
+          <div class="tile-day">Tuesday</div>
+          <div class="tile-name">Strength</div>
+        </div>
+      </div>
+      <div class="tile-dist">20 min</div>
+      <p class="tile-tip">A few low box jumps or skips are fine now — light plyometrics sharpen running economy.</p>
+    </div>
+      <div class="tile tile-quality" data-sid="w7-quality">
+      <label class="tile-check"><input type="checkbox" data-sid="w7-quality" aria-label="Mark quality session done"><span class="box"></span></label>
+      <div class="tile-head">
+        <span class="tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></span>
+        <div class="tile-headtext">
+          <div class="tile-day">Wednesday</div>
+          <div class="tile-name">Quality session (INT)</div>
+        </div>
+      </div>
+      <div class="tile-dist">≈16 km total</div>
+      
+      <div class="alt-grid">
+        <div class="alt-card">
+          <div class="alt-label">Track (preferred)</div>
+          <p class="alt-detail">15 min warm-up + 6×1000m @ 10K/VO2max effort, 2 min jog recovery + 15 min cool-down</p>
+          <div class="tile-row"><span class="tag hr">HR 184–197 bpm (INT)</span><span class="tag pace">3:40–3:55/km</span><span class="tag time">~1:03 h</span></div>
+          <p class="tile-tip">First real INT session — above your 183 bpm EB ceiling. Per your lab report, this is exactly the right time to introduce it (6–8 weeks out).</p>
+        </div>
+        <div class="alt-card">
+          <div class="alt-label">Hill (alt)</div>
+          <p class="alt-detail">15 min warm-up + 8×90s hard hill repeats, jog-down + 15 min flat strides after</p>
+          <div class="tile-row"><span class="tag hr">HR 184–197 bpm (INT)</span><span class="tag pace">Effort-based — hard up, easy down</span><span class="tag time">~1:03 h</span></div>
+          <p class="tile-tip">This is your INT session in hill form — hard, not heroic.</p>
+        </div>
+      </div>
+    </div>
+      <div class="tile tile-strength" data-sid="w7-str2">
+      <label class="tile-check"><input type="checkbox" data-sid="w7-str2" aria-label="Mark Strength done"><span class="box"></span></label>
+      <div class="tile-head">
+        <span class="tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="9" width="4" height="6" rx="1"/><rect x="18" y="9" width="4" height="6" rx="1"/><line x1="6" y1="12" x2="18" y2="12"/><line x1="6" y1="10" x2="6" y2="14"/><line x1="18" y1="10" x2="18" y2="14"/></svg></span>
+        <div class="tile-headtext">
+          <div class="tile-day">Thursday</div>
+          <div class="tile-name">Strength</div>
+        </div>
+      </div>
+      <div class="tile-dist">20 min</div>
+      <p class="tile-tip">A few low box jumps or skips are fine now — light plyometrics sharpen running economy.</p>
+    </div>
+      <div class="tile tile-easy" data-sid="w7-easy2">
+      <label class="tile-check"><input type="checkbox" data-sid="w7-easy2" aria-label="Mark Steady run (GA2) done"><span class="box"></span></label>
+      <div class="tile-head">
+        <span class="tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></span>
+        <div class="tile-headtext">
+          <div class="tile-day">Friday</div>
+          <div class="tile-name">Steady run (GA2)</div>
+        </div>
+      </div>
+      <div class="tile-dist">16 km</div>
+      <div class="tile-row"><span class="tag hr">HR 152–169 bpm</span><span class="tag pace">4:32–5:33/km</span><span class="tag time">~1:21 h</span></div>
+      
+      <p class="tile-tip">GA2 — the one “moderate” day of the week, deliberately kept to just one.</p>
+    </div>
+      <div class="tile tile-rest">
+      <div class="tile-head">
+        <span class="tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></span>
+        <div class="tile-headtext">
+          <div class="tile-day">Saturday</div>
+          <div class="tile-name">Rest day</div>
+        </div>
+      </div>
+      <div class="tile-dist">Off</div>
+      <p class="tile-tip">Full rest — no training. This is what lets Sunday’s long run actually count.</p>
+    </div>
+      <div class="tile tile-long" data-sid="w7-long">
+      <label class="tile-check"><input type="checkbox" data-sid="w7-long" aria-label="Mark Long run (GA1 + pace) done"><span class="box"></span></label>
+      <div class="tile-head">
+        <span class="tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="22" x2="4" y2="3"/><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/></svg></span>
+        <div class="tile-headtext">
+          <div class="tile-day">Sunday</div>
+          <div class="tile-name">Long run (GA1 + pace)</div>
+        </div>
+      </div>
+      <div class="tile-dist">22 km</div>
+      <div class="tile-row"><span class="tag hr">HR 138–152 bpm easy, 172–178 bpm on pace block</span><span class="tag pace">5:33–6:40/km + 6 km @ 4:16/km</span><span class="tag time">~2:03 h</span></div>
+      <div class="tile-row"><span class="tag fuel">Fuel from 15 km</span></div>
+      <p class="tile-tip">6 km at goal pace, seven weeks out is exactly on schedule for this — stay relaxed through it.</p>
+    </div>
+    
+      </div>
+    </details>
+
+    <details class="week" id="week-8" data-start="2026-09-28" data-end="2026-10-04" style="--phase-color:#B8791A;--phase-tint:#F5EBDA" open>
+      <summary>
+        <div class="bib">
+          <div class="bib-num">08</div>
+          <div class="bib-meta">
+            <div class="bib-phase">Race-specific <span class="badge-cutback">deload</span></div>
+            <div class="bib-dates">28 Sep–4 Oct</div>
+          </div>
+        </div>
+        <div class="week-volume"><span class="vol-num">52</span><span class="vol-unit">km</span></div>
+        <i class="chev" aria-hidden="true"></i>
+      </summary>
+      <div class="tile-grid">
+        
+      <div class="tile tile-easy" data-sid="w8-easy1">
+      <label class="tile-check"><input type="checkbox" data-sid="w8-easy1" aria-label="Mark Easy run (GA1) done"><span class="box"></span></label>
+      <div class="tile-head">
+        <span class="tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></span>
+        <div class="tile-headtext">
+          <div class="tile-day">Monday</div>
+          <div class="tile-name">Easy run (GA1)</div>
+        </div>
+      </div>
+      <div class="tile-dist">12 km</div>
+      <div class="tile-row"><span class="tag hr">HR 138–152 bpm</span><span class="tag pace">5:33–6:40/km</span><span class="tag time">~1:13 h</span></div>
+      
+      <p class="tile-tip">GA1, unchanged — save the effort for Wednesday and Sunday.</p>
+    </div>
+      <div class="tile tile-strength" data-sid="w8-str1">
+      <label class="tile-check"><input type="checkbox" data-sid="w8-str1" aria-label="Mark Strength done"><span class="box"></span></label>
+      <div class="tile-head">
+        <span class="tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="9" width="4" height="6" rx="1"/><rect x="18" y="9" width="4" height="6" rx="1"/><line x1="6" y1="12" x2="18" y2="12"/><line x1="6" y1="10" x2="6" y2="14"/><line x1="18" y1="10" x2="18" y2="14"/></svg></span>
+        <div class="tile-headtext">
+          <div class="tile-day">Tuesday</div>
+          <div class="tile-name">Strength</div>
+        </div>
+      </div>
+      <div class="tile-dist">20 min</div>
+      <p class="tile-tip">A few low box jumps or skips are fine now — light plyometrics sharpen running economy.</p>
+    </div>
+      <div class="tile tile-quality" data-sid="w8-quality">
+      <label class="tile-check"><input type="checkbox" data-sid="w8-quality" aria-label="Mark quality session done"><span class="box"></span></label>
+      <div class="tile-head">
+        <span class="tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></span>
+        <div class="tile-headtext">
+          <div class="tile-day">Wednesday</div>
+          <div class="tile-name">Quality session (INT)</div>
+        </div>
+      </div>
+      <div class="tile-dist">≈11 km total</div>
+      <p class="quality-note">Optional: swap this entire session for a local 10K tune-up race this week — a great chance to rehearse pacing and fueling. A Sunday race can simply replace your long run that day; a Saturday race means breaking your normal rest day, worth it occasionally but entirely optional.</p>
+      <div class="alt-grid">
+        <div class="alt-card">
+          <div class="alt-label">Track (preferred)</div>
+          <p class="alt-detail">15 min warm-up + 5×800m @ VO2max effort, 2 min jog recovery + 15 min cool-down</p>
+          <div class="tile-row"><span class="tag hr">HR 184–197 bpm (INT)</span><span class="tag pace">3:40–3:55/km</span><span class="tag time">~53 min</span></div>
+          <p class="tile-tip">Deload — or trade this for the 10K tune-up race idea above.</p>
+        </div>
+        <div class="alt-card">
+          <div class="alt-label">Hill (alt)</div>
+          <p class="alt-detail">15 min warm-up + 6×90s hard hill repeats, jog-down + 15 min cool-down</p>
+          <div class="tile-row"><span class="tag hr">HR 184–197 bpm (INT)</span><span class="tag pace">Effort-based — hard up, easy down</span><span class="tag time">~53 min</span></div>
+          <p class="tile-tip">Deload — or trade this for the 10K tune-up race idea above.</p>
+        </div>
+      </div>
+    </div>
+      <div class="tile tile-strength" data-sid="w8-str2">
+      <label class="tile-check"><input type="checkbox" data-sid="w8-str2" aria-label="Mark Strength done"><span class="box"></span></label>
+      <div class="tile-head">
+        <span class="tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="9" width="4" height="6" rx="1"/><rect x="18" y="9" width="4" height="6" rx="1"/><line x1="6" y1="12" x2="18" y2="12"/><line x1="6" y1="10" x2="6" y2="14"/><line x1="18" y1="10" x2="18" y2="14"/></svg></span>
+        <div class="tile-headtext">
+          <div class="tile-day">Thursday</div>
+          <div class="tile-name">Strength</div>
+        </div>
+      </div>
+      <div class="tile-dist">20 min</div>
+      <p class="tile-tip">A few low box jumps or skips are fine now — light plyometrics sharpen running economy.</p>
+    </div>
+      <div class="tile tile-easy" data-sid="w8-easy2">
+      <label class="tile-check"><input type="checkbox" data-sid="w8-easy2" aria-label="Mark Steady run (GA2) done"><span class="box"></span></label>
+      <div class="tile-head">
+        <span class="tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></span>
+        <div class="tile-headtext">
+          <div class="tile-day">Friday</div>
+          <div class="tile-name">Steady run (GA2)</div>
+        </div>
+      </div>
+      <div class="tile-dist">12 km</div>
+      <div class="tile-row"><span class="tag hr">HR 152–169 bpm</span><span class="tag pace">4:32–5:33/km</span><span class="tag time">~1:00 h</span></div>
+      
+      <p class="tile-tip">GA2 — the one “moderate” day of the week, deliberately kept to just one.</p>
+    </div>
+      <div class="tile tile-rest">
+      <div class="tile-head">
+        <span class="tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></span>
+        <div class="tile-headtext">
+          <div class="tile-day">Saturday</div>
+          <div class="tile-name">Rest day</div>
+        </div>
+      </div>
+      <div class="tile-dist">Off</div>
+      <p class="tile-tip">Full rest — no training. This is what lets Sunday’s long run actually count.</p>
+    </div>
+      <div class="tile tile-long" data-sid="w8-long">
+      <label class="tile-check"><input type="checkbox" data-sid="w8-long" aria-label="Mark Long run (GA1 + pace) done"><span class="box"></span></label>
+      <div class="tile-head">
+        <span class="tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="22" x2="4" y2="3"/><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/></svg></span>
+        <div class="tile-headtext">
+          <div class="tile-day">Sunday</div>
+          <div class="tile-name">Long run (GA1 + pace)</div>
+        </div>
+      </div>
+      <div class="tile-dist">17 km</div>
+      <div class="tile-row"><span class="tag hr">HR 138–152 bpm easy, 172–178 bpm on pace block</span><span class="tag pace">5:33–6:40/km + 3 km @ 4:16/km</span><span class="tag time">~1:38 h</span></div>
+      <div class="tile-row"><span class="tag fuel">Fuel from 15 km</span></div>
+      <p class="tile-tip">Deload — pace work drops back to a maintenance dose of 3 km. Let the legs recover.</p>
+    </div>
+    
+      </div>
+    </details>
+
+    <details class="week" id="week-9" data-start="2026-10-05" data-end="2026-10-11" style="--phase-color:#B8791A;--phase-tint:#F5EBDA" open>
+      <summary>
+        <div class="bib">
+          <div class="bib-num">09</div>
+          <div class="bib-meta">
+            <div class="bib-phase">Race-specific </div>
+            <div class="bib-dates">5–11 Oct</div>
+          </div>
+        </div>
+        <div class="week-volume"><span class="vol-num">72</span><span class="vol-unit">km</span></div>
+        <i class="chev" aria-hidden="true"></i>
+      </summary>
+      <div class="tile-grid">
+        
+      <div class="tile tile-easy" data-sid="w9-easy1">
+      <label class="tile-check"><input type="checkbox" data-sid="w9-easy1" aria-label="Mark Easy run (GA1) done"><span class="box"></span></label>
+      <div class="tile-head">
+        <span class="tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></span>
+        <div class="tile-headtext">
+          <div class="tile-day">Monday</div>
+          <div class="tile-name">Easy run (GA1)</div>
+        </div>
+      </div>
+      <div class="tile-dist">16 km</div>
+      <div class="tile-row"><span class="tag hr">HR 138–152 bpm</span><span class="tag pace">5:33–6:40/km</span><span class="tag time">~1:38 h</span></div>
+      
+      <p class="tile-tip">GA1, unchanged — save the effort for Sunday.</p>
+    </div>
+      <div class="tile tile-strength" data-sid="w9-str1">
+      <label class="tile-check"><input type="checkbox" data-sid="w9-str1" aria-label="Mark Strength done"><span class="box"></span></label>
+      <div class="tile-head">
+        <span class="tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="9" width="4" height="6" rx="1"/><rect x="18" y="9" width="4" height="6" rx="1"/><line x1="6" y1="12" x2="18" y2="12"/><line x1="6" y1="10" x2="6" y2="14"/><line x1="18" y1="10" x2="18" y2="14"/></svg></span>
+        <div class="tile-headtext">
+          <div class="tile-day">Tuesday</div>
+          <div class="tile-name">Strength</div>
+        </div>
+      </div>
+      <div class="tile-dist">20 min</div>
+      <p class="tile-tip">A few low box jumps or skips are fine now — light plyometrics sharpen running economy.</p>
+    </div>
+      <div class="tile tile-quality" data-sid="w9-quality">
+      <label class="tile-check"><input type="checkbox" data-sid="w9-quality" aria-label="Mark quality session done"><span class="box"></span></label>
+      <div class="tile-head">
+        <span class="tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></span>
+        <div class="tile-headtext">
+          <div class="tile-day">Wednesday</div>
+          <div class="tile-name">Quality session (EB/INT)</div>
+        </div>
+      </div>
+      <div class="tile-dist">≈17 km total</div>
+      
+      <div class="alt-grid">
+        <div class="alt-card">
+          <div class="alt-label">Track (preferred)</div>
+          <p class="alt-detail">15 min warm-up + 5×1000m @ threshold/VO2max blend, 90s jog recovery + 15 min cool-down</p>
+          <div class="tile-row"><span class="tag hr">HR 178–195 bpm</span><span class="tag pace">3:45–4:05/km</span><span class="tag time">~56 min</span></div>
+          <p class="tile-tip">EB/INT blend — sharp but not exhausting. Sunday’s long run is the main event this week.</p>
+        </div>
+        <div class="alt-card">
+          <div class="alt-label">Hill (alt)</div>
+          <p class="alt-detail">15 min warm-up + 6×2 min hard hill surges, jog-down + 15 min cool-down</p>
+          <div class="tile-row"><span class="tag hr">HR 178–195 bpm</span><span class="tag pace">Effort-based — hard surges, controlled</span><span class="tag time">~56 min</span></div>
+          <p class="tile-tip">Keep it controlled — the long run later this week matters more.</p>
+        </div>
+      </div>
+    </div>
+      <div class="tile tile-strength" data-sid="w9-str2">
+      <label class="tile-check"><input type="checkbox" data-sid="w9-str2" aria-label="Mark Strength done"><span class="box"></span></label>
+      <div class="tile-head">
+        <span class="tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="9" width="4" height="6" rx="1"/><rect x="18" y="9" width="4" height="6" rx="1"/><line x1="6" y1="12" x2="18" y2="12"/><line x1="6" y1="10" x2="6" y2="14"/><line x1="18" y1="10" x2="18" y2="14"/></svg></span>
+        <div class="tile-headtext">
+          <div class="tile-day">Thursday</div>
+          <div class="tile-name">Strength</div>
+        </div>
+      </div>
+      <div class="tile-dist">20 min</div>
+      <p class="tile-tip">A few low box jumps or skips are fine now — light plyometrics sharpen running economy.</p>
+    </div>
+      <div class="tile tile-easy" data-sid="w9-easy2">
+      <label class="tile-check"><input type="checkbox" data-sid="w9-easy2" aria-label="Mark Steady run (GA2) done"><span class="box"></span></label>
+      <div class="tile-head">
+        <span class="tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></span>
+        <div class="tile-headtext">
+          <div class="tile-day">Friday</div>
+          <div class="tile-name">Steady run (GA2)</div>
+        </div>
+      </div>
+      <div class="tile-dist">16 km</div>
+      <div class="tile-row"><span class="tag hr">HR 152–169 bpm</span><span class="tag pace">4:32–5:33/km</span><span class="tag time">~1:21 h</span></div>
+      
+      <p class="tile-tip">GA2 — the one “moderate” day of the week.</p>
+    </div>
+      <div class="tile tile-rest">
+      <div class="tile-head">
+        <span class="tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></span>
+        <div class="tile-headtext">
+          <div class="tile-day">Saturday</div>
+          <div class="tile-name">Rest day</div>
+        </div>
+      </div>
+      <div class="tile-dist">Off</div>
+      <p class="tile-tip">Full rest — no training. This is what lets Sunday’s long run actually count.</p>
+    </div>
+      <div class="tile tile-long" data-sid="w9-long">
+      <label class="tile-check"><input type="checkbox" data-sid="w9-long" aria-label="Mark Long run (GA1 + pace) done"><span class="box"></span></label>
+      <div class="tile-head">
+        <span class="tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="22" x2="4" y2="3"/><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/></svg></span>
+        <div class="tile-headtext">
+          <div class="tile-day">Sunday</div>
+          <div class="tile-name">Long run (GA1 + pace)</div>
+        </div>
+      </div>
+      <div class="tile-dist">23 km</div>
+      <div class="tile-row"><span class="tag hr">HR 138–152 bpm easy, 172–178 bpm on pace blocks</span><span class="tag pace">5:33–6:40/km + 2×4 km @ 4:16/km</span><span class="tag time">~2:06 h</span></div>
+      <div class="tile-row"><span class="tag fuel">Fuel from 15 km</span></div>
+      <p class="tile-tip">2×4 km at goal pace with an easy km between — this is race rehearsal, including fueling.</p>
+    </div>
+    
+      </div>
+    </details>
+
+    <details class="week" id="week-10" data-start="2026-10-12" data-end="2026-10-18" style="--phase-color:#9C2B54;--phase-tint:#F5E1EA" open>
+      <summary>
+        <div class="bib">
+          <div class="bib-num">10</div>
+          <div class="bib-meta">
+            <div class="bib-phase">Peak <span class="badge-cutback badge-peak">peak</span></div>
+            <div class="bib-dates">12–18 Oct</div>
+          </div>
+        </div>
+        <div class="week-volume"><span class="vol-num">75</span><span class="vol-unit">km</span></div>
+        <i class="chev" aria-hidden="true"></i>
+      </summary>
+      <div class="tile-grid">
+        
+      <div class="tile tile-easy" data-sid="w10-easy1">
+      <label class="tile-check"><input type="checkbox" data-sid="w10-easy1" aria-label="Mark Easy run (GA1) done"><span class="box"></span></label>
+      <div class="tile-head">
+        <span class="tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></span>
+        <div class="tile-headtext">
+          <div class="tile-day">Monday</div>
+          <div class="tile-name">Easy run (GA1)</div>
+        </div>
+      </div>
+      <div class="tile-dist">17 km</div>
+      <div class="tile-row"><span class="tag hr">HR 138–152 bpm</span><span class="tag pace">5:33–6:40/km</span><span class="tag time">~1:44 h</span></div>
+      
+      <p class="tile-tip">Still real volume this week — this is the peak week, but Monday stays true GA1.</p>
+    </div>
+      <div class="tile tile-strength" data-sid="w10-str1">
+      <label class="tile-check"><input type="checkbox" data-sid="w10-str1" aria-label="Mark Strength done"><span class="box"></span></label>
+      <div class="tile-head">
+        <span class="tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="9" width="4" height="6" rx="1"/><rect x="18" y="9" width="4" height="6" rx="1"/><line x1="6" y1="12" x2="18" y2="12"/><line x1="6" y1="10" x2="6" y2="14"/><line x1="18" y1="10" x2="18" y2="14"/></svg></span>
+        <div class="tile-headtext">
+          <div class="tile-day">Tuesday</div>
+          <div class="tile-name">Strength</div>
+        </div>
+      </div>
+      <div class="tile-dist">20 min</div>
+      <p class="tile-tip">Normal strength session — no need to pull back yet, that starts next week.</p>
+    </div>
+      <div class="tile tile-quality" data-sid="w10-quality">
+      <label class="tile-check"><input type="checkbox" data-sid="w10-quality" aria-label="Mark quality session done"><span class="box"></span></label>
+      <div class="tile-head">
+        <span class="tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></span>
+        <div class="tile-headtext">
+          <div class="tile-day">Wednesday</div>
+          <div class="tile-name">Quality session (EB/INT)</div>
+        </div>
+      </div>
+      <div class="tile-dist">≈16 km total</div>
+      
+      <div class="alt-grid">
+        <div class="alt-card">
+          <div class="alt-label">Track (preferred)</div>
+          <p class="alt-detail">15 min warm-up + 5×1000m @ threshold/VO2max blend, 90s jog recovery + 15 min cool-down</p>
+          <div class="tile-row"><span class="tag hr">HR 178–190 bpm</span><span class="tag pace">3:50–4:05/km</span><span class="tag time">~52 min</span></div>
+          <p class="tile-tip">This week’s real test is Sunday — keep this one strong but controlled, don’t empty the tank.</p>
+        </div>
+        <div class="alt-card">
+          <div class="alt-label">Hill (alt)</div>
+          <p class="alt-detail">15 min warm-up + 6×2 min hard hill surges, jog-down + 15 min cool-down</p>
+          <div class="tile-row"><span class="tag hr">HR 178–190 bpm</span><span class="tag pace">Effort-based — hard surges, controlled</span><span class="tag time">~52 min</span></div>
+          <p class="tile-tip">Strong but controlled — Sunday is the priority.</p>
+        </div>
+      </div>
+    </div>
+      <div class="tile tile-strength" data-sid="w10-str2">
+      <label class="tile-check"><input type="checkbox" data-sid="w10-str2" aria-label="Mark Strength done"><span class="box"></span></label>
+      <div class="tile-head">
+        <span class="tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="9" width="4" height="6" rx="1"/><rect x="18" y="9" width="4" height="6" rx="1"/><line x1="6" y1="12" x2="18" y2="12"/><line x1="6" y1="10" x2="6" y2="14"/><line x1="18" y1="10" x2="18" y2="14"/></svg></span>
+        <div class="tile-headtext">
+          <div class="tile-day">Thursday</div>
+          <div class="tile-name">Strength</div>
+        </div>
+      </div>
+      <div class="tile-dist">20 min</div>
+      <p class="tile-tip">Normal strength session — no need to pull back yet, that starts next week.</p>
+    </div>
+      <div class="tile tile-easy" data-sid="w10-easy2">
+      <label class="tile-check"><input type="checkbox" data-sid="w10-easy2" aria-label="Mark Steady run (GA2) done"><span class="box"></span></label>
+      <div class="tile-head">
+        <span class="tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></span>
+        <div class="tile-headtext">
+          <div class="tile-day">Friday</div>
+          <div class="tile-name">Steady run (GA2)</div>
+        </div>
+      </div>
+      <div class="tile-dist">17 km</div>
+      <div class="tile-row"><span class="tag hr">HR 152–169 bpm</span><span class="tag pace">4:32–5:33/km</span><span class="tag time">~1:26 h</span></div>
+      
+      <p class="tile-tip">GA2 — the last one at this volume before the taper begins.</p>
+    </div>
+      <div class="tile tile-rest">
+      <div class="tile-head">
+        <span class="tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></span>
+        <div class="tile-headtext">
+          <div class="tile-day">Saturday</div>
+          <div class="tile-name">Rest day</div>
+        </div>
+      </div>
+      <div class="tile-dist">Off</div>
+      <p class="tile-tip">Full rest — no training. This is what lets Sunday’s long run actually count.</p>
+    </div>
+      <div class="tile tile-long" data-sid="w10-long">
+      <label class="tile-check"><input type="checkbox" data-sid="w10-long" aria-label="Mark Long run — peak session (GA1 + pace) done"><span class="box"></span></label>
+      <div class="tile-head">
+        <span class="tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="22" x2="4" y2="3"/><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/></svg></span>
+        <div class="tile-headtext">
+          <div class="tile-day">Sunday</div>
+          <div class="tile-name">Long run — peak session (GA1 + pace)</div>
+        </div>
+      </div>
+      <div class="tile-dist">25 km</div>
+      <div class="tile-row"><span class="tag hr">HR 138–152 bpm easy, 172–178 bpm on pace blocks</span><span class="tag pace">5:33–6:40/km + 3×5 km @ 4:16/km</span><span class="tag time">~2:05 h</span></div>
+      <div class="tile-row"><span class="tag fuel">Fuel from 15 km</span></div>
+      <p class="tile-tip">The peak session of the entire plan: 3×5 km at goal pace within a 25 km long run. This is also day 1 of your 8-day taper — the hard work is done after this.</p>
+    </div>
+    
+      </div>
+    </details>
+    <details class="week" id="week-11" data-start="2026-10-19" data-end="2026-10-25" style="--phase-color:#2B6B4A;--phase-tint:#E4EFE8" open>
+      <summary>
+        <div class="bib">
+          <div class="bib-num">11</div>
+          <div class="bib-meta">
+            <div class="bib-phase">Race week</div>
+            <div class="bib-dates">19–25 Oct — race week</div>
+          </div>
+        </div>
+        <div class="week-volume"><span class="vol-num">34</span><span class="vol-unit">km</span></div>
+        <i class="chev" aria-hidden="true"></i>
+      </summary>
+      <div class="tile-grid race-grid">
+        <div class="tile tile-easy " data-sid="w11-s0">
+          <label class="tile-check"><input type="checkbox" data-sid="w11-s0" aria-label="Mark Easy run (GA1) done"><span class="box"></span></label>
+          <div class="tile-head">
+            <span class="tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></span>
+            <div class="tile-headtext">
+              <div class="tile-day">Monday</div>
+              <div class="tile-name">Easy run (GA1)</div>
+            </div>
+          </div>
+          <div class="tile-dist">6 km</div>
+          <div class="tile-row"><span class="tag hr">HR 138–152 bpm</span><span class="tag pace">5:33–6:40/km</span><span class="tag time">~37 min</span></div>
+          <p class="tile-tip">Normal easy run — nothing new, nothing hard.</p>
+        </div><div class="tile tile-quality " data-sid="w11-s1">
+          <label class="tile-check"><input type="checkbox" data-sid="w11-s1" aria-label="Mark Shakeout + strides done"><span class="box"></span></label>
+          <div class="tile-head">
+            <span class="tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></span>
+            <div class="tile-headtext">
+              <div class="tile-day">Wednesday</div>
+              <div class="tile-name">Shakeout + strides</div>
+            </div>
+          </div>
+          <div class="tile-dist">4 km</div>
+          <div class="tile-row"><span class="tag hr">HR 138–152 bpm, brief spikes on strides</span><span class="tag pace">Easy + 4×20s strides</span><span class="tag time">~26 min</span></div>
+          <p class="tile-tip">A few strides to keep the legs sharp — stop the moment they feel heavy.</p>
+        </div><div class="tile tile-easy " data-sid="w11-s2">
+          <label class="tile-check"><input type="checkbox" data-sid="w11-s2" aria-label="Mark Openers done"><span class="box"></span></label>
+          <div class="tile-head">
+            <span class="tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></span>
+            <div class="tile-headtext">
+              <div class="tile-day">Friday</div>
+              <div class="tile-name">Openers</div>
+            </div>
+          </div>
+          <div class="tile-dist">3 km</div>
+          <div class="tile-row"><span class="tag hr">HR 138–155 bpm, brief spikes</span><span class="tag pace">Easy + 3×15s strides</span><span class="tag time">~19 min</span></div>
+          <p class="tile-tip">Short and crisp — wake the legs up, don’t tire them.</p>
+        </div><div class="tile tile-long tile-race" data-sid="w11-s3">
+          <label class="tile-check"><input type="checkbox" data-sid="w11-s3" aria-label="Mark RACE DAY — Lausanne Half Marathon done"><span class="box"></span></label>
+          <div class="tile-head">
+            <span class="tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="22" x2="4" y2="3"/><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/></svg></span>
+            <div class="tile-headtext">
+              <div class="tile-day">Sunday</div>
+              <div class="tile-name">RACE DAY — Lausanne Half Marathon</div>
+            </div>
+          </div>
+          <div class="tile-dist">21.1 km</div>
+          <div class="tile-row"><span class="tag hr">HR 172–178 bpm target</span><span class="tag pace">4:16/km goal (even to slightly negative split)</span><span class="tag time">~1:30 h</span></div>
+          <p class="tile-tip">Start at goal pace, not faster. Race fueling: a gel every ~40 min from the start, 60–90 g carbs/hour — exactly what you rehearsed in weeks 4–10.</p>
+        </div><div class="tile tile-rest">
+      <div class="tile-head">
+        <span class="tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></span>
+        <div class="tile-headtext">
+          <div class="tile-day">Saturday</div>
+          <div class="tile-name">Rest day</div>
+        </div>
+      </div>
+      <div class="tile-dist">Off</div>
+      <p class="tile-tip">Full rest — no training. This is what lets Sunday’s long run actually count.</p>
+    </div>
+      </div>
+    </details>  </div>
+
+  <footer class="note">
+    <strong>Your default week:</strong> Mon GA1 easy &middot; Tue strength &middot; Wed quality (track access) &middot; Thu strength &middot; Fri GA2 steady (track access) &middot; Sat rest &middot; Sun long run. Swap freely when life intervenes &mdash; just try to keep Saturday clear and the long run on Sunday, since those two anchor the whole week's recovery. Tick sessions off as you go; that state is saved on this device only.<br><br>
+    <strong>Structure at a glance.</strong> Deload weeks land every 4 weeks (4 and 8) &mdash; your lab report actually suggests an even more conservative 2:1 cycle given your workload, worth considering if week 4 doesn't feel like enough of a reset. Half-marathon-pace work enters the long run from week 4 (seven weeks out) and builds to the peak session in week 10. Taper is 8 days exactly: from Sunday of week 10 through race day.<br><br>
+    <strong>Fueling.</strong> Any long run tagged "Fuel from 15 km" is a rehearsal for race-day nutrition &mdash; aim for 30&ndash;60 g carbs/hour from that point, whatever gel or drink you plan to use on the day. Don't try anything new in the final 1&ndash;2 weeks.<br><br>
+    <strong>Marathon, spring 2027.</strong> This block is the first step toward 80&nbsp;km weeks &mdash; the threshold work here is exactly what closes your marathon PR-to-prediction gap too. Once you've got a date, ask and I'll build the dedicated block straight off the back of this one.<br><br>
+    <strong>Check-ins.</strong> After any session, or whenever, just tell me how it went or say &ldquo;check my data&rdquo; &mdash; I'll pull your training load, HRV and sleep, and adjust what's ahead.
+  </footer>
+
+  <div class="complete-section" id="complete-section">
+    <div class="confetti-layer" id="confetti-layer" aria-hidden="true"></div>
+    <p class="complete-eyebrow" id="complete-eyebrow">Finished the block?</p>
+    <h2 class="complete-title" id="complete-title">Mark this plan complete</h2>
+    <p class="complete-sub" id="complete-sub">11 weeks, 645 km, one race. When you've crossed the finish line, make it official.</p>
+    <button class="complete-btn" id="complete-btn" type="button">
+      <span class="complete-btn-icon" id="complete-btn-icon">&#127942;</span>
+      <span id="complete-btn-label">Mark plan complete</span>
+    </button>
+    <a class="hub-link" href="training_hub.html">&larr; Back to Training Hub</a>
+  </div>
+</div>
+
+<script>
+(function(){
+  var ids = ["w1-easy1", "w1-str1", "w1-quality", "w1-str2", "w1-easy2", "w1-long", "w2-easy1", "w2-str1", "w2-quality", "w2-str2", "w2-easy2", "w2-long", "w3-easy1", "w3-str1", "w3-quality", "w3-str2", "w3-easy2", "w3-long", "w4-easy1", "w4-str1", "w4-quality", "w4-str2", "w4-easy2", "w4-long", "w5-easy1", "w5-str1", "w5-quality", "w5-str2", "w5-easy2", "w5-long", "w6-easy1", "w6-str1", "w6-quality", "w6-str2", "w6-easy2", "w6-long", "w7-easy1", "w7-str1", "w7-quality", "w7-str2", "w7-easy2", "w7-long", "w8-easy1", "w8-str1", "w8-quality", "w8-str2", "w8-easy2", "w8-long", "w9-easy1", "w9-str1", "w9-quality", "w9-str2", "w9-easy2", "w9-long", "w10-easy1", "w10-str1", "w10-quality", "w10-str2", "w10-easy2", "w10-long", "w11-s0", "w11-s1", "w11-s2", "w11-s3"];
+  var total = ids.length;
+  var state = {};
+
+  var DAY_CUM = [["2026-08-10", 12.0], ["2026-08-11", 12.0], ["2026-08-12", 22.0], ["2026-08-13", 22.0], ["2026-08-14", 34.0], ["2026-08-15", 34.0], ["2026-08-16", 48.0], ["2026-08-17", 61.0], ["2026-08-18", 61.0], ["2026-08-19", 73.0], ["2026-08-20", 73.0], ["2026-08-21", 86.0], ["2026-08-22", 86.0], ["2026-08-23", 102.0], ["2026-08-24", 116.0], ["2026-08-25", 116.0], ["2026-08-26", 130.0], ["2026-08-27", 130.0], ["2026-08-28", 144.0], ["2026-08-29", 144.0], ["2026-08-30", 162.0], ["2026-08-31", 173.0], ["2026-09-01", 173.0], ["2026-09-02", 184.0], ["2026-09-03", 184.0], ["2026-09-04", 195.0], ["2026-09-05", 195.0], ["2026-09-06", 210.0], ["2026-09-07", 225.0], ["2026-09-08", 225.0], ["2026-09-09", 240.0], ["2026-09-10", 240.0], ["2026-09-11", 255.0], ["2026-09-12", 255.0], ["2026-09-13", 274.0], ["2026-09-14", 290.0], ["2026-09-15", 290.0], ["2026-09-16", 305.0], ["2026-09-17", 305.0], ["2026-09-18", 321.0], ["2026-09-19", 321.0], ["2026-09-20", 342.0], ["2026-09-21", 358.0], ["2026-09-22", 358.0], ["2026-09-23", 374.0], ["2026-09-24", 374.0], ["2026-09-25", 390.0], ["2026-09-26", 390.0], ["2026-09-27", 412.0], ["2026-09-28", 424.0], ["2026-09-29", 424.0], ["2026-09-30", 435.0], ["2026-10-01", 435.0], ["2026-10-02", 447.0], ["2026-10-03", 447.0], ["2026-10-04", 464.0], ["2026-10-05", 480.0], ["2026-10-06", 480.0], ["2026-10-07", 497.0], ["2026-10-08", 497.0], ["2026-10-09", 513.0], ["2026-10-10", 513.0], ["2026-10-11", 536.0], ["2026-10-12", 553.0], ["2026-10-13", 553.0], ["2026-10-14", 569.0], ["2026-10-15", 569.0], ["2026-10-16", 586.0], ["2026-10-17", 586.0], ["2026-10-18", 611.0], ["2026-10-19", 617.0], ["2026-10-20", 617.0], ["2026-10-21", 621.0], ["2026-10-22", 621.0], ["2026-10-23", 624.0], ["2026-10-24", 624.0], ["2026-10-25", 645.1]];
+  var TOTAL_PLANNED_KM = 645;
+  var ACTUAL_SESSION_KM = {"w1-easy1": 12.0};
+  var ACTUAL_KM = 12;
+  var ACTUAL_KM_ASOF = '10 Aug 2026';
+
+  function updateCountdown(){
+    var raceDay = new Date(2026, 9, 25);
+    var today = new Date();
+    var startOfToday = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+    var diffDays = Math.round((raceDay - startOfToday) / 86400000);
+    var el = document.getElementById('days-out');
+    if(!el) return;
+    if(diffDays > 0) el.textContent = diffDays + ' days out';
+    else if(diffDays === 0) el.textContent = 'Race day';
+    else el.textContent = 'Race complete';
+  }
+  updateCountdown();
+
+  function highlightCurrentWeek(){
+    var t = new Date();
+    var todayStr = t.getFullYear() + '-' + String(t.getMonth()+1).padStart(2,'0') + '-' + String(t.getDate()).padStart(2,'0');
+    document.querySelectorAll('[data-start][data-end]').forEach(function(el){
+      var isCurrent = todayStr >= el.getAttribute('data-start') && todayStr <= el.getAttribute('data-end');
+      if(el.classList.contains('overview-card')) el.classList.toggle('is-current', isCurrent);
+      if(el.classList.contains('week')) el.classList.toggle('is-current-week', isCurrent);
+    });
+  }
+  highlightCurrentWeek();
+
+  function plannedKmToDate(){
+    var t = new Date();
+    var todayStr = t.getFullYear() + '-' + String(t.getMonth()+1).padStart(2,'0') + '-' + String(t.getDate()).padStart(2,'0');
+    var days = DAY_CUM;
+    if(todayStr <= days[0][0]) return 0;
+    if(todayStr >= days[days.length-1][0]) return days[days.length-1][1];
+    var result = 0;
+    for(var i=0;i<days.length;i++){
+      if(days[i][0] <= todayStr) result = days[i][1]; else break;
+    }
+    return result;
+  }
+
+  function updateKmProgress(){
+    var planned = plannedKmToDate();
+    var actualPct = Math.min(100, (ACTUAL_KM / TOTAL_PLANNED_KM) * 100);
+    var plannedPct = Math.min(100, (planned / TOTAL_PLANNED_KM) * 100);
+    var fill = document.getElementById('km-fill');
+    var marker = document.getElementById('km-marker');
+    var text = document.getElementById('km-text');
+    var asof = document.getElementById('km-asof');
+    var delta = document.getElementById('km-delta');
+    if(fill) fill.style.width = actualPct + '%';
+    if(marker) marker.style.left = plannedPct + '%';
+    if(marker) marker.title = 'On-pace target: ' + Math.round(planned) + ' km by today';
+    if(text) text.textContent = Math.round(ACTUAL_KM) + ' / ' + TOTAL_PLANNED_KM + ' km run';
+    if(asof) asof.textContent = 'as of ' + ACTUAL_KM_ASOF;
+    if(delta){
+      var diff = ACTUAL_KM - planned;
+      var rounded = Math.round(Math.abs(diff));
+      delta.classList.remove('ahead','behind');
+      if(rounded === 0) delta.textContent = 'Right on pace (target ' + Math.round(planned) + ' km today)';
+      else if(diff > 0){ delta.textContent = rounded + ' km ahead of pace (target ' + Math.round(planned) + ' km today)'; delta.classList.add('ahead'); }
+      else{ delta.textContent = rounded + ' km behind pace (target ' + Math.round(planned) + ' km today)'; delta.classList.add('behind'); }
+    }
+  }
+  updateKmProgress();
+
+  function applyState(){
+    var done = 0;
+    ids.forEach(function(id){
+      var cb = document.querySelector('input[data-sid="'+id+'"]');
+      if(!cb) return;
+      var isDone = !!state[id];
+      cb.checked = isDone;
+      var tile = cb.closest('.tile');
+      if(tile) tile.classList.toggle('done', isDone);
+      if(isDone) done++;
+    });
+    var pct = total ? Math.round((done/total)*100) : 0;
+    var fill = document.getElementById('progress-fill');
+    var text = document.getElementById('progress-text');
+    var pctEl = document.getElementById('progress-pct');
+    if(fill) fill.style.width = pct + '%';
+    if(text) text.textContent = done + ' / ' + total + ' sessions logged';
+    if(pctEl) pctEl.textContent = pct + '%';
+  }
+
+  function load(){
+    try{
+      var raw = localStorage.getItem('plan-progress');
+      if(raw) state = JSON.parse(raw) || {};
+    }catch(e){ state = {}; }
+    var changed = false;
+    Object.keys(ACTUAL_SESSION_KM).forEach(function(sid){
+      if(!state[sid]){ state[sid] = true; changed = true; }
+    });
+    applyState();
+    if(changed) save();
+  }
+
+  function save(){
+    try{ localStorage.setItem('plan-progress', JSON.stringify(state)); }
+    catch(e){ /* private-browsing or storage disabled; UI still reflects local state */ }
+  }
+
+  document.addEventListener('change', function(e){
+    var t = e.target;
+    if(t && t.matches('input[type="checkbox"][data-sid]')){
+      var id = t.getAttribute('data-sid');
+      state[id] = t.checked;
+      applyState();
+      save();
+    }
+  });
+
+  load();
+
+  var PLAN_ID = 'lausanne-hm-2026';
+  var PLAN_META = {
+    weeks: 11, km: 645,
+    incomplete: {
+      eyebrow: 'Finished the block?',
+      title: 'Mark this plan complete',
+      sub: '11 weeks, 645 km, one race. When you\u2019ve crossed the finish line, make it official.',
+      icon: '\ud83c\udfc6',
+      label: 'Mark plan complete'
+    },
+    complete: {
+      eyebrow: 'Plan complete',
+      title: 'Well run.',
+      sub: '11 weeks, 645 km, Lausanne done.',
+      icon: '\u21ba',
+      label: 'Reopen plan'
+    }
+  };
+  var CONFETTI_COLORS = ['#1F7A6C','#6D4C9E','#C93B1D','#A6740F','#2B6B4A'];
+
+  async function loadPlanRegistry(){
+    try{
+      var raw = localStorage.getItem('plan-registry');
+      if(raw) return JSON.parse(raw) || {};
+    }catch(e){}
+    return {};
+  }
+  async function savePlanRegistry(reg){
+    try{ localStorage.setItem('plan-registry', JSON.stringify(reg)); }
+    catch(e){}
+  }
+
+  function applyCompleteUI(isComplete, completedAt){
+    var m = isComplete ? PLAN_META.complete : PLAN_META.incomplete;
+    document.getElementById('complete-eyebrow').textContent = m.eyebrow;
+    document.getElementById('complete-title').textContent = m.title;
+    var sub = m.sub;
+    if(isComplete && completedAt){
+      sub += ' Marked complete ' + new Date(completedAt).toLocaleDateString(undefined,{day:'numeric',month:'short',year:'numeric'}) + '.';
+    }
+    document.getElementById('complete-sub').textContent = sub;
+    document.getElementById('complete-btn-icon').textContent = m.icon;
+    document.getElementById('complete-btn-label').textContent = m.label;
+    document.getElementById('complete-section').classList.toggle('is-complete', isComplete);
+  }
+
+  function burstConfetti(){
+    var layer = document.getElementById('confetti-layer');
+    if(!layer) return;
+    var count = 46;
+    for(var i=0;i<count;i++){
+      var piece = document.createElement('span');
+      piece.className = 'confetti-piece';
+      piece.style.left = (Math.random()*100) + '%';
+      piece.style.background = CONFETTI_COLORS[i % CONFETTI_COLORS.length];
+      piece.style.animationDelay = (Math.random()*0.25) + 's';
+      piece.style.animationDuration = (1.6 + Math.random()*1.0) + 's';
+      piece.style.setProperty('--drift', (Math.random()*140-70) + 'px');
+      piece.style.setProperty('--rot', (Math.random()*520-260) + 'deg');
+      layer.appendChild(piece);
+    }
+    setTimeout(function(){ layer.innerHTML = ''; }, 2900);
+  }
+
+  (async function initComplete(){
+    var reg = await loadPlanRegistry();
+    var entry = reg[PLAN_ID] || {};
+    applyCompleteUI(entry.status === 'completed', entry.completedAt);
+
+    document.getElementById('complete-btn').addEventListener('click', async function(){
+      var reg2 = await loadPlanRegistry();
+      var wasComplete = reg2[PLAN_ID] && reg2[PLAN_ID].status === 'completed';
+      if(wasComplete){
+        reg2[PLAN_ID] = { status: 'active', completedAt: null };
+        applyCompleteUI(false, null);
+      }else{
+        var now = new Date().toISOString();
+        reg2[PLAN_ID] = { status: 'completed', completedAt: now };
+        applyCompleteUI(true, now);
+        burstConfetti();
+      }
+      savePlanRegistry(reg2);
+    });
+  })();
+})();
+</script>
+</body>
+</html>
