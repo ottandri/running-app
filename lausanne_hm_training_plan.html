@@ -206,16 +206,17 @@ footer.note strong{color:var(--ink)}
 
     <div class="predict-card">
       <p class="stat-label">Predicted half marathon &middot; Garmin</p>
-      <p class="stat-num">1:32:39</p>
-      <p class="stat-note">today, 11 Aug &middot; 8 Aug baseline was 1:32:27 &middot; goal 1:29:59</p>
+      <p class="stat-num">1:32:28</p>
+      <p class="stat-note">today, 12 Aug &middot; 8 Aug baseline was 1:32:27 &middot; goal 1:29:59</p>
       <svg class="predict-chart" viewBox="0 0 260 60" preserveAspectRatio="none" aria-hidden="true">
         <line x1="8" y1="46.5" x2="252" y2="46.5" class="predict-goal-line"/>
         <line x1="8" y1="13.9" x2="252" y2="13.9" class="predict-baseline-line"/>
-        <polyline points="8.0,13.9 252.0,11.3" class="predict-line"/>
+        <polyline points="8.0,13.9 191.0,11.3 252.0,13.7" class="predict-line"/>
         <circle cx="8.0" cy="13.9" r="3" class="predict-dot"/>
-        <circle cx="252.0" cy="11.3" r="3.5" class="predict-dot predict-dot-latest"/>
+        <circle cx="191.0" cy="11.3" r="3" class="predict-dot"/>
+        <circle cx="252.0" cy="13.7" r="3.5" class="predict-dot predict-dot-latest"/>
       </svg>
-      <div class="predict-chart-labels"><span>8 Aug &middot; plan start</span><span>11 Aug &middot; today</span></div>
+      <div class="predict-chart-labels"><span>8 Aug &middot; plan start</span><span>12 Aug &middot; today</span></div>
       <p class="progress-caption">
         <span><span class="swatch" style="background:var(--c-long)"></span>Predicted time</span>
         <span><span class="swatch" style="background:var(--ink-mute);border-radius:0;height:2px;width:10px"></span>Baseline 8 Aug (1:32:27)</span>
@@ -397,14 +398,15 @@ footer.note strong{color:var(--ink)}
           <div class="tile-name">Quality session</div>
         </div>
       </div>
-      <div class="tile-dist">≈10 km total</div>
-      
+      <div class="tile-dist">≈10 km total <span class="tile-actual">(actual 8.6 km)</span></div>
+
       <div class="alt-grid">
         <div class="alt-card">
           <div class="alt-label">Track (preferred)</div>
           <p class="alt-detail">15 min warm-up + 8×200m @ 3:50–4:05/km, 75s jog recovery + 15 min cool-down</p>
           <div class="tile-row"><span class="tag hr">HR 160–185 bpm (brief spikes)</span><span class="tag pace">≈3:50–4:05/km on reps</span><span class="tag time">~46 min</span></div>
           <p class="tile-tip">Strides should feel fast but relaxed — smooth form, not a sprint.</p>
+          <p class="tile-actual">Actual: 8×200m @ 3:22–3:36/km, HR 155–177 bpm, 45:32 total</p>
         </div>
         <div class="alt-card">
           <div class="alt-label">Hill (alt)</div>
@@ -1661,9 +1663,9 @@ footer.note strong{color:var(--ink)}
 
   var DAY_CUM = [["2026-08-10", 12.0], ["2026-08-11", 12.0], ["2026-08-12", 22.0], ["2026-08-13", 22.0], ["2026-08-14", 34.0], ["2026-08-15", 34.0], ["2026-08-16", 48.0], ["2026-08-17", 61.0], ["2026-08-18", 61.0], ["2026-08-19", 73.0], ["2026-08-20", 73.0], ["2026-08-21", 86.0], ["2026-08-22", 86.0], ["2026-08-23", 102.0], ["2026-08-24", 116.0], ["2026-08-25", 116.0], ["2026-08-26", 130.0], ["2026-08-27", 130.0], ["2026-08-28", 144.0], ["2026-08-29", 144.0], ["2026-08-30", 162.0], ["2026-08-31", 173.0], ["2026-09-01", 173.0], ["2026-09-02", 184.0], ["2026-09-03", 184.0], ["2026-09-04", 195.0], ["2026-09-05", 195.0], ["2026-09-06", 210.0], ["2026-09-07", 225.0], ["2026-09-08", 225.0], ["2026-09-09", 240.0], ["2026-09-10", 240.0], ["2026-09-11", 255.0], ["2026-09-12", 255.0], ["2026-09-13", 274.0], ["2026-09-14", 290.0], ["2026-09-15", 290.0], ["2026-09-16", 305.0], ["2026-09-17", 305.0], ["2026-09-18", 321.0], ["2026-09-19", 321.0], ["2026-09-20", 342.0], ["2026-09-21", 358.0], ["2026-09-22", 358.0], ["2026-09-23", 374.0], ["2026-09-24", 374.0], ["2026-09-25", 390.0], ["2026-09-26", 390.0], ["2026-09-27", 412.0], ["2026-09-28", 424.0], ["2026-09-29", 424.0], ["2026-09-30", 435.0], ["2026-10-01", 435.0], ["2026-10-02", 447.0], ["2026-10-03", 447.0], ["2026-10-04", 464.0], ["2026-10-05", 480.0], ["2026-10-06", 480.0], ["2026-10-07", 497.0], ["2026-10-08", 497.0], ["2026-10-09", 513.0], ["2026-10-10", 513.0], ["2026-10-11", 536.0], ["2026-10-12", 553.0], ["2026-10-13", 553.0], ["2026-10-14", 569.0], ["2026-10-15", 569.0], ["2026-10-16", 586.0], ["2026-10-17", 586.0], ["2026-10-18", 611.0], ["2026-10-19", 617.0], ["2026-10-20", 617.0], ["2026-10-21", 621.0], ["2026-10-22", 621.0], ["2026-10-23", 624.0], ["2026-10-24", 624.0], ["2026-10-25", 645.1]];
   var TOTAL_PLANNED_KM = 645;
-  var ACTUAL_SESSION_KM = {"w1-easy1": 12.0};
-  var ACTUAL_KM = 12;
-  var ACTUAL_KM_ASOF = '10 Aug 2026';
+  var ACTUAL_SESSION_KM = {"w1-easy1": 12.0, "w1-quality": 8.6};
+  var ACTUAL_KM = 20.6;
+  var ACTUAL_KM_ASOF = '12 Aug 2026';
 
   function updateCountdown(){
     var raceDay = new Date(2026, 9, 25);
