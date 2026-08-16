@@ -13,12 +13,12 @@
 
 (function (global) {
   var FIREBASE_CONFIG = {
-    apiKey: "REPLACE_ME",
-    authDomain: "REPLACE_ME.firebaseapp.com",
-    databaseURL: "https://REPLACE_ME.firebaseio.com",
-    projectId: "REPLACE_ME"
+    apiKey: "AIzaSyDP9GWHTqlf4qZaDvao71w6BGwoWcg-g1M",
+    authDomain: "andri-running.firebaseapp.com",
+    databaseURL: "https://andri-running-default-rtdb.europe-west1.firebasedatabase.app",
+    projectId: "andri-running"
   };
-  var SYNC_PATH_PREFIX = "REPLACE_ME_RANDOM_PATH";
+  var SYNC_PATH_PREFIX = "bFo5Lgt68_zWmKB5LzPHfHtD";
 
   var db = null;
   var ready = false;
