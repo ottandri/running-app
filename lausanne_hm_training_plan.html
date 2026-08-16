@@ -7,6 +7,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-database-compat.js"></script>
+<script src="firebase-sync.js"></script>
 <style>
 :root{
   --paper:#F7F6F2; --paper-raised:#FFFFFF; --ink:#1C1B19; --ink-soft:#5B5852; --ink-mute:#8C897F;
@@ -1752,22 +1755,16 @@ footer.note strong{color:var(--ink)}
     if(pctEl) pctEl.textContent = pct + '%';
   }
 
-  function load(){
-    try{
-      var raw = localStorage.getItem('plan-progress');
-      if(raw) state = JSON.parse(raw) || {};
-    }catch(e){ state = {}; }
+  function save(){
+    PlanSync.save('plan-progress', state);
+  }
+
+  function mergeActualSessions(){
     var changed = false;
     Object.keys(ACTUAL_SESSION_KM).forEach(function(sid){
       if(!state[sid]){ state[sid] = true; changed = true; }
     });
-    applyState();
     if(changed) save();
-  }
-
-  function save(){
-    try{ localStorage.setItem('plan-progress', JSON.stringify(state)); }
-    catch(e){ /* private-browsing or storage disabled; UI still reflects local state */ }
   }
 
   document.addEventListener('change', function(e){
@@ -1780,7 +1777,12 @@ footer.note strong{color:var(--ink)}
     }
   });
 
-  load();
+  applyState();
+  PlanSync.watch('plan-progress', function(val){
+    state = val || {};
+    applyState();
+    mergeActualSessions();
+  });
 
   var PLAN_ID = 'lausanne-hm-2026';
   var PLAN_META = {
@@ -1801,18 +1803,6 @@ footer.note strong{color:var(--ink)}
     }
   };
   var CONFETTI_COLORS = ['#1F7A6C','#6D4C9E','#C93B1D','#A6740F','#2B6B4A'];
-
-  async function loadPlanRegistry(){
-    try{
-      var raw = localStorage.getItem('plan-registry');
-      if(raw) return JSON.parse(raw) || {};
-    }catch(e){}
-    return {};
-  }
-  async function savePlanRegistry(reg){
-    try{ localStorage.setItem('plan-registry', JSON.stringify(reg)); }
-    catch(e){}
-  }
 
   function applyCompleteUI(isComplete, completedAt){
     var m = isComplete ? PLAN_META.complete : PLAN_META.incomplete;
@@ -1846,24 +1836,26 @@ footer.note strong{color:var(--ink)}
     setTimeout(function(){ layer.innerHTML = ''; }, 2900);
   }
 
-  (async function initComplete(){
-    var reg = await loadPlanRegistry();
-    var entry = reg[PLAN_ID] || {};
-    applyCompleteUI(entry.status === 'completed', entry.completedAt);
+  (function initComplete(){
+    var registry = {};
+    PlanSync.watch('plan-registry', function(val){
+      registry = val || {};
+      var entry = registry[PLAN_ID] || {};
+      applyCompleteUI(entry.status === 'completed', entry.completedAt);
+    });
 
-    document.getElementById('complete-btn').addEventListener('click', async function(){
-      var reg2 = await loadPlanRegistry();
-      var wasComplete = reg2[PLAN_ID] && reg2[PLAN_ID].status === 'completed';
+    document.getElementById('complete-btn').addEventListener('click', function(){
+      var wasComplete = registry[PLAN_ID] && registry[PLAN_ID].status === 'completed';
       if(wasComplete){
-        reg2[PLAN_ID] = { status: 'active', completedAt: null };
+        registry[PLAN_ID] = { status: 'active', completedAt: null };
         applyCompleteUI(false, null);
       }else{
         var now = new Date().toISOString();
-        reg2[PLAN_ID] = { status: 'completed', completedAt: now };
+        registry[PLAN_ID] = { status: 'completed', completedAt: now };
         applyCompleteUI(true, now);
         burstConfetti();
       }
-      savePlanRegistry(reg2);
+      PlanSync.save('plan-registry', registry);
     });
   })();
 })();

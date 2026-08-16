@@ -7,6 +7,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-database-compat.js"></script>
+<script src="firebase-sync.js"></script>
 <style>
 :root{
   --paper:#F7F6F2; --paper-raised:#FFFFFF; --ink:#1C1B19; --ink-soft:#5B5852; --ink-mute:#8C897F;
@@ -46,6 +49,24 @@ h1.hub-title{font-family:var(--font-display);font-weight:600;font-size:clamp(30p
 .quote-card{background:var(--paper-raised);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow-sm);padding:18px 22px;max-width:640px}
 .quote-text{font-family:var(--font-display);font-weight:400;font-style:italic;font-size:18px;line-height:1.4;margin:0 0 8px;color:var(--ink)}
 .quote-attr{font-family:var(--font-mono);font-size:12px;color:var(--ink-mute);margin:0}
+
+/* ---- Tomorrow (weather + gym hours) ---- */
+.tomorrow-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;margin:28px 0 8px}
+.tomorrow-card{background:var(--paper-raised);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow-sm);padding:18px 20px}
+.tomorrow-head{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin:0 0 12px}
+.tomorrow-label{font-family:var(--font-mono);font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-mute);margin:0}
+.tomorrow-date{font-family:var(--font-mono);font-size:11px;color:var(--ink-mute);margin:0;white-space:nowrap}
+.weather-strip{display:flex;gap:6px;overflow-x:auto;padding-bottom:6px;margin:0 0 10px;-webkit-overflow-scrolling:touch}
+.weather-hour{flex:none;display:flex;flex-direction:column;align-items:center;gap:3px;min-width:36px;padding:8px 3px;border-radius:10px;background:var(--paper)}
+.weather-hour-time{font-family:var(--font-mono);font-size:9.5px;color:var(--ink-mute)}
+.weather-hour-icon{font-size:15px;line-height:1}
+.weather-hour-temp{font-family:var(--font-mono);font-size:11px;font-weight:500;color:var(--ink)}
+.weather-loading,.weather-error{font-size:12px;color:var(--ink-mute);padding:8px 0}
+.weather-summary{font-size:12.5px;color:var(--ink-soft);margin:0 0 12px;min-height:1.2em}
+.gym-line{display:flex;align-items:center;gap:8px;padding-top:12px;border-top:1px solid var(--line);font-size:12.5px}
+.gym-dot{width:7px;height:7px;border-radius:50%;background:var(--taper);flex:none}
+.gym-name{color:var(--ink-soft);flex:1}
+.gym-hours{font-family:var(--font-mono);color:var(--ink);font-weight:500;white-space:nowrap}
 
 /* ---- Sections ---- */
 .section-head{display:flex;align-items:baseline;justify-content:space-between;margin:44px 0 18px}
@@ -95,6 +116,8 @@ footer.hub-note strong{color:var(--ink)}
 </div>
 
 <div class="wrap">
+
+  <div class="tomorrow-grid" id="tomorrow-grid"></div>
 
   <div class="section-head">
     <h2>Active plans</h2>
@@ -165,18 +188,96 @@ footer.hub-note strong{color:var(--ink)}
   var creditEl = document.getElementById('photo-credit');
   creditEl.textContent = p.credit + ' / Unsplash';
 
-  var registry = {};
-
-  function loadRegistry(){
-    try{
-      var raw = localStorage.getItem('plan-registry');
-      if(raw) registry = JSON.parse(raw) || {};
-    }catch(e){ registry = {}; }
+  // ---- Tomorrow: weather + gym hours ----
+  // Gym hours are ActivFitness's own published weekly schedule (no live API exists for
+  // this) — keyed by Date.getDay() (0=Sun..6=Sat). Holiday overrides are known fixed dates.
+  var GYM_WEEKLY = {
+    stettbach: ['09:00–18:00','06:30–22:00','08:00–22:00','06:30–22:00','08:00–22:00','08:00–22:00','09:00–18:00'],
+    uzwil:     ['09:00–17:00','08:00–21:30','06:30–21:30','08:00–21:30','06:30–21:30','08:00–21:30','09:00–17:00']
+  };
+  var GYM_HOLIDAYS = {
+    stettbach: { '12-24':'09:00–18:00', '12-25':'09:00–18:00', '12-26':'09:00–18:00' },
+    uzwil: { '11-01':'09:00–17:00', '12-24':'09:00–17:00', '12-25':'09:00–17:00', '12-26':'09:00–17:00' }
+  };
+  function gymHoursFor(gymId, date){
+    var mmdd = String(date.getMonth()+1).padStart(2,'0') + '-' + String(date.getDate()).padStart(2,'0');
+    if(GYM_HOLIDAYS[gymId][mmdd]) return GYM_HOLIDAYS[gymId][mmdd];
+    return GYM_WEEKLY[gymId][date.getDay()];
   }
 
+  function weatherIcon(code){
+    if(code === 0) return '☀️';
+    if(code === 1 || code === 2) return '⛅';
+    if(code === 3) return '☁️';
+    if(code === 45 || code === 48) return '🌫️';
+    if(code >= 51 && code <= 57) return '🌦️';
+    if(code >= 61 && code <= 67) return '🌧️';
+    if(code >= 71 && code <= 77) return '🌨️';
+    if(code >= 80 && code <= 82) return '🌦️';
+    if(code >= 85 && code <= 86) return '🌨️';
+    if(code >= 95) return '⛈️';
+    return '🌤️';
+  }
+
+  function renderLocationCard(loc, tomorrow){
+    var hoursStr = gymHoursFor(loc.gymId, tomorrow);
+    var dateLabel = tomorrow.toLocaleDateString(undefined, {weekday:'short', day:'numeric', month:'short'});
+    return '' +
+      '<div class="tomorrow-card">' +
+        '<div class="tomorrow-head"><p class="tomorrow-label">Tomorrow · ' + loc.label + '</p><p class="tomorrow-date">' + dateLabel + '</p></div>' +
+        '<div class="weather-strip" id="weather-strip-' + loc.id + '"><span class="weather-loading">Loading forecast…</span></div>' +
+        '<p class="weather-summary" id="weather-summary-' + loc.id + '"></p>' +
+        '<div class="gym-line"><span class="gym-dot"></span><span class="gym-name">' + loc.gymName + '</span><span class="gym-hours">' + hoursStr + '</span></div>' +
+      '</div>';
+  }
+
+  function fetchWeather(loc, tomorrow){
+    var url = 'https://api.open-meteo.com/v1/forecast?latitude=' + loc.lat + '&longitude=' + loc.lon +
+      '&hourly=temperature_2m,weathercode,precipitation_probability&timezone=Europe%2FZurich&forecast_days=2';
+    fetch(url).then(function(r){ return r.json(); }).then(function(data){
+      var tomorrowStr = tomorrow.getFullYear() + '-' + String(tomorrow.getMonth()+1).padStart(2,'0') + '-' + String(tomorrow.getDate()).padStart(2,'0');
+      var times = data.hourly.time, temps = data.hourly.temperature_2m, codes = data.hourly.weathercode, precip = data.hourly.precipitation_probability;
+      var hours = [];
+      for(var i=0;i<times.length;i++){
+        if(times[i].indexOf(tomorrowStr) === 0){
+          var hour = parseInt(times[i].slice(11,13),10);
+          if(hour >= 5 && hour <= 22) hours.push({ hour: hour, temp: Math.round(temps[i]), code: codes[i], precip: precip[i] });
+        }
+      }
+      if(!hours.length) throw new Error('no forecast hours for tomorrow');
+      var stripEl = document.getElementById('weather-strip-' + loc.id);
+      stripEl.innerHTML = hours.map(function(h){
+        return '<div class="weather-hour"><span class="weather-hour-time">' + String(h.hour).padStart(2,'0') + '</span>' +
+          '<span class="weather-hour-icon">' + weatherIcon(h.code) + '</span>' +
+          '<span class="weather-hour-temp">' + h.temp + '°</span></div>';
+      }).join('');
+      var temps2 = hours.map(function(h){ return h.temp; });
+      var precips = hours.map(function(h){ return h.precip; });
+      var minT = Math.min.apply(null, temps2), maxT = Math.max.apply(null, temps2);
+      var maxP = Math.max.apply(null, precips);
+      document.getElementById('weather-summary-' + loc.id).textContent = minT + '–' + maxT + '°C · ' + maxP + '% rain chance';
+    }).catch(function(){
+      var stripEl = document.getElementById('weather-strip-' + loc.id);
+      if(stripEl) stripEl.innerHTML = '<span class="weather-error">Forecast unavailable right now.</span>';
+    });
+  }
+
+  (function initTomorrow(){
+    var tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    var LOCATIONS = [
+      { id:'zurich', label:'Zürich / Stettbach', lat:47.3988, lon:8.6013, gymId:'stettbach', gymName:'ActivFitness Stettbach' },
+      { id:'uzwil', label:'Uzwil', lat:47.4573, lon:9.1319, gymId:'uzwil', gymName:'ActivFitness Uzwil' }
+    ];
+    var grid = document.getElementById('tomorrow-grid');
+    grid.innerHTML = LOCATIONS.map(function(loc){ return renderLocationCard(loc, tomorrow); }).join('');
+    LOCATIONS.forEach(function(loc){ fetchWeather(loc, tomorrow); });
+  })();
+
+  var registry = {};
+
   function saveRegistry(){
-    try{ localStorage.setItem('plan-registry', JSON.stringify(registry)); }
-    catch(e){ /* private-browsing or storage disabled; UI still reflects local state */ }
+    PlanSync.save('plan-registry', registry);
   }
 
   function statusFor(plan){
@@ -237,8 +338,11 @@ footer.hub-note strong{color:var(--ink)}
   });
 
   (function init(){
-    loadRegistry();
     render();
+    PlanSync.watch('plan-registry', function(val){
+      registry = val || {};
+      render();
+    });
   })();
 })();
 </script>
