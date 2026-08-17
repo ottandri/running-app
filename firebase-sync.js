@@ -16,12 +16,12 @@
 
 (function (global) {
   var FIREBASE_CONFIG = {
-    apiKey: "AIzaSyDP9GWHTqlf4qZaDvao71w6BGwoWcg-g1M",
-    authDomain: "andri-running.firebaseapp.com",
-    databaseURL: "https://andri-running-default-rtdb.europe-west1.firebasedatabase.app",
-    projectId: "andri-running"
+    apiKey: "AIzaSyDfCneXxdAWgvMouyo_i-rgt0ZMV7SXzaA",
+    authDomain: "andri-running-v2.firebaseapp.com",
+    databaseURL: "https://andri-running-v2-default-rtdb.europe-west1.firebasedatabase.app",
+    projectId: "andri-running-v2"
   };
-  var SYNC_PATH_PREFIX = "bFo5Lgt68_zWmKB5LzPHfHtD";
+  var SYNC_PATH_PREFIX = "rL9bItzqmb9-t89wqUc0b-yp";
 
   var db = null;
   var ready = false;

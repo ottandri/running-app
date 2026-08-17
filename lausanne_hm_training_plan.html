@@ -1760,12 +1760,14 @@ footer.note strong{color:var(--ink)}
     PlanSync.save('plan-progress', state);
   }
 
+  // Mutates state in-memory only — never writes here. Writing from this function
+  // was a real bug: called before PlanSync.watch's authoritative value arrives, a
+  // premature partial-state save could win a race against the real synced data and
+  // clobber it (caught in testing: it reverted two real checked sessions to unchecked).
   function mergeActualSessions(){
-    var changed = false;
     Object.keys(ACTUAL_SESSION_KM).forEach(function(sid){
-      if(!state[sid]){ state[sid] = true; changed = true; }
+      if(!state[sid]) state[sid] = true;
     });
-    if(changed) save();
   }
 
   document.addEventListener('change', function(e){
@@ -1778,12 +1780,16 @@ footer.note strong{color:var(--ink)}
     }
   });
 
+  // Render an immediate best-effort view (local cache, if any, plus Garmin-verified
+  // merges) so the page isn't blank while sync resolves. Only the watch callback
+  // below — which has the authoritative value — is allowed to persist a write.
   mergeActualSessions();
   applyState();
   PlanSync.watch('plan-progress', function(val){
-    state = val || {};
+    state = val;
     mergeActualSessions();
     applyState();
+    save();
   });
 
   var PLAN_ID = 'lausanne-hm-2026';
