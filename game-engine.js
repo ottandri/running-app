@@ -472,6 +472,39 @@
     }
   }
 
+  // Firebase Realtime Database silently prunes any field that's an empty
+  // object/array on write (there's no stored representation of "empty" —
+  // a node either has children or doesn't exist), so a value read back via
+  // PlanSync can be missing owned/activeRunnyHistory/eggs/etc. entirely,
+  // not {}/[], any time those fields were still empty at save time — which
+  // is the normal state for a brand new player, not just a one-off. Call
+  // this on every value that comes out of PlanSync.watch('plan-gamification',
+  // ...) before using it, so the rest of the code can keep assuming the
+  // full shape always exists (matches blankGameState's fields exactly).
+  function normalizeGameState(val) {
+    var g = val || {};
+    var inv = g.inventory || {};
+    return {
+      owned: g.owned || {},
+      activeRunnyId: g.activeRunnyId != null ? g.activeRunnyId : null,
+      activeRunnyHistory: g.activeRunnyHistory || [],
+      inventory: {
+        trainingShard: inv.trainingShard || 0,
+        evolutionCores: inv.evolutionCores || { easy: 0, quality: 0, long: 0, strength: 0 },
+        eggs: inv.eggs || {},
+        trophies: inv.trophies || { bronze: 0, silver: 0, gold: 0, platinum: 0 }
+      },
+      pityCounter: g.pityCounter || 0,
+      eggPityCounter: g.eggPityCounter || 0,
+      processedSessionIds: g.processedSessionIds || [],
+      sessionScores: g.sessionScores || {},
+      xpEarnersThisWeek: g.xpEarnersThisWeek || {},
+      lastRecoveryWeekClaimed: g.lastRecoveryWeekClaimed != null ? g.lastRecoveryWeekClaimed : null,
+      currentStreakWeeks: g.currentStreakWeeks || 0,
+      lastStreakWeekChecked: g.lastStreakWeekChecked != null ? g.lastStreakWeekChecked : null
+    };
+  }
+
   // ---- Main orchestrator — what the Sync button calls ----
   // sessionActuals: { [sid]: { date, category, plannedDistanceKm, distanceKm,
   //                             avgPaceSecPerKm, avgHr, targetHrLow, targetHrHigh,
@@ -616,6 +649,7 @@
     teamPower: teamPower,
     // state helpers
     blankGameState: blankGameState,
+    normalizeGameState: normalizeGameState,
     collectRunny: collectRunny,
     // orchestrator
     processSync: processSync

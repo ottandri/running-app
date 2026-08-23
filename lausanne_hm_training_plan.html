@@ -1890,7 +1890,7 @@ footer.note strong{color:var(--ink)}
 
   renderRunny();
   PlanSync.watch('plan-gamification', function(val){
-    runnyState = val;
+    runnyState = GameEngine.normalizeGameState(val);
     renderRunny();
   });
 

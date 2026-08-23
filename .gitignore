@@ -1,3 +1,4 @@
 *.pdf
 *_V[0-9]*.html
+*_V[0-9]*.js
 generate_coaching_brief.py

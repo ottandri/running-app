@@ -846,7 +846,7 @@ h1{font-family:var(--font-display);font-weight:600;font-size:clamp(24px,4.5vw,32
   ensurePositionIndicators();
   render();
   PlanSync.watch('plan-gamification', function (val) {
-    gameState = val;
+    gameState = GameEngine.normalizeGameState(val);
     render();
   });
 })();
