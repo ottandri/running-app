@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hall of Fame</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-auth-compat.js"></script>
+<script src="firebase-sync.js"></script>
+<script src="creatures-data.js"></script>
+<script src="creature-art.js"></script>
+<script src="item-art.js"></script>
+<script src="game-engine.js"></script>
+<style>
+:root{
+  --paper:#F7F6F2; --paper-raised:#FFFFFF; --ink:#1C1B19; --ink-soft:#5B5852; --ink-mute:#8C897F;
+  --line:rgba(28,27,25,0.10); --line-strong:rgba(28,27,25,0.18);
+  --accent:#B23A1C;
+  --c-easy:#1F7A6C; --c-strength:#6D4C9E; --c-quality:#C93B1D; --c-long:#A6740F; --c-rest:#8C897F;
+  --race-gold:#B8791A;
+  --taper:#2B6B4A; --taper-tint:#E4EFE8;
+  --radius:14px;
+  --shadow-sm:0 1px 2px rgba(28,27,25,0.05), 0 3px 8px rgba(28,27,25,0.05);
+  --shadow-md:0 2px 5px rgba(28,27,25,0.06), 0 10px 24px rgba(28,27,25,0.09);
+  --ease:cubic-bezier(.2,.8,.2,1);
+  --font-display:'Oswald',sans-serif; --font-body:'IBM Plex Sans',sans-serif; --font-mono:'IBM Plex Mono',monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --paper:#171613; --paper-raised:#211F1B; --ink:#F2F0EA; --ink-soft:#C8C4B8; --ink-mute:#8C897F;
+    --line:rgba(255,255,255,0.12); --line-strong:rgba(255,255,255,0.20);
+    --c-easy:#5FCDB0; --c-strength:#B79AE0; --c-quality:#F08F5E; --c-long:#EBB84C; --c-rest:#8C897F;
+    --race-gold:#F0C15E;
+    --taper:#7FC49E; --taper-tint:#1E3327;
+  }
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--font-body);line-height:1.6;-webkit-font-smoothing:antialiased}
+.wrap{max-width:720px;margin:0 auto;padding:28px 20px 90px}
+.eyebrow{font-family:var(--font-mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-mute);margin:0 0 8px}
+h1{font-family:var(--font-display);font-weight:600;font-size:clamp(24px,4.5vw,32px);margin:0 0 6px}
+.subhead{font-size:13.5px;color:var(--ink-soft);margin:0 0 22px}
+a.back-link{font-family:var(--font-mono);font-size:12px;color:var(--ink-mute);text-decoration:none}
+
+.carousel{display:flex;align-items:center;gap:12px;margin-bottom:6px}
+.carousel-btn{flex:none;width:38px;height:38px;border-radius:50%;border:1px solid var(--line);background:var(--paper-raised);color:var(--ink);font-size:16px;cursor:pointer}
+.carousel-btn:hover{background:var(--paper)}
+.carousel-viewport{flex:1;min-width:0}
+.position-dot{text-align:center;font-family:var(--font-mono);font-size:11px;color:var(--ink-mute);margin:8px 0 30px}
+
+.fame-card{background:var(--paper-raised);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow-md);padding:22px;text-align:center}
+.fame-plan-name{font-family:var(--font-display);font-weight:600;font-size:20px;margin:0 0 4px}
+.fame-date{font-family:var(--font-mono);font-size:12px;color:var(--ink-mute);margin:0 0 14px}
+.fame-power{font-family:var(--font-mono);font-size:13px;color:var(--ink-soft);margin:0 0 16px}
+.fame-power strong{font-family:var(--font-display);font-size:22px;color:var(--ink);display:block}
+.fame-roster{display:flex;flex-wrap:wrap;justify-content:center;gap:10px}
+.fame-roster-item{width:56px;text-align:center;font-family:var(--font-mono);font-size:10px;color:var(--ink-mute)}
+
+.empty-state{border:1px dashed var(--line-strong);border-radius:var(--radius);padding:26px;text-align:center;color:var(--ink-mute);font-size:13.5px}
+
+@media (prefers-reduced-motion: reduce){ *{transition:none !important} }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back-link" href="training_hub.html">&larr; Back to Training Hub</a>
+  <p class="eyebrow" style="margin-top:14px">Hall of Fame</p>
+  <h1>Every plan you've finished</h1>
+  <p class="subhead">A permanent trophy case &mdash; each completed plan's final Team Power and evolved roster, kept forever across every future race.</p>
+
+  <div class="carousel">
+    <button class="carousel-btn" id="fame-prev" aria-label="Previous">&larr;</button>
+    <div class="carousel-viewport" id="fame-viewport"></div>
+    <button class="carousel-btn" id="fame-next" aria-label="Next">&rarr;</button>
+  </div>
+</div>
+
+<script>
+(function(){
+  var fameIndex = 0;
+  var hallOfFame = [];
+
+  function renderFameCard(){
+    var el = document.getElementById('fame-viewport');
+    if (!hallOfFame.length) {
+      el.innerHTML = '<div class="empty-state">Nothing here yet &mdash; finish a plan and it\'ll land in this trophy case.</div>';
+      var posEl = document.getElementById('fame-position');
+      if (posEl) posEl.textContent = '';
+      return;
+    }
+    if (fameIndex >= hallOfFame.length) fameIndex = hallOfFame.length - 1;
+    if (fameIndex < 0) fameIndex = 0;
+    var entry = hallOfFame[fameIndex];
+    var dateLabel = new Date(entry.completedAt).toLocaleDateString(undefined, {day:'numeric', month:'short', year:'numeric'});
+    var rosterHtml = entry.roster.map(function(r){
+      var species = RunnyData.getRunny(r.runnyId);
+      if (!species) return '';
+      return '<div class="fame-roster-item">' + RunnyArt.renderRunnySVG(r.runnyId, r.stageIndex, {size:48}) + 'Lv ' + r.level + '</div>';
+    }).join('');
+    el.innerHTML =
+      '<div class="fame-card">' +
+        '<p class="fame-plan-name">' + entry.planId + '</p>' +
+        '<p class="fame-date">Completed ' + dateLabel + '</p>' +
+        '<p class="fame-power">Final Team Power<strong>' + entry.teamPower + '</strong></p>' +
+        '<div class="fame-roster">' + rosterHtml + '</div>' +
+      '</div>';
+    ensurePositionIndicator();
+    document.getElementById('fame-position').textContent = (fameIndex+1) + ' / ' + hallOfFame.length;
+  }
+
+  function ensurePositionIndicator(){
+    if (!document.getElementById('fame-position')) {
+      var p = document.createElement('div'); p.className = 'position-dot'; p.id = 'fame-position';
+      document.getElementById('fame-viewport').insertAdjacentElement('afterend', p);
+    }
+  }
+
+  document.getElementById('fame-prev').addEventListener('click', function(){
+    fameIndex = (fameIndex - 1 + hallOfFame.length) % hallOfFame.length;
+    renderFameCard();
+  });
+  document.getElementById('fame-next').addEventListener('click', function(){
+    fameIndex = (fameIndex + 1) % hallOfFame.length;
+    renderFameCard();
+  });
+
+  // Read-only page — a snapshot is appended to this same 'hall-of-fame' key
+  // by lausanne_hm_training_plan.html's existing "Mark plan complete" button,
+  // not from here.
+  renderFameCard();
+  PlanSync.watch('hall-of-fame', function(val){
+    hallOfFame = val || [];
+    renderFameCard();
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Runny Farm</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-auth-compat.js"></script>
+<script src="firebase-sync.js"></script>
+<script src="creatures-data.js"></script>
+<script src="creature-art.js"></script>
+<script src="item-art.js"></script>
+<script src="game-engine.js"></script>
+<style>
+:root{
+  --paper:#F7F6F2; --paper-raised:#FFFFFF; --ink:#1C1B19; --ink-soft:#5B5852; --ink-mute:#8C897F;
+  --line:rgba(28,27,25,0.10); --line-strong:rgba(28,27,25,0.18);
+  --accent:#B23A1C;
+  --c-easy:#1F7A6C; --c-strength:#6D4C9E; --c-quality:#C93B1D; --c-long:#A6740F; --c-rest:#8C897F;
+  --race-gold:#B8791A;
+  --taper:#2B6B4A; --taper-tint:#E4EFE8;
+  --radius:14px;
+  --shadow-sm:0 1px 2px rgba(28,27,25,0.05), 0 3px 8px rgba(28,27,25,0.05);
+  --shadow-md:0 2px 5px rgba(28,27,25,0.06), 0 10px 24px rgba(28,27,25,0.09);
+  --shadow-lift:0 4px 10px rgba(28,27,25,.08), 0 18px 36px rgba(28,27,25,.14);
+  --ease:cubic-bezier(.2,.8,.2,1);
+  --font-display:'Oswald',sans-serif; --font-body:'IBM Plex Sans',sans-serif; --font-mono:'IBM Plex Mono',monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --paper:#171613; --paper-raised:#211F1B; --ink:#F2F0EA; --ink-soft:#C8C4B8; --ink-mute:#8C897F;
+    --line:rgba(255,255,255,0.12); --line-strong:rgba(255,255,255,0.20);
+    --c-easy:#5FCDB0; --c-strength:#B79AE0; --c-quality:#F08F5E; --c-long:#EBB84C; --c-rest:#8C897F;
+    --race-gold:#F0C15E;
+    --taper:#7FC49E; --taper-tint:#1E3327;
+  }
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--font-body);line-height:1.6;-webkit-font-smoothing:antialiased}
+.wrap{max-width:720px;margin:0 auto;padding:28px 20px 90px}
+.eyebrow{font-family:var(--font-mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-mute);margin:0 0 8px}
+h1{font-family:var(--font-display);font-weight:600;font-size:clamp(24px,4.5vw,32px);margin:0 0 6px}
+.subhead{font-size:13.5px;color:var(--ink-soft);margin:0 0 22px}
+a.back-link{font-family:var(--font-mono);font-size:12px;color:var(--ink-mute);text-decoration:none}
+
+.power-card{background:var(--paper-raised);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow-sm);padding:16px 20px;display:flex;justify-content:space-between;align-items:baseline;margin:18px 0 26px}
+.power-label{font-family:var(--font-mono);font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-mute)}
+.power-value{font-family:var(--font-display);font-size:26px;font-weight:600;font-variant-numeric:tabular-nums}
+
+.section-label{font-family:var(--font-mono);font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-mute);margin:0 0 12px}
+.section-hint{font-family:var(--font-mono);font-size:10.5px;color:var(--ink-mute);margin:-8px 0 12px}
+
+.carousel{display:flex;align-items:center;gap:12px;margin-bottom:6px}
+.carousel-btn{flex:none;width:38px;height:38px;border-radius:50%;border:1px solid var(--line);background:var(--paper-raised);color:var(--ink);font-size:16px;cursor:pointer;transition:background .15s var(--ease), transform .15s var(--ease)}
+.carousel-btn:hover{background:var(--paper)}
+.carousel-btn:active{transform:scale(.92)}
+.carousel-viewport{flex:1;min-width:0;perspective:900px}
+.position-dot{text-align:center;font-family:var(--font-mono);font-size:11px;color:var(--ink-mute);margin:8px 0 34px}
+
+.runny-card{background:var(--paper-raised);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow-md);padding:22px;text-align:center;transition:box-shadow .25s var(--ease);transform-style:preserve-3d}
+.runny-card:hover{box-shadow:var(--shadow-lift)}
+.runny-card.locked{opacity:.5}
+.runny-portrait-lg{display:flex;justify-content:center;margin-bottom:8px;animation:idleFloat 3.6s ease-in-out infinite}
+@keyframes idleFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+.category-badge{display:inline-block;font-family:var(--font-mono);font-size:10.5px;letter-spacing:.04em;text-transform:uppercase;padding:3px 10px;border-radius:999px;background:var(--paper);border:1px solid var(--line);color:var(--tile-color, var(--ink-mute))}
+.runny-card-name{font-family:var(--font-display);font-weight:600;font-size:20px;margin:10px 0 2px}
+.runny-card-meta{font-family:var(--font-mono);font-size:12px;color:var(--ink-mute);margin:0 0 10px}
+.xp-bar-track{height:7px;border-radius:999px;background:var(--paper);overflow:hidden;max-width:260px;margin:0 auto 10px}
+.xp-bar-fill{height:100%;background:var(--accent);border-radius:999px;transition:width .4s var(--ease)}
+.flavor{font-size:13px;color:var(--ink-soft);font-style:italic;margin:0 0 16px;max-width:320px;margin-left:auto;margin-right:auto}
+.card-actions{display:flex;justify-content:center;gap:10px;flex-wrap:wrap}
+.btn{font-family:var(--font-mono);font-size:12.5px;font-weight:500;padding:9px 16px;border-radius:999px;border:none;cursor:pointer;transition:filter .15s var(--ease)}
+.btn:hover{filter:brightness(1.08)}
+.btn.primary{background:var(--accent);color:#fff}
+.btn.primary:disabled{background:var(--line-strong);color:var(--ink-mute);cursor:default;filter:none}
+.btn.ghost{background:var(--paper);color:var(--ink-soft);border:1px solid var(--line)}
+.btn.ghost:disabled{opacity:.5;cursor:default}
+.active-pill{font-family:var(--font-mono);font-size:11px;color:var(--taper);background:var(--taper-tint);padding:6px 14px;border-radius:999px;display:inline-block}
+.criteria-line{font-family:var(--font-mono);font-size:11.5px;margin:2px 0 12px}
+.criteria-ok{color:var(--taper);font-weight:600}
+.criteria-bad{color:var(--accent)}
+.shiny-badge{font-family:var(--font-mono);font-size:10.5px;color:#B8791A;background:linear-gradient(90deg,#FFE9A8,#F4C9E0,#B9E3FF);padding:3px 10px;border-radius:999px;display:inline-block;margin-bottom:6px}
+.trophy-shelf{display:flex;justify-content:center;gap:14px;margin:14px 0}
+.trophy-slot{text-align:center;font-family:var(--font-mono);font-size:11px;color:var(--ink-mute)}
+.trophy-slot img,.trophy-slot svg{display:block;margin:0 auto 2px}
+.star-note{font-family:var(--font-mono);font-size:12px;color:var(--race-gold);margin:0 0 10px}
+.exchange-panel{margin-top:14px;padding-top:14px;border-top:1px dashed var(--line);text-align:left}
+.exchange-label{font-family:var(--font-mono);font-size:11px;color:var(--ink-mute);margin:0 0 6px;text-align:center}
+.exchange-row{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:12px}
+.exchange-btn{font-family:var(--font-mono);font-size:11.5px;padding:7px 12px;border-radius:999px;border:1px solid var(--line);background:var(--paper);color:var(--ink-soft);cursor:pointer;transition:background .15s var(--ease)}
+.exchange-btn:hover{background:var(--paper-raised)}
+.exchange-hint{font-size:12px;color:var(--ink-mute);text-align:center;margin:8px 0 0}
+
+.item-card{background:var(--paper-raised);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow-md);padding:22px;text-align:center;transition:box-shadow .25s var(--ease);transform-style:preserve-3d}
+.item-card:hover{box-shadow:var(--shadow-lift)}
+.item-card .icon{display:flex;justify-content:center;margin-bottom:8px;animation:idleFloat 4.2s ease-in-out infinite}
+.item-card-name{font-family:var(--font-display);font-weight:600;font-size:17px;margin:6px 0 2px}
+.item-card-count{font-family:var(--font-mono);font-size:13px;color:var(--ink-mute);margin:0 0 8px}
+.item-card .flavor{margin-bottom:0}
+
+/* ---- Starter picker (first visit, no Runny collected yet) ---- */
+.starter-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:18px 0 8px}
+.starter-card{background:var(--paper-raised);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow-sm);padding:16px;text-align:center;transition:transform .18s var(--ease), box-shadow .18s var(--ease)}
+.starter-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-md)}
+.starter-card .runny-portrait-lg{margin-bottom:4px}
+.starter-card-name{font-family:var(--font-display);font-weight:600;font-size:15px;margin:6px 0 2px}
+.starter-card .flavor{font-size:11.5px;margin:0 0 10px;max-width:none}
+.starter-card .btn{width:100%}
+
+@media (prefers-reduced-motion: reduce){ *{transition:none !important; animation:none !important} }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back-link" href="lausanne_hm_training_plan.html">&larr; Back to Training Plan</a>
+  <p class="eyebrow" style="margin-top:14px">Runny Farm</p>
+  <h1>Your Runnies</h1>
+  <p class="subhead">Browse your collection, set who's active, and evolve anyone who's ready.</p>
+
+  <div id="starter-picker" style="display:none">
+    <p class="section-label">Choose your starter Runny</p>
+    <p class="section-hint">This becomes your first collected Runny and starts out active &mdash; you can add more later through eggs, and switch who's active any time.</p>
+    <div class="starter-grid" id="starter-grid"></div>
+  </div>
+
+  <div id="collection-sections">
+    <div class="power-card"><span class="power-label">Team Power</span><span class="power-value" id="team-power">0</span></div>
+
+    <p class="section-label">Your Runnies (the barn)</p>
+    <p class="section-hint">Swipe, or use the arrows, to browse.</p>
+    <div class="carousel">
+      <button class="carousel-btn" id="runny-prev" aria-label="Previous Runny">&larr;</button>
+      <div class="carousel-viewport" id="runny-viewport"></div>
+      <button class="carousel-btn" id="runny-next" aria-label="Next Runny">&rarr;</button>
+    </div>
+
+    <p class="section-label">Item Silo</p>
+    <div class="carousel">
+      <button class="carousel-btn" id="item-prev" aria-label="Previous item">&larr;</button>
+      <div class="carousel-viewport" id="item-viewport"></div>
+      <button class="carousel-btn" id="item-next" aria-label="Next item">&rarr;</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  var gameState = null;
+  var runnyIndex = 0;
+  var itemIndex = 0;
+
+  // Item Silo shows the 4 fixed core/shard types always, plus one card per
+  // species with at least 1 egg in progress (dynamic — appears/disappears as
+  // eggs accumulate or hatch).
+  function getItemTypesList() {
+    var list = ['trainingShard', 'core-easy', 'core-quality', 'core-long', 'core-strength'];
+    RunnyData.RUNNIES.forEach(function (r) {
+      if (!r.legendary && gameState.inventory.eggs && gameState.inventory.eggs[r.id] > 0) {
+        list.push('egg-' + r.id);
+      }
+    });
+    return list;
+  }
+
+  function hasStarter(){
+    return !!(gameState.activeRunnyId && Object.keys(gameState.owned).length > 0);
+  }
+
+  function todayStr(){
+    var d = new Date();
+    return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+  }
+
+  // ---- Starter picker (first visit only) — Finishron (the race legendary)
+  // is deliberately excluded: it's only obtainable by completing an actual
+  // tracked race, never a starting pick. ----
+  function renderStarterPicker(){
+    var pickable = RunnyData.RUNNIES.filter(function(r){ return !r.legendary; });
+    var grid = document.getElementById('starter-grid');
+    grid.innerHTML = pickable.map(function(species){
+      var catColor = 'var(' + RunnyData.CATEGORIES[species.category].colorVar + ')';
+      return '<div class="starter-card">' +
+        '<div class="runny-portrait-lg">' + RunnyArt.renderRunnySVG(species.id, 0, {size:80}) + '</div>' +
+        '<span class="category-badge" style="--tile-color:' + catColor + '">' + RunnyData.CATEGORIES[species.category].label + '</span>' +
+        '<p class="starter-card-name">' + species.stages[0].name + '</p>' +
+        '<p class="flavor">' + species.stages[0].flavor + '</p>' +
+        '<button class="btn primary" data-action="chooseStarter" data-id="' + species.id + '">Choose as starter</button>' +
+      '</div>';
+    }).join('');
+  }
+
+  function render() {
+    if (!hasStarter()) {
+      document.getElementById('starter-picker').style.display = 'block';
+      document.getElementById('collection-sections').style.display = 'none';
+      renderStarterPicker();
+      return;
+    }
+    document.getElementById('starter-picker').style.display = 'none';
+    document.getElementById('collection-sections').style.display = 'block';
+    renderTeamPower();
+    renderRunnyCard();
+    renderItemCard();
+  }
+
+  // ---- CSS-3D tilt-on-hover (mouse-driven perspective rotate) ----
+  function attachTilt(el, maxDeg){
+    if (!el) return;
+    maxDeg = maxDeg || 8;
+    el.addEventListener('mousemove', function (e) {
+      var r = el.getBoundingClientRect();
+      var px = (e.clientX - r.left) / r.width - 0.5;
+      var py = (e.clientY - r.top) / r.height - 0.5;
+      el.style.transition = 'transform .08s linear';
+      el.style.transform = 'perspective(700px) rotateX(' + (-py * maxDeg).toFixed(2) + 'deg) rotateY(' + (px * maxDeg).toFixed(2) + 'deg)';
+    });
+    el.addEventListener('mouseleave', function () {
+      el.style.transition = 'transform .4s var(--ease)';
+      el.style.transform = '';
+    });
+  }
+
+  // ---- swipe support ----
+  function attachSwipe(viewportEl, onSwipeRight, onSwipeLeft) {
+    var startX = null;
+    viewportEl.addEventListener('touchstart', function (e) { startX = e.touches[0].clientX; }, { passive: true });
+    viewportEl.addEventListener('touchend', function (e) {
+      if (startX === null) return;
+      var dx = e.changedTouches[0].clientX - startX;
+      startX = null;
+      if (Math.abs(dx) < 40) return;
+      if (dx > 0) onSwipeRight(); else onSwipeLeft();
+    }, { passive: true });
+  }
+
+  // ---- brief slide transition when moving to a new carousel card ----
+  function slideTo(viewportEl, direction, renderFn) {
+    viewportEl.style.transition = 'opacity .1s ease, transform .1s ease';
+    viewportEl.style.opacity = '0';
+    viewportEl.style.transform = 'translateX(' + (direction * 10) + 'px)';
+    setTimeout(function () {
+      renderFn();
+      viewportEl.style.transition = 'none';
+      viewportEl.style.transform = 'translateX(' + (-direction * 10) + 'px)';
+      void viewportEl.offsetWidth;
+      viewportEl.style.transition = 'opacity .18s var(--ease), transform .18s var(--ease)';
+      viewportEl.style.opacity = '1';
+      viewportEl.style.transform = 'translateX(0)';
+    }, 100);
+  }
+
+  function renderTeamPower() {
+    var el = document.getElementById('team-power');
+    var target = GameEngine.teamPower(gameState);
+    var start = parseInt(el.textContent, 10) || 0;
+    if (start === target) return;
+    var steps = 12, i = 0;
+    var timer = setInterval(function () {
+      i++;
+      el.textContent = Math.round(start + (target - start) * (i / steps));
+      if (i >= steps) { el.textContent = target; clearInterval(timer); }
+    }, 20);
+  }
+
+  function renderRunnyCard() {
+    var species = RunnyData.RUNNIES[runnyIndex];
+    var owned = gameState.owned[species.id];
+    var el = document.getElementById('runny-viewport');
+    var catColor = 'var(' + RunnyData.CATEGORIES[species.category].colorVar + ')';
+
+    if (!owned) {
+      var eggsHave = (gameState.inventory.eggs && gameState.inventory.eggs[species.id]) || 0;
+      var eggNote = species.legendary
+        ? 'Only obtainable by completing an actual race'
+        : (eggsHave > 0
+          ? eggsHave + ' / ' + GameEngine.EGGS_NEEDED_TO_HATCH + ' eggs collected'
+          : 'Not yet collected');
+      el.innerHTML =
+        '<div class="runny-card locked">' +
+          '<div class="runny-portrait-lg">' + RunnyArt.renderRunnySVG(species.id, 0, {size:96}) + '</div>' +
+          '<span class="category-badge" style="--tile-color:' + catColor + '">' + RunnyData.CATEGORIES[species.category].label + '</span>' +
+          '<p class="runny-card-name">' + species.stages[0].name + '</p>' +
+          '<p class="runny-card-meta">' + eggNote + '</p>' +
+        '</div>';
+      document.getElementById('runny-position').textContent = (runnyIndex+1) + ' / ' + RunnyData.RUNNIES.length;
+      attachTilt(el.querySelector('.runny-card'));
+      return;
+    }
+
+    var stage = species.stages[owned.stageIndex];
+    var need = GameEngine.xpToNext(owned.level);
+    var pct = Math.min(100, Math.round(100 * owned.xp / need));
+    var isActive = gameState.activeRunnyId === species.id;
+    var coresOwned = gameState.inventory.evolutionCores[species.category] || 0;
+    var evo = GameEngine.checkEvolutionEligible(species, owned.stageIndex, owned.level, coresOwned);
+
+    var actionsHtml = '';
+    if (isActive) {
+      actionsHtml += '<span class="active-pill">Active</span>';
+    } else {
+      actionsHtml += '<button class="btn primary" data-action="setActive" data-id="' + species.id + '">Set as Active</button>';
+    }
+    if (evo.eligible) {
+      actionsHtml += '<button class="btn ghost" data-action="evolve" data-id="' + species.id + '">Evolve!</button>';
+    }
+    if (coresOwned > 0) {
+      var catShort = RunnyData.CATEGORIES[species.category].label.split(' ')[0];
+      actionsHtml += '<button class="btn ghost" data-action="coreToXp" data-id="' + species.id + '">Use 1 ' + catShort + ' Core &rarr; XP</button>';
+    }
+    if (owned.shiny) {
+      actionsHtml += '<span class="active-pill" style="background:none;color:#B8791A">&#10024; Shiny</span>';
+    } else {
+      var canShiny = (gameState.inventory.trainingShard || 0) >= GameEngine.SHINY_UNLOCK_COST;
+      actionsHtml += '<button class="btn ghost" data-action="unlockShiny" data-id="' + species.id + '"' + (canShiny ? '' : ' disabled') + '>Unlock Shiny (' + GameEngine.SHINY_UNLOCK_COST + ' Shards)</button>';
+    }
+
+    // Always-visible evolve criteria (per-criterion color) — shown whenever a
+    // next stage exists, even far below level, so the goalpost is never hidden.
+    var criteriaHtml = '';
+    if (evo.hasNextStage) {
+      var levelClass = evo.levelOk ? 'criteria-ok' : 'criteria-bad';
+      var itemClass = evo.itemOk ? 'criteria-ok' : 'criteria-bad';
+      criteriaHtml = '<p class="criteria-line"><span class="' + levelClass + '">Level ' + owned.level + '/' + evo.levelNeeded + '</span> &middot; <span class="' + itemClass + '">Cores ' + evo.coresOwned + '/' + evo.coresNeeded + '</span></p>';
+    }
+
+    // Trophy shelf — Finishron (legendary) only.
+    var trophyHtml = '';
+    if (species.legendary) {
+      var t = gameState.inventory.trophies || { bronze: 0, silver: 0, gold: 0, platinum: 0 };
+      trophyHtml = '<div class="trophy-shelf">' +
+        GameEngine.TROPHY_TIER_ORDER.map(function (tier) {
+          return '<div class="trophy-slot">' + ItemArt.renderTrophySVG(tier, 40) + '&times; ' + (t[tier] || 0) + '</div>';
+        }).join('') +
+      '</div>' + (owned.hasStar ? '<p class="star-note">&#9733; Permanent Star earned</p>' : '');
+    }
+
+    el.innerHTML =
+      '<div class="runny-card">' +
+        '<div class="runny-portrait-lg">' + RunnyArt.renderRunnySVG(species.id, owned.stageIndex, {size:110, shiny: !!owned.shiny}) + '</div>' +
+        '<span class="category-badge" style="--tile-color:' + catColor + '">' + RunnyData.CATEGORIES[species.category].label + '</span>' +
+        '<p class="runny-card-name">' + stage.name + '</p>' +
+        '<p class="runny-card-meta">Lv ' + owned.level + ' &middot; Stage ' + (owned.stageIndex+1) + ' of ' + species.stages.length + ' &middot; ' + GameEngine.totalMultiplier(owned.level, owned.stageIndex).toFixed(2) + '&times; total</p>' +
+        '<div class="xp-bar-track"><div class="xp-bar-fill" style="width:' + pct + '%"></div></div>' +
+        trophyHtml +
+        '<p class="flavor">' + stage.flavor + '</p>' +
+        '<div class="card-actions">' + actionsHtml + '</div>' +
+        criteriaHtml +
+      '</div>';
+    document.getElementById('runny-position').textContent = (runnyIndex+1) + ' / ' + RunnyData.RUNNIES.length;
+    attachTilt(el.querySelector('.runny-card'));
+  }
+
+  function itemDisplayFor(type) {
+    if (type === 'trainingShard') {
+      return { icon: ItemArt.renderTrainingShardSVG(72), name: 'Training Shard', count: gameState.inventory.trainingShard, flavor: 'A common shard earned from any well-run session. Spend it below, or unlock a Shiny look on any Runny you own.' };
+    }
+    if (type.indexOf('egg-') === 0) {
+      var speciesId = type.replace('egg-', '');
+      var eggSpecies = RunnyData.getRunny(speciesId);
+      var have = (gameState.inventory.eggs && gameState.inventory.eggs[speciesId]) || 0;
+      return { icon: ItemArt.renderSpeciesEggSVG(eggSpecies.category, 72), name: eggSpecies.stages[0].name + ' Egg', count: have, flavor: 'Collect ' + GameEngine.EGGS_NEEDED_TO_HATCH + ' to hatch a ' + eggSpecies.stages[0].name + '.' };
+    }
+    var category = type.replace('core-', '');
+    var catLabel = RunnyData.CATEGORIES[category].label.split(' ')[0];
+    var article = /^[aeiou]/i.test(catLabel) ? 'an' : 'a';
+    return { icon: ItemArt.renderEvolutionCoreSVG(category, 72), name: catLabel + ' Evolution Core', count: gameState.inventory.evolutionCores[category] || 0, flavor: 'Needed to evolve ' + article + ' ' + catLabel + '-line Runny.' };
+  }
+
+  // Shard Exchange — deterministic, "find the missing piece" (see game-engine.js
+  // exchangeShardsForChoice). Lives on the Training Shard item card since it's
+  // what gets spent. Egg choices only list NOT-yet-owned species.
+  function renderExchangePanel() {
+    var cost = GameEngine.SHARD_EXCHANGE_COST;
+    var have = gameState.inventory.trainingShard || 0;
+    if (have < cost) {
+      return '<div class="exchange-panel"><p class="exchange-hint">Collect ' + cost + '+ Shards to unlock exchanges (have ' + have + ').</p></div>';
+    }
+    var coreButtons = Object.keys(RunnyData.CATEGORIES).filter(function (c) { return c !== 'race'; }).map(function (cat) {
+      return '<button class="exchange-btn" data-action="exchangeCore" data-choice="' + cat + '">' + RunnyData.CATEGORIES[cat].label.split(' ')[0] + ' Core</button>';
+    }).join('');
+    var missingSpecies = RunnyData.RUNNIES.filter(function (r) { return !r.legendary && !gameState.owned[r.id]; });
+    var eggButtons = missingSpecies.length
+      ? missingSpecies.map(function (r) { return '<button class="exchange-btn" data-action="exchangeEgg" data-choice="' + r.id + '">' + r.stages[0].name + ' egg</button>'; }).join('')
+      : '<span class="exchange-hint">You already own every collectible species!</span>';
+    return '<div class="exchange-panel">' +
+      '<p class="exchange-label">Exchange ' + cost + ' Shards for a chosen Core:</p>' +
+      '<div class="exchange-row">' + coreButtons + '</div>' +
+      '<p class="exchange-label">...or 1 egg toward a species you\'re missing:</p>' +
+      '<div class="exchange-row">' + eggButtons + '</div>' +
+    '</div>';
+  }
+
+  function renderItemCard() {
+    var types = getItemTypesList();
+    if (itemIndex >= types.length) itemIndex = types.length - 1;
+    if (itemIndex < 0) itemIndex = 0;
+    var type = types[itemIndex];
+    var d = itemDisplayFor(type);
+    var el = document.getElementById('item-viewport');
+    el.innerHTML =
+      '<div class="item-card">' +
+        '<div class="icon">' + d.icon + '</div>' +
+        '<p class="item-card-name">' + d.name + '</p>' +
+        '<p class="item-card-count">&times; ' + d.count + '</p>' +
+        '<p class="flavor">' + d.flavor + '</p>' +
+        (type === 'trainingShard' ? renderExchangePanel() : '') +
+      '</div>';
+    document.getElementById('item-position').textContent = (itemIndex+1) + ' / ' + types.length;
+    attachTilt(el.querySelector('.item-card'), 5);
+  }
+
+  function ensurePositionIndicators() {
+    if (!document.getElementById('runny-position')) {
+      var p1 = document.createElement('div'); p1.className = 'position-dot'; p1.id = 'runny-position';
+      document.getElementById('runny-viewport').insertAdjacentElement('afterend', p1);
+    }
+    if (!document.getElementById('item-position')) {
+      var p2 = document.createElement('div'); p2.className = 'position-dot'; p2.id = 'item-position';
+      document.getElementById('item-viewport').insertAdjacentElement('afterend', p2);
+    }
+  }
+
+  function goRunnyPrev() {
+    slideTo(document.getElementById('runny-viewport'), -1, function () {
+      runnyIndex = (runnyIndex - 1 + RunnyData.RUNNIES.length) % RunnyData.RUNNIES.length;
+      renderRunnyCard();
+    });
+  }
+  function goRunnyNext() {
+    slideTo(document.getElementById('runny-viewport'), 1, function () {
+      runnyIndex = (runnyIndex + 1) % RunnyData.RUNNIES.length;
+      renderRunnyCard();
+    });
+  }
+  function goItemPrev() {
+    slideTo(document.getElementById('item-viewport'), -1, function () {
+      var len = getItemTypesList().length;
+      itemIndex = (itemIndex - 1 + len) % len;
+      renderItemCard();
+    });
+  }
+  function goItemNext() {
+    slideTo(document.getElementById('item-viewport'), 1, function () {
+      var len = getItemTypesList().length;
+      itemIndex = (itemIndex + 1) % len;
+      renderItemCard();
+    });
+  }
+
+  document.getElementById('runny-prev').addEventListener('click', goRunnyPrev);
+  document.getElementById('runny-next').addEventListener('click', goRunnyNext);
+  document.getElementById('item-prev').addEventListener('click', goItemPrev);
+  document.getElementById('item-next').addEventListener('click', goItemNext);
+  attachSwipe(document.getElementById('runny-viewport'), goRunnyPrev, goRunnyNext);
+  attachSwipe(document.getElementById('item-viewport'), goItemPrev, goItemNext);
+
+  // ---- Evolution: rotateY flip-reveal (card turns edge-on, content swaps, turns back) ----
+  function evolveWithFlip(id) {
+    var container = document.getElementById('runny-viewport');
+    var card = container.querySelector('.runny-card');
+    var done = false;
+    function proceed() {
+      if (done) return;
+      done = true;
+      var ok = GameEngine.evolveRunny(gameState, id);
+      if (ok) PlanSync.save('plan-gamification', gameState);
+      renderTeamPower();
+      renderRunnyCard();
+      var newCard = container.querySelector('.runny-card');
+      if (newCard) {
+        newCard.style.transition = 'none';
+        newCard.style.transform = 'perspective(700px) rotateY(-90deg)';
+        void newCard.offsetWidth;
+        newCard.style.transition = 'transform .26s var(--ease)';
+        newCard.style.transform = 'perspective(700px) rotateY(0deg)';
+      }
+    }
+    if (!card) { proceed(); return; }
+    card.style.transition = 'transform .22s cubic-bezier(.4,.1,.6,1)';
+    card.style.transform = 'perspective(700px) rotateY(90deg)';
+    card.addEventListener('transitionend', proceed, { once: true });
+    setTimeout(proceed, 260); // safety net if the transition never fires (e.g. reduced-motion strips it)
+  }
+
+  document.addEventListener('click', function (e) {
+    var btn = e.target.closest('[data-action]');
+    if (!btn) return;
+    var action = btn.getAttribute('data-action');
+    var id = btn.getAttribute('data-id');
+    if (action === 'chooseStarter') {
+      GameEngine.collectRunny(gameState, id);
+      GameEngine.setActiveRunny(gameState, id, todayStr());
+      PlanSync.save('plan-gamification', gameState);
+      render();
+    } else if (action === 'setActive') {
+      GameEngine.setActiveRunny(gameState, id, todayStr());
+      PlanSync.save('plan-gamification', gameState);
+      render();
+    } else if (action === 'evolve') {
+      evolveWithFlip(id);
+    } else if (action === 'coreToXp') {
+      var result = GameEngine.convertCoreToXp(gameState, id);
+      if (result.ok) {
+        PlanSync.save('plan-gamification', gameState);
+        render();
+      }
+    } else if (action === 'unlockShiny') {
+      var shinyResult = GameEngine.unlockShiny(gameState, id);
+      if (shinyResult.ok) {
+        PlanSync.save('plan-gamification', gameState);
+        render();
+      }
+    } else if (action === 'exchangeCore') {
+      var choice = btn.getAttribute('data-choice');
+      var coreEx = GameEngine.exchangeShardsForChoice(gameState, 'core', choice);
+      if (coreEx.ok) {
+        PlanSync.save('plan-gamification', gameState);
+        render();
+      }
+    } else if (action === 'exchangeEgg') {
+      var eggChoice = btn.getAttribute('data-choice');
+      var eggEx = GameEngine.exchangeShardsForChoice(gameState, 'egg', eggChoice);
+      if (eggEx.ok) {
+        PlanSync.save('plan-gamification', gameState);
+        render();
+      }
+    }
+  });
+
+  // Best-effort immediate render from blank state (avoids a flash of nothing
+  // while Firebase resolves); the watch callback below has the authoritative
+  // value and re-renders once it arrives — same save-timing rule as the rest
+  // of the site: never save() speculatively before that authoritative value
+  // is in hand.
+  gameState = GameEngine.blankGameState();
+  ensurePositionIndicators();
+  render();
+  PlanSync.watch('plan-gamification', function (val) {
+    gameState = val;
+    render();
+  });
+})();
+</script>
+</body>
+</html>

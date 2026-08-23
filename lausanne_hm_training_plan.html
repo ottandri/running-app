@@ -11,6 +11,11 @@
 <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-database-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-auth-compat.js"></script>
 <script src="firebase-sync.js"></script>
+<script src="creatures-data.js"></script>
+<script src="creature-art.js"></script>
+<script src="item-art.js"></script>
+<script src="game-engine.js"></script>
+<script src="session-data.js"></script>
 <style>
 :root{
   --paper:#F7F6F2; --paper-raised:#FFFFFF; --ink:#1C1B19; --ink-soft:#5B5852; --ink-mute:#8C897F;
@@ -190,6 +195,58 @@ footer.note strong{color:var(--ink)}
   100%{opacity:0;transform:translate(var(--drift),220px) rotate(var(--rot))}
 }
 @media (prefers-reduced-motion: reduce){ *{transition:none !important} .confetti-piece{animation:none !important;display:none} }
+
+/* ---- Runnies: active widget, Sync button, reveal slideshow, extra sessions ---- */
+.runny-card-widget{display:flex;align-items:center;gap:16px;background:var(--paper-raised);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow-sm);padding:16px 20px;margin:24px 0 0}
+.runny-card-widget .runny-portrait{flex:none;width:60px;height:60px;border-radius:12px;background:var(--paper);display:flex;align-items:center;justify-content:center}
+.runny-card-widget .runny-info{flex:1;min-width:0}
+.runny-card-widget .runny-name{font-family:var(--font-display);font-weight:600;font-size:16px;margin:0}
+.runny-card-widget .runny-meta{font-family:var(--font-mono);font-size:11.5px;color:var(--ink-mute);margin:2px 0 6px}
+.runny-xp-track{height:6px;border-radius:999px;background:var(--paper);overflow:hidden}
+.runny-xp-fill{height:100%;background:var(--accent);border-radius:999px;transition:width .5s var(--ease)}
+.runny-farm-link{font-family:var(--font-mono);font-size:12px;font-weight:500;text-decoration:none;color:#fff;background:var(--accent);padding:8px 14px;border-radius:999px;white-space:nowrap;transition:filter .15s var(--ease)}
+.runny-farm-link:hover{filter:brightness(1.08)}
+
+.tile-gamescore{font-family:var(--font-mono);font-weight:600;font-size:11.5px;color:var(--accent);margin-left:8px}
+
+.runny-sync-row{display:flex;align-items:center;gap:12px;margin:14px 0 0}
+.runny-sync-btn{font-family:var(--font-mono);font-size:13.5px;font-weight:600;color:#fff;background:var(--accent);border:none;padding:11px 20px;border-radius:999px;cursor:pointer;transition:filter .15s var(--ease), transform .15s var(--ease)}
+.runny-sync-btn:hover{filter:brightness(1.08)}
+.runny-sync-btn:active{transform:scale(.97)}
+.runny-ready-badge{font-family:var(--font-mono);font-size:11.5px;font-weight:600;padding:6px 13px;border-radius:999px;background:var(--paper);border:1px solid var(--line);color:var(--ink-mute)}
+.runny-ready-badge.has-pending{background:#F5EBDA;border-color:transparent;color:var(--peak);animation:runnyReadyPulse 1.8s ease-in-out infinite}
+@keyframes runnyReadyPulse{0%,100%{box-shadow:0 0 0 0 rgba(184,121,26,.35)}50%{box-shadow:0 0 0 5px rgba(184,121,26,0)}}
+
+.runny-extra-section{margin-top:18px}
+.runny-section-label{font-family:var(--font-mono);font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-mute);margin:0 0 10px}
+.runny-section-hint{font-family:var(--font-mono);font-size:10.5px;color:var(--ink-mute);margin:-6px 0 10px}
+.runny-extra-tile{background:var(--paper-raised);border:1px solid var(--line);border-left:4px dashed var(--tile-color, var(--c-easy));border-radius:var(--radius);box-shadow:var(--shadow-sm);padding:12px 16px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;gap:10px}
+.runny-extra-name{font-family:var(--font-display);font-weight:500;font-size:14.5px;margin:0}
+.runny-extra-meta{font-family:var(--font-mono);font-size:11.5px;color:var(--ink-mute);margin:2px 0 0}
+.runny-extra-badge{font-family:var(--font-mono);font-size:9.5px;letter-spacing:.04em;text-transform:uppercase;background:var(--paper);border:1px solid var(--line);color:var(--ink-mute);padding:2px 7px;border-radius:999px;margin-left:6px}
+.runny-extra-status{font-family:var(--font-mono);font-size:11px;padding:3px 9px;border-radius:999px;white-space:nowrap;background:var(--paper);color:var(--ink-mute);border:1px solid var(--line)}
+
+#runny-reveal{display:none;margin-top:18px;background:var(--paper-raised);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow-sm);padding:18px 20px;perspective:900px}
+.runny-slide{position:relative;min-height:180px}
+.runny-slide-eyebrow{font-family:var(--font-mono);font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-mute);margin:0 0 12px}
+.runny-comp-row{display:flex;justify-content:space-between;font-size:13px;color:var(--ink-soft);padding:3px 0}
+.runny-comp-total{display:flex;justify-content:space-between;font-family:var(--font-display);font-weight:600;font-size:16px;margin:8px 0;padding-top:8px;border-top:1px dashed var(--line)}
+.runny-xp-line{font-size:14px;margin:10px 0 6px}
+.runny-xp-line strong{color:var(--accent)}
+.runny-slide-level-label{font-family:var(--font-mono);font-size:11.5px;color:var(--ink-mute);margin:6px 0 0;text-align:right}
+.runny-nav-row{display:flex;align-items:center;justify-content:space-between;margin-top:18px;gap:12px}
+.runny-nav-btn{font-family:var(--font-mono);font-size:12.5px;font-weight:500;padding:9px 16px;border-radius:999px;border:1px solid var(--line);background:var(--paper-raised);color:var(--ink-soft);cursor:pointer;transition:background .15s var(--ease)}
+.runny-nav-btn:hover{background:var(--paper)}
+.runny-nav-btn:disabled{opacity:.4;cursor:default}
+.runny-nav-btn.primary{background:var(--accent);color:#fff;border-color:transparent}
+.runny-slide-counter{font-family:var(--font-mono);font-size:12px;color:var(--ink-mute)}
+.runny-popup{margin-top:14px;padding:12px 14px;border-radius:12px;font-size:13px;opacity:0;transform:scale(.9) translateY(6px);transition:opacity .3s var(--ease), transform .3s var(--ease);display:flex;align-items:center;gap:10px}
+.runny-popup.show{opacity:1;transform:scale(1) translateY(0)}
+.runny-popup.item{background:#F5EBDA;color:var(--peak)}
+.runny-popup.levelup{background:var(--taper-tint);color:var(--taper);font-family:var(--font-display);font-weight:600;font-size:15px}
+.runny-popup.race{background:linear-gradient(135deg,#F5EBDA,#F5E1EA);color:var(--peaked);font-family:var(--font-display);font-weight:600}
+.runny-recovery-box{display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:12px;background:var(--taper-tint);color:var(--taper);font-size:13px}
+.runny-summary-line{font-size:14px;margin:6px 0}
 </style>
 </head>
 <body>
@@ -352,6 +409,18 @@ footer.note strong{color:var(--ink)}
         <span><span class="swatch" style="background:var(--ink)"></span>marker: where the plan expects you today</span>
       </p>
     </div>
+
+    <div class="runny-card-widget" id="runny-widget"></div>
+    <div class="runny-sync-row">
+      <button class="runny-sync-btn" id="runny-sync-btn">Sync</button>
+      <span class="runny-ready-badge" id="runny-ready-badge"></span>
+    </div>
+    <div class="runny-extra-section" id="runny-extra-section" style="display:none">
+      <p class="runny-section-label">Extra sessions (not part of the plan)</p>
+      <p class="runny-section-hint">Still rated, still earns baseline XP/items &mdash; just no category-matching bonus.</p>
+      <div id="runny-extra-tiles"></div>
+    </div>
+    <div id="runny-reveal"></div>
   </div>
 
   <div class="plan">
@@ -1796,6 +1865,281 @@ footer.note strong{color:var(--ink)}
     save();
   });
 
+  // ==== Runnies: gamification engine wiring ====
+  // SESSION_ACTUALS/RECOVERY_WEEKLY (session-data.js) start empty on merge —
+  // populated for real by Claude during future data syncs (see CLAUDE.md).
+  // Race-condition rule (same as plan-progress above): only ever save
+  // 'plan-gamification' from inside the watch callback below, or directly
+  // from a deliberate user action (tapping Sync).
+  var runnyState = null;
+  var hallOfFameEntries = [];
+  PlanSync.watch('hall-of-fame', function(val){ hallOfFameEntries = val || []; });
+
+  function runnyTodayStr(){
+    var d = new Date();
+    return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+  }
+
+  function runnyPendingSessionIds(){
+    if (!runnyState) return [];
+    return Object.keys(SESSION_ACTUALS).filter(function(sid){
+      return runnyState.processedSessionIds.indexOf(sid) === -1;
+    });
+  }
+
+  function renderRunnyWidget(){
+    var el = document.getElementById('runny-widget');
+    if (!el) return;
+    var id = runnyState && runnyState.activeRunnyId;
+    if (!id || !runnyState.owned[id]) {
+      el.innerHTML = '<div class="runny-info"><p class="runny-name">No active Runny yet</p><p class="runny-meta">Pick your starter on the Runny Farm.</p></div><a class="runny-farm-link" href="runny_farm.html">Runny Farm &rarr;</a>';
+      return;
+    }
+    var runny = RunnyData.getRunny(id);
+    var owned = runnyState.owned[id];
+    var stageName = runny.stages[owned.stageIndex].name;
+    var need = GameEngine.xpToNext(owned.level);
+    var pct = Math.min(100, Math.round(100 * owned.xp / need));
+    var streakBadge = runnyState.currentStreakWeeks > 0 ? ' &middot; 🔥 ' + runnyState.currentStreakWeeks + ' wk streak' : '';
+    el.innerHTML =
+      '<div class="runny-portrait">' + RunnyArt.renderRunnySVG(id, owned.stageIndex, {size:52, shiny: !!owned.shiny}) + '</div>' +
+      '<div class="runny-info">' +
+        '<p class="runny-name">' + stageName + ' &middot; Lv ' + owned.level + '</p>' +
+        '<p class="runny-meta">Stage ' + (owned.stageIndex+1) + ' of ' + runny.stages.length + ' &middot; ' + Math.round(owned.xp) + ' / ' + need + ' XP &middot; ' + GameEngine.totalMultiplier(owned.level, owned.stageIndex).toFixed(2) + '&times; total' + streakBadge + '</p>' +
+        '<div class="runny-xp-track"><div class="runny-xp-fill" style="width:' + pct + '%"></div></div>' +
+      '</div>' +
+      '<a class="runny-farm-link" href="runny_farm.html">Runny Farm &rarr;</a>';
+  }
+
+  function renderRunnyExtraTiles(){
+    var allSids = Object.keys(SESSION_ACTUALS);
+    var extraSids = allSids.filter(function(sid){ return SESSION_ACTUALS[sid].isExtra; });
+    var section = document.getElementById('runny-extra-section');
+    if (!extraSids.length) { section.style.display = 'none'; return; }
+    section.style.display = 'block';
+    document.getElementById('runny-extra-tiles').innerHTML = extraSids.map(function(sid){
+      var s = SESSION_ACTUALS[sid];
+      var processed = runnyState && runnyState.processedSessionIds.indexOf(sid) !== -1;
+      var distText = s.distanceKm != null ? (s.distanceKm + ' km') : 'strength session';
+      var scoreText = (runnyState && runnyState.sessionScores && runnyState.sessionScores[sid] != null)
+        ? ' &middot; <span class="tile-gamescore">Game score: ' + runnyState.sessionScores[sid] + '</span>' : '';
+      return '<div class="runny-extra-tile" style="--tile-color:var(--c-' + s.category + ')">' +
+        '<div><p class="runny-extra-name">' + sid + '<span class="runny-extra-badge">Extra</span></p><p class="runny-extra-meta">' + s.date + ' &middot; ' + distText + scoreText + '</p></div>' +
+        '<span class="runny-extra-status">' + (processed ? 'Synced' : 'Ready to sync') + '</span>' +
+      '</div>';
+    }).join('');
+  }
+
+  function applyRunnyGameScores(){
+    if (!runnyState || !runnyState.sessionScores) return;
+    Object.keys(runnyState.sessionScores).forEach(function(sid){
+      var tile = document.querySelector('.tile[data-sid="' + sid + '"]');
+      if (!tile) return;
+      var dist = tile.querySelector('.tile-dist');
+      if (!dist || dist.querySelector('.tile-gamescore')) return;
+      var span = document.createElement('span');
+      span.className = 'tile-gamescore';
+      span.textContent = 'Game score: ' + runnyState.sessionScores[sid];
+      dist.appendChild(span);
+    });
+  }
+
+  function renderRunnyReadyBadge(){
+    var pendingCount = runnyPendingSessionIds().length;
+    var badge = document.getElementById('runny-ready-badge');
+    badge.textContent = pendingCount > 0 ? (pendingCount + ' session' + (pendingCount>1?'s':'') + ' ready to sync') : 'All caught up';
+    badge.classList.toggle('has-pending', pendingCount > 0);
+  }
+
+  function renderRunny(){
+    renderRunnyWidget();
+    renderRunnyExtraTiles();
+    applyRunnyGameScores();
+    renderRunnyReadyBadge();
+  }
+
+  function computeRunnyWeeklyCompletion(){
+    var weekly = {};
+    Object.keys(SESSION_ACTUALS).forEach(function(sid){
+      var s = SESSION_ACTUALS[sid];
+      var wk = GameEngine.weekStartFor(s.date);
+      weekly[wk] = weekly[wk] || { planned: 0, completed: 0 };
+      weekly[wk].planned++;
+      if (s.checked) weekly[wk].completed++;
+    });
+    return weekly;
+  }
+
+  // ---- Sync reveal slideshow (mirrors Gamification Sandbox/gamification_test.html) ----
+  var runnySlides = [];
+  var runnySlideIndex = 0;
+
+  function runnyItemDropLabel(d){
+    var parts = [];
+    if (d.trainingShard) parts.push('Training Shard');
+    if (d.evolutionCore) parts.push(RunnyData.CATEGORIES[d.evolutionCore].label.split(' ')[0] + ' Evolution Core');
+    return parts.join(' + ');
+  }
+  function runnyEggEventLabel(e){
+    var species = RunnyData.getRunny(e.speciesId);
+    if (e.type === 'hatched') return 'Hatched a new Runny: ' + species.stages[0].name + '!';
+    if (e.type === 'egg-progress') return species.stages[0].name + ' egg (' + e.have + ' / ' + GameEngine.EGGS_NEEDED_TO_HATCH + ')';
+    if (e.type === 'duplicate-core') return 'Duplicate ' + species.stages[0].name + ' egg → ' + RunnyData.CATEGORIES[e.category].label.split(' ')[0] + ' Evolution Core';
+    if (e.type === 'duplicate-xp') return 'Duplicate ' + species.stages[0].name + ' egg → +' + e.amount + ' XP';
+    return '';
+  }
+
+  function buildRunnySlides(results, beforeSnapshot){
+    var bySid = {};
+    function ensureBucket(sid){ bySid[sid] = bySid[sid] || {}; return bySid[sid]; }
+    results.levelUps.forEach(function(l){ ensureBucket(l.sid).levelUp = l; });
+    results.itemDrops.forEach(function(d){ if (d.trainingShard || d.evolutionCore) ensureBucket(d.sid).itemDrop = d; });
+    results.eggEvents.forEach(function(e){ ensureBucket(e.sid).eggEvent = e; });
+    results.raceEvents.forEach(function(r){ ensureBucket(r.sid).raceEvent = r; });
+
+    var running = {};
+    Object.keys(beforeSnapshot).forEach(function(id){ running[id] = { level: beforeSnapshot[id].level, xp: beforeSnapshot[id].xp, stageIndex: beforeSnapshot[id].stageIndex }; });
+
+    var built = results.ratedSessions.map(function(r){
+      var runny = RunnyData.getRunny(r.runnyId);
+      var st = running[r.runnyId];
+      var beforeLevel = st.level, beforeXp = st.xp, stageIndex = st.stageIndex;
+      var beforeNeed = GameEngine.xpToNext(beforeLevel);
+      var beforePct = Math.min(100, Math.round(100 * beforeXp / beforeNeed));
+      GameEngine.applyXp(st, r.xp);
+      var afterNeed = GameEngine.xpToNext(st.level);
+      var afterPct = st.level > beforeLevel ? 100 : Math.min(100, Math.round(100 * st.xp / afterNeed));
+      var extra = bySid[r.sid] || {};
+      return {
+        type: 'session', sid: r.sid, score: r.score, breakdown: r.breakdown, xp: r.xp,
+        runnyId: r.runnyId, runnyName: runny.stages[stageIndex].name,
+        beforeLevel: beforeLevel, afterLevel: st.level, beforePct: beforePct, afterPct: afterPct,
+        itemDrop: extra.itemDrop, eggEvent: extra.eggEvent, raceEvent: extra.raceEvent, levelUp: extra.levelUp
+      };
+    });
+
+    results.recoveryBonuses.forEach(function(rb){
+      built.push({ type: 'recovery', weekKey: rb.weekKey, bonus: rb.bonus, earners: rb.earners });
+    });
+
+    built.push({ type: 'summary', results: results });
+    return built;
+  }
+
+  function renderRunnySlide(idx){
+    var s = runnySlides[idx];
+    var el = document.getElementById('runny-reveal');
+    var html = '';
+
+    if (s.type === 'session') {
+      html += '<p class="runny-slide-eyebrow">Session ' + (idx+1) + ' of ' + runnySlides.length + ' &middot; ' + s.sid + '</p>';
+      html += '<div>' +
+        '<div class="runny-comp-row"><span>Completion &amp; adherence</span><span>' + s.breakdown.completion + ' / 40</span></div>' +
+        '<div class="runny-comp-row"><span>Execution accuracy</span><span>' + s.breakdown.execution + ' / 30</span></div>' +
+        '<div class="runny-comp-row"><span>Progress / improvement</span><span>' + s.breakdown.progress + ' / 20</span></div>' +
+        '<div class="runny-comp-row"><span>Effort alignment</span><span>' + s.breakdown.effort + ' / 10</span></div>' +
+        '<div class="runny-comp-total"><span>Score</span><span>' + s.score + ' / 100</span></div>' +
+      '</div>';
+      html += '<p class="runny-xp-line">+<strong>' + s.xp + ' XP</strong> to ' + s.runnyName + '</p>';
+      html += '<div class="runny-xp-track"><div class="runny-xp-fill" id="runny-slide-xp-fill" style="width:' + s.beforePct + '%"></div></div>';
+      html += '<p class="runny-slide-level-label" id="runny-slide-level-label">Lv ' + s.beforeLevel + '</p>';
+      html += '<div id="runny-slide-popups"></div>';
+    } else if (s.type === 'recovery') {
+      html += '<p class="runny-slide-eyebrow">Weekly Recovery Bonus</p>';
+      html += '<div class="runny-recovery-box">' + ItemArt.renderSlothMascotSVG(44) + '<span>Week of ' + s.weekKey + ': +' + s.bonus + ' XP split across ' + s.earners.length + ' Runny/Runnies who trained that week.</span></div>';
+    } else if (s.type === 'summary') {
+      var r = s.results;
+      html += '<p class="runny-slide-eyebrow">All done</p>';
+      html += '<p class="runny-summary-line"><strong>' + r.ratedSessions.length + '</strong> session(s) synced this time.</p>';
+      if (r.evolutionReady.length) {
+        html += '<p class="runny-summary-line">Ready to evolve: ' + r.evolutionReady.map(function(id){ var rn=RunnyData.getRunny(id); return rn.stages[runnyState.owned[id].stageIndex].name; }).join(', ') + ' &mdash; visit the <a href="runny_farm.html">Runny Farm</a>!</p>';
+      }
+      if (!r.ratedSessions.length && !r.recoveryBonuses.length) {
+        html += '<p class="runny-summary-line">Nothing new to process &mdash; you\'re all caught up.</p>';
+      }
+    }
+
+    el.innerHTML = html;
+    renderRunnyNav();
+
+    if (s.type === 'session') {
+      var fill = document.getElementById('runny-slide-xp-fill');
+      var label = document.getElementById('runny-slide-level-label');
+      setTimeout(function(){
+        fill.style.width = s.afterPct + '%';
+        if (s.afterLevel > s.beforeLevel) label.textContent = 'Lv ' + s.afterLevel;
+      }, 120);
+
+      var popupDelay = 650;
+      var popupsEl = document.getElementById('runny-slide-popups');
+      if (s.levelUp) {
+        setTimeout(function(){
+          popupsEl.insertAdjacentHTML('beforeend', '<div class="runny-popup levelup" id="runny-pu-level">🎉 Level up! ' + s.beforeLevel + ' → ' + s.afterLevel + '</div>');
+          requestAnimationFrame(function(){ document.getElementById('runny-pu-level').classList.add('show'); });
+        }, popupDelay);
+        popupDelay += 350;
+      }
+      if (s.itemDrop) {
+        setTimeout(function(){
+          popupsEl.insertAdjacentHTML('beforeend', '<div class="runny-popup item" id="runny-pu-item">✨ Found: ' + runnyItemDropLabel(s.itemDrop) + '</div>');
+          requestAnimationFrame(function(){ document.getElementById('runny-pu-item').classList.add('show'); });
+        }, popupDelay);
+        popupDelay += 350;
+      }
+      if (s.eggEvent) {
+        setTimeout(function(){
+          popupsEl.insertAdjacentHTML('beforeend', '<div class="runny-popup item" id="runny-pu-egg">🥚 ' + runnyEggEventLabel(s.eggEvent) + '</div>');
+          requestAnimationFrame(function(){ document.getElementById('runny-pu-egg').classList.add('show'); });
+        }, popupDelay);
+        popupDelay += 350;
+      }
+      if (s.raceEvent) {
+        setTimeout(function(){
+          burstConfetti();
+          var msg = (s.raceEvent.isNewPB ? '🏆 New PB! ' : '🏁 Race complete! ') + '+' + s.raceEvent.trophiesAwarded + ' trophy/trophies';
+          if (s.raceEvent.gotStar) msg += ' — ⭐ Finishron earned a permanent Star!';
+          popupsEl.insertAdjacentHTML('beforeend', '<div class="runny-popup race" id="runny-pu-race">' + msg + '</div>');
+          requestAnimationFrame(function(){ document.getElementById('runny-pu-race').classList.add('show'); });
+        }, popupDelay);
+      }
+    }
+  }
+
+  function renderRunnyNav(){
+    var el = document.getElementById('runny-reveal');
+    el.insertAdjacentHTML('beforeend',
+      '<div class="runny-nav-row">' +
+        '<button class="runny-nav-btn" id="runny-slide-prev" ' + (runnySlideIndex===0?'disabled':'') + '>&larr; Prev</button>' +
+        '<span class="runny-slide-counter">' + (runnySlideIndex+1) + ' / ' + runnySlides.length + '</span>' +
+        '<button class="runny-nav-btn primary" id="runny-slide-next">' + (runnySlideIndex===runnySlides.length-1?'Done':'Next →') + '</button>' +
+      '</div>'
+    );
+    document.getElementById('runny-slide-prev').addEventListener('click', function(){ if (runnySlideIndex>0){ runnySlideIndex--; renderRunnySlide(runnySlideIndex); } });
+    document.getElementById('runny-slide-next').addEventListener('click', function(){
+      if (runnySlideIndex < runnySlides.length-1) { runnySlideIndex++; renderRunnySlide(runnySlideIndex); }
+      else { document.getElementById('runny-reveal').style.display = 'none'; renderRunny(); }
+    });
+  }
+
+  document.getElementById('runny-sync-btn').addEventListener('click', function(){
+    if (!runnyState) runnyState = GameEngine.blankGameState();
+    var beforeSnapshot = JSON.parse(JSON.stringify(runnyState.owned));
+    var results = GameEngine.processSync(runnyState, SESSION_ACTUALS, RECOVERY_WEEKLY);
+    GameEngine.updateStreak(runnyState, computeRunnyWeeklyCompletion(), runnyTodayStr());
+    runnySlides = buildRunnySlides(results, beforeSnapshot);
+    runnySlideIndex = 0;
+    document.getElementById('runny-reveal').style.display = 'block';
+    renderRunnySlide(0);
+    renderRunny();
+    PlanSync.save('plan-gamification', runnyState);
+  });
+
+  renderRunny();
+  PlanSync.watch('plan-gamification', function(val){
+    runnyState = val;
+    renderRunny();
+  });
+
   var PLAN_ID = 'lausanne-hm-2026';
   var PLAN_META = {
     weeks: 11, km: 645,
@@ -1866,6 +2210,21 @@ footer.note strong{color:var(--ink)}
         registry[PLAN_ID] = { status: 'completed', completedAt: now };
         applyCompleteUI(true, now);
         burstConfetti();
+        // Runnies: snapshot the final roster into the permanent Hall of Fame
+        // the moment a plan is marked complete (only on the forward transition).
+        if (runnyState && runnyState.activeRunnyId && Object.keys(runnyState.owned).length) {
+          var runnyRoster = Object.keys(runnyState.owned).map(function(id){
+            var o = runnyState.owned[id];
+            return { runnyId: id, level: o.level, stageIndex: o.stageIndex };
+          });
+          hallOfFameEntries = hallOfFameEntries.concat([{
+            planId: PLAN_ID,
+            completedAt: now,
+            teamPower: GameEngine.teamPower(runnyState),
+            roster: runnyRoster
+          }]);
+          PlanSync.save('hall-of-fame', hallOfFameEntries);
+        }
       }
       PlanSync.save('plan-registry', registry);
     });
