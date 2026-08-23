@@ -23,5 +23,19 @@
 //   };
 //   RECOVERY_WEEKLY['YYYY-MM-DD' (Monday)] = 0-100;
 
-var SESSION_ACTUALS = {};
-var RECOVERY_WEEKLY = {};
+var SESSION_ACTUALS = {
+  'w1-easy1': { date: '2026-08-10', category: 'easy', plannedDistanceKm: 12, distanceKm: 12.0, avgPaceSecPerKm: 366, avgHr: 137, targetHrLow: 138, targetHrHigh: 152, feel: 100, raceTimeTrend: null, checked: true },
+  'w1-quality': { date: '2026-08-12', category: 'quality', plannedDistanceKm: 10, distanceKm: 8.6, avgPaceSecPerKm: 318, avgHr: 154, targetHrLow: 160, targetHrHigh: 185, feel: 75, raceTimeTrend: null, checked: true },
+  'w1-easy2': { date: '2026-08-14', category: 'easy', plannedDistanceKm: 12, distanceKm: 12.0, avgPaceSecPerKm: 310, avgHr: 154, targetHrLow: 152, targetHrHigh: 169, feel: 100, raceTimeTrend: null, checked: true, toughWeather: true },
+  'w1-long': { date: '2026-08-16', category: 'long', plannedDistanceKm: 14, distanceKm: 15.2, avgPaceSecPerKm: 398, avgHr: 145, targetHrLow: 138, targetHrHigh: 152, feel: 100, raceTimeTrend: null, checked: true },
+  'w2-easy1': { date: '2026-08-17', category: 'easy', plannedDistanceKm: 13, distanceKm: 13.0, avgPaceSecPerKm: 323, avgHr: 148, targetHrLow: 138, targetHrHigh: 152, feel: 100, raceTimeTrend: null, checked: true },
+  'w2-quality': { date: '2026-08-18', category: 'quality', plannedDistanceKm: 12, distanceKm: 8.2, avgPaceSecPerKm: 369, avgHr: 143, targetHrLow: 165, targetHrHigh: 188, feel: 25, raceTimeTrend: null, checked: true, toughWeather: true },
+  'w2-easy2': { date: '2026-08-20', category: 'easy', plannedDistanceKm: 13, distanceKm: 13.0, avgPaceSecPerKm: 291, avgHr: 162, targetHrLow: 152, targetHrHigh: 169, feel: 100, raceTimeTrend: null, checked: true },
+  'w2-long': { date: '2026-08-22', category: 'long', plannedDistanceKm: 16, distanceKm: 16.0, avgPaceSecPerKm: 321, avgHr: 141, targetHrLow: 138, targetHrHigh: 152, feel: 100, raceTimeTrend: null, checked: true },
+  'extra-2026-08-23': { date: '2026-08-23', category: 'easy', distanceKm: 6.8, avgPaceSecPerKm: 420, avgHr: 130, targetHrLow: 138, targetHrHigh: 152, feel: 100, raceTimeTrend: null, checked: true, isExtra: true }
+};
+
+var RECOVERY_WEEKLY = {
+  '2026-08-10': 73,
+  '2026-08-17': 50
+};
