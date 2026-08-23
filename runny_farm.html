@@ -106,12 +106,12 @@ h1{font-family:var(--font-display);font-weight:600;font-size:clamp(24px,4.5vw,32
 
 /* ---- Starter picker (first visit, no Runny collected yet) ---- */
 .starter-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:18px 0 8px}
-.starter-card{background:var(--paper-raised);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow-sm);padding:16px;text-align:center;transition:transform .18s var(--ease), box-shadow .18s var(--ease)}
+.starter-card{display:flex;flex-direction:column;background:var(--paper-raised);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow-sm);padding:16px;text-align:center;transition:transform .18s var(--ease), box-shadow .18s var(--ease)}
 .starter-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-md)}
 .starter-card .runny-portrait-lg{margin-bottom:4px}
 .starter-card-name{font-family:var(--font-display);font-weight:600;font-size:15px;margin:6px 0 2px}
 .starter-card .flavor{font-size:11.5px;margin:0 0 10px;max-width:none}
-.starter-card .btn{width:100%}
+.starter-card .btn{width:100%;margin-top:auto}
 
 /* ---- Sync: pending-session list + button + reveal slideshow ---- */
 .sync-section{margin-top:34px;padding-top:22px;border-top:1px solid var(--line)}
@@ -163,7 +163,7 @@ h1{font-family:var(--font-display);font-weight:600;font-size:clamp(24px,4.5vw,32
 </head>
 <body>
 <div class="wrap">
-  <a href="lausanne_hm_training_plan.html" class="back-btn">&larr; Back to Training Plan</a>
+  <a href="training_hub.html" class="back-btn">&larr; Back to Training Hub</a>
   <p class="eyebrow">Runny Farm</p>
   <h1>Your Runnies</h1>
   <p class="subhead">Browse your collection, set who's active, and evolve anyone who's ready.</p>
