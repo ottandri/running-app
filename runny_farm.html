@@ -15,6 +15,7 @@
 <script src="creature-art.js"></script>
 <script src="item-art.js"></script>
 <script src="game-engine.js"></script>
+<script src="session-data.js"></script>
 <style>
 :root{
   --paper:#F7F6F2; --paper-raised:#FFFFFF; --ink:#1C1B19; --ink-soft:#5B5852; --ink-mute:#8C897F;
@@ -41,11 +42,12 @@
 }
 *{box-sizing:border-box}
 body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--font-body);line-height:1.6;-webkit-font-smoothing:antialiased}
-.wrap{max-width:720px;margin:0 auto;padding:28px 20px 90px}
+.wrap{max-width:720px;margin:0 auto;padding:76px 20px 90px}
 .eyebrow{font-family:var(--font-mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-mute);margin:0 0 8px}
 h1{font-family:var(--font-display);font-weight:600;font-size:clamp(24px,4.5vw,32px);margin:0 0 6px}
 .subhead{font-size:13.5px;color:var(--ink-soft);margin:0 0 22px}
-a.back-link{font-family:var(--font-mono);font-size:12px;color:var(--ink-mute);text-decoration:none}
+.back-btn{position:fixed;top:16px;left:16px;z-index:50;display:inline-flex;align-items:center;gap:6px;font-family:var(--font-mono);font-size:12.5px;font-weight:500;color:var(--ink-soft);text-decoration:none;background:var(--paper-raised);border:1px solid var(--line);border-radius:999px;padding:9px 16px;box-shadow:var(--shadow-md);transition:transform .15s var(--ease), box-shadow .15s var(--ease), background .15s var(--ease)}
+.back-btn:hover{transform:translateY(-1px);background:var(--paper)}
 
 .power-card{background:var(--paper-raised);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow-sm);padding:16px 20px;display:flex;justify-content:space-between;align-items:baseline;margin:18px 0 26px}
 .power-label{font-family:var(--font-mono);font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-mute)}
@@ -66,7 +68,7 @@ a.back-link{font-family:var(--font-mono);font-size:12px;color:var(--ink-mute);te
 .runny-card.locked{opacity:.5}
 .runny-portrait-lg{display:flex;justify-content:center;margin-bottom:8px;animation:idleFloat 3.6s ease-in-out infinite}
 @keyframes idleFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
-.category-badge{display:inline-block;font-family:var(--font-mono);font-size:10.5px;letter-spacing:.04em;text-transform:uppercase;padding:3px 10px;border-radius:999px;background:var(--paper);border:1px solid var(--line);color:var(--tile-color, var(--ink-mute))}
+.category-badge{display:inline-block;white-space:nowrap;font-family:var(--font-mono);font-size:10.5px;letter-spacing:.04em;text-transform:uppercase;padding:3px 10px;border-radius:999px;background:var(--paper);border:1px solid var(--line);color:var(--tile-color, var(--ink-mute))}
 .runny-card-name{font-family:var(--font-display);font-weight:600;font-size:20px;margin:10px 0 2px}
 .runny-card-meta{font-family:var(--font-mono);font-size:12px;color:var(--ink-mute);margin:0 0 10px}
 .xp-bar-track{height:7px;border-radius:999px;background:var(--paper);overflow:hidden;max-width:260px;margin:0 auto 10px}
@@ -111,13 +113,58 @@ a.back-link{font-family:var(--font-mono);font-size:12px;color:var(--ink-mute);te
 .starter-card .flavor{font-size:11.5px;margin:0 0 10px;max-width:none}
 .starter-card .btn{width:100%}
 
+/* ---- Sync: pending-session list + button + reveal slideshow ---- */
+.sync-section{margin-top:34px;padding-top:22px;border-top:1px solid var(--line)}
+.sync-tile{background:var(--paper-raised);border:1px solid var(--line);border-left:4px solid var(--tile-color, var(--c-easy));border-radius:var(--radius);box-shadow:var(--shadow-sm);padding:12px 16px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;gap:10px}
+.sync-tile.extra{border-left-style:dashed}
+.sync-tile-name{font-family:var(--font-display);font-weight:500;font-size:14.5px;margin:0}
+.sync-tile-meta{font-family:var(--font-mono);font-size:11.5px;color:var(--ink-mute);margin:2px 0 0}
+.sync-tile-badge{font-family:var(--font-mono);font-size:9.5px;letter-spacing:.04em;text-transform:uppercase;background:var(--paper);border:1px solid var(--line);color:var(--ink-mute);padding:2px 7px;border-radius:999px;margin-left:6px}
+.sync-tile-status{font-family:var(--font-mono);font-size:11px;padding:3px 9px;border-radius:999px;white-space:nowrap}
+.sync-tile-status.done{background:var(--taper-tint);color:var(--taper)}
+.sync-tile-status.synced{background:var(--paper);color:var(--ink-mute);border:1px solid var(--line)}
+.sync-empty{font-size:13px;color:var(--ink-mute);font-style:italic;margin:0 0 12px}
+
+.sync-row{display:flex;align-items:center;gap:12px;margin:16px 0 0}
+.sync-btn{font-family:var(--font-mono);font-size:13.5px;font-weight:600;color:#fff;background:var(--accent);border:none;padding:11px 20px;border-radius:999px;cursor:pointer;transition:filter .15s var(--ease), transform .15s var(--ease)}
+.sync-btn:hover{filter:brightness(1.08)}
+.sync-btn:active{transform:scale(.97)}
+.sync-ready-badge{font-family:var(--font-mono);font-size:11.5px;font-weight:600;padding:6px 13px;border-radius:999px;background:var(--paper);border:1px solid var(--line);color:var(--ink-mute)}
+.sync-ready-badge.has-pending{background:#F5EBDA;border-color:transparent;color:var(--race-gold);animation:syncReadyPulse 1.8s ease-in-out infinite}
+@keyframes syncReadyPulse{0%,100%{box-shadow:0 0 0 0 rgba(184,121,26,.35)}50%{box-shadow:0 0 0 5px rgba(184,121,26,0)}}
+
+#sync-reveal{display:none;margin-top:18px;background:var(--paper-raised);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow-sm);padding:18px 20px;perspective:900px}
+.sync-slide-eyebrow{font-family:var(--font-mono);font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-mute);margin:0 0 12px}
+.sync-comp-row{display:flex;justify-content:space-between;font-size:13px;color:var(--ink-soft);padding:3px 0}
+.sync-comp-total{display:flex;justify-content:space-between;font-family:var(--font-display);font-weight:600;font-size:16px;margin:8px 0;padding-top:8px;border-top:1px dashed var(--line)}
+.sync-xp-line{font-size:14px;margin:10px 0 6px}
+.sync-xp-line strong{color:var(--accent)}
+.sync-slide-level-label{font-family:var(--font-mono);font-size:11.5px;color:var(--ink-mute);margin:6px 0 0;text-align:right}
+.sync-nav-row{display:flex;align-items:center;justify-content:space-between;margin-top:18px;gap:12px}
+.sync-nav-btn{font-family:var(--font-mono);font-size:12.5px;font-weight:500;padding:9px 16px;border-radius:999px;border:1px solid var(--line);background:var(--paper-raised);color:var(--ink-soft);cursor:pointer;transition:background .15s var(--ease)}
+.sync-nav-btn:hover{background:var(--paper)}
+.sync-nav-btn:disabled{opacity:.4;cursor:default}
+.sync-nav-btn.primary{background:var(--accent);color:#fff;border-color:transparent}
+.sync-slide-counter{font-family:var(--font-mono);font-size:12px;color:var(--ink-mute)}
+.sync-popup{margin-top:14px;padding:12px 14px;border-radius:12px;font-size:13px;opacity:0;transform:scale(.9) translateY(6px);transition:opacity .3s var(--ease), transform .3s var(--ease);display:flex;align-items:center;gap:10px}
+.sync-popup.show{opacity:1;transform:scale(1) translateY(0)}
+.sync-popup.item{background:#F5EBDA;color:var(--race-gold)}
+.sync-popup.levelup{background:var(--taper-tint);color:var(--taper);font-family:var(--font-display);font-weight:600;font-size:15px}
+.sync-popup.race{background:linear-gradient(135deg,#F5EBDA,#F5E1EA);color:#9C2B54;font-family:var(--font-display);font-weight:600}
+.sync-recovery-box{display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:12px;background:var(--taper-tint);color:var(--taper);font-size:13px}
+.sync-summary-line{font-size:14px;margin:6px 0}
+
+#confetti-layer{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:80}
+.confetti-piece{position:absolute;top:-12px;width:8px;height:8px;border-radius:2px;animation:confetti-fall 2s linear forwards}
+@keyframes confetti-fall{ to{ transform:translateY(100vh) translateX(var(--drift)) rotate(var(--rot)); opacity:.15; } }
+
 @media (prefers-reduced-motion: reduce){ *{transition:none !important; animation:none !important} }
 </style>
 </head>
 <body>
 <div class="wrap">
-  <a class="back-link" href="lausanne_hm_training_plan.html">&larr; Back to Training Plan</a>
-  <p class="eyebrow" style="margin-top:14px">Runny Farm</p>
+  <a href="lausanne_hm_training_plan.html" class="back-btn">&larr; Back to Training Plan</a>
+  <p class="eyebrow">Runny Farm</p>
   <h1>Your Runnies</h1>
   <p class="subhead">Browse your collection, set who's active, and evolve anyone who's ready.</p>
 
@@ -144,8 +191,20 @@ a.back-link{font-family:var(--font-mono);font-size:12px;color:var(--ink-mute);te
       <div class="carousel-viewport" id="item-viewport"></div>
       <button class="carousel-btn" id="item-next" aria-label="Next item">&rarr;</button>
     </div>
+
+    <div class="sync-section">
+      <p class="section-label">Sync</p>
+      <p class="section-hint">Every session logged from a data sync, and whether it's fed into your Runnies yet.</p>
+      <div id="sync-tiles"></div>
+      <div class="sync-row">
+        <button class="sync-btn" id="sync-btn">Sync</button>
+        <span class="sync-ready-badge" id="sync-ready-badge"></span>
+      </div>
+      <div id="sync-reveal"></div>
+    </div>
   </div>
 </div>
+<div id="confetti-layer"></div>
 
 <script>
 (function(){
@@ -170,6 +229,14 @@ a.back-link{font-family:var(--font-mono);font-size:12px;color:var(--ink-mute);te
     return !!(gameState.activeRunnyId && Object.keys(gameState.owned).length > 0);
   }
 
+  // Short form for the category badge — the full label (e.g. "Quality
+  // (Threshold+Interval)") overflows the small pill on a narrow card; same
+  // first-word convention already used for item names below (e.g. "Long
+  // Evolution Core").
+  function categoryShortLabel(category){
+    return RunnyData.CATEGORIES[category].label.split(' ')[0];
+  }
+
   function todayStr(){
     var d = new Date();
     return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
@@ -185,7 +252,7 @@ a.back-link{font-family:var(--font-mono);font-size:12px;color:var(--ink-mute);te
       var catColor = 'var(' + RunnyData.CATEGORIES[species.category].colorVar + ')';
       return '<div class="starter-card">' +
         '<div class="runny-portrait-lg">' + RunnyArt.renderRunnySVG(species.id, 0, {size:80}) + '</div>' +
-        '<span class="category-badge" style="--tile-color:' + catColor + '">' + RunnyData.CATEGORIES[species.category].label + '</span>' +
+        '<span class="category-badge" style="--tile-color:' + catColor + '">' + categoryShortLabel(species.category) + '</span>' +
         '<p class="starter-card-name">' + species.stages[0].name + '</p>' +
         '<p class="flavor">' + species.stages[0].flavor + '</p>' +
         '<button class="btn primary" data-action="chooseStarter" data-id="' + species.id + '">Choose as starter</button>' +
@@ -205,7 +272,240 @@ a.back-link{font-family:var(--font-mono);font-size:12px;color:var(--ink-mute);te
     renderTeamPower();
     renderRunnyCard();
     renderItemCard();
+    renderSyncSection();
   }
+
+  // ==== Sync (moved here from the plan page per Andri's request — one shared
+  // list + button for every session, not per-session triggers, since the
+  // engine always processes the whole pending batch together anyway) ====
+  function syncPendingSessionIds(){
+    return Object.keys(SESSION_ACTUALS).filter(function(sid){
+      return gameState.processedSessionIds.indexOf(sid) === -1;
+    });
+  }
+
+  function renderSyncTiles(){
+    var sids = Object.keys(SESSION_ACTUALS);
+    var el = document.getElementById('sync-tiles');
+    if (!sids.length) { el.innerHTML = '<p class="sync-empty">No session data yet — this fills in after your next data sync.</p>'; return; }
+    el.innerHTML = sids.map(function(sid){
+      var s = SESSION_ACTUALS[sid];
+      var processed = gameState.processedSessionIds.indexOf(sid) !== -1;
+      var distText = s.distanceKm != null ? (s.distanceKm + ' km') : 'strength session';
+      var scoreText = (gameState.sessionScores && gameState.sessionScores[sid] != null)
+        ? ' &middot; <span class="tile-gamescore" style="color:var(--accent);font-weight:600">Game score: ' + gameState.sessionScores[sid] + '</span>' : '';
+      var extraBadge = s.isExtra ? '<span class="sync-tile-badge">Extra</span>' : '';
+      return '<div class="sync-tile' + (s.isExtra ? ' extra' : '') + '" style="--tile-color:var(--c-' + s.category + ')">' +
+        '<div><p class="sync-tile-name">' + sid + (s.isRace ? ' 🏁' : '') + extraBadge + '</p><p class="sync-tile-meta">' + s.date + ' &middot; ' + distText + scoreText + '</p></div>' +
+        '<span class="sync-tile-status ' + (processed ? 'synced' : 'done') + '">' + (processed ? 'Synced' : 'Ready to sync') + '</span>' +
+      '</div>';
+    }).join('');
+  }
+
+  function renderSyncReadyBadge(){
+    var pendingCount = syncPendingSessionIds().length;
+    var badge = document.getElementById('sync-ready-badge');
+    badge.textContent = pendingCount > 0 ? (pendingCount + ' session' + (pendingCount>1?'s':'') + ' ready to sync') : 'All caught up';
+    badge.classList.toggle('has-pending', pendingCount > 0);
+  }
+
+  function renderSyncSection(){
+    renderSyncTiles();
+    renderSyncReadyBadge();
+  }
+
+  function computeSyncWeeklyCompletion(){
+    var weekly = {};
+    Object.keys(SESSION_ACTUALS).forEach(function(sid){
+      var s = SESSION_ACTUALS[sid];
+      var wk = GameEngine.weekStartFor(s.date);
+      weekly[wk] = weekly[wk] || { planned: 0, completed: 0 };
+      weekly[wk].planned++;
+      if (s.checked) weekly[wk].completed++;
+    });
+    return weekly;
+  }
+
+  var CONFETTI_COLORS = ['#1F7A6C','#6D4C9E','#C93B1D','#A6740F','#2B6B4A'];
+  function burstConfetti(){
+    var layer = document.getElementById('confetti-layer');
+    if (!layer) return;
+    for (var i=0;i<46;i++){
+      var piece = document.createElement('span');
+      piece.className = 'confetti-piece';
+      piece.style.left = (Math.random()*100) + '%';
+      piece.style.background = CONFETTI_COLORS[i % CONFETTI_COLORS.length];
+      piece.style.animationDelay = (Math.random()*0.25) + 's';
+      piece.style.animationDuration = (1.6 + Math.random()*1.0) + 's';
+      piece.style.setProperty('--drift', (Math.random()*140-70) + 'px');
+      piece.style.setProperty('--rot', (Math.random()*520-260) + 'deg');
+      layer.appendChild(piece);
+    }
+    setTimeout(function(){ layer.innerHTML = ''; }, 2900);
+  }
+
+  // ---- Sync reveal slideshow (mirrors Gamification Sandbox/gamification_test.html) ----
+  var syncSlides = [];
+  var syncSlideIndex = 0;
+
+  function syncItemDropLabel(d){
+    var parts = [];
+    if (d.trainingShard) parts.push('Training Shard');
+    if (d.evolutionCore) parts.push(RunnyData.CATEGORIES[d.evolutionCore].label.split(' ')[0] + ' Evolution Core');
+    return parts.join(' + ');
+  }
+  function syncEggEventLabel(e){
+    var species = RunnyData.getRunny(e.speciesId);
+    if (e.type === 'hatched') return 'Hatched a new Runny: ' + species.stages[0].name + '!';
+    if (e.type === 'egg-progress') return species.stages[0].name + ' egg (' + e.have + ' / ' + GameEngine.EGGS_NEEDED_TO_HATCH + ')';
+    if (e.type === 'duplicate-core') return 'Duplicate ' + species.stages[0].name + ' egg → ' + RunnyData.CATEGORIES[e.category].label.split(' ')[0] + ' Evolution Core';
+    if (e.type === 'duplicate-xp') return 'Duplicate ' + species.stages[0].name + ' egg → +' + e.amount + ' XP';
+    return '';
+  }
+
+  function buildSyncSlides(results, beforeSnapshot){
+    var bySid = {};
+    function ensureBucket(sid){ bySid[sid] = bySid[sid] || {}; return bySid[sid]; }
+    results.levelUps.forEach(function(l){ ensureBucket(l.sid).levelUp = l; });
+    results.itemDrops.forEach(function(d){ if (d.trainingShard || d.evolutionCore) ensureBucket(d.sid).itemDrop = d; });
+    results.eggEvents.forEach(function(e){ ensureBucket(e.sid).eggEvent = e; });
+    results.raceEvents.forEach(function(r){ ensureBucket(r.sid).raceEvent = r; });
+
+    var running = {};
+    Object.keys(beforeSnapshot).forEach(function(id){ running[id] = { level: beforeSnapshot[id].level, xp: beforeSnapshot[id].xp, stageIndex: beforeSnapshot[id].stageIndex }; });
+
+    var built = results.ratedSessions.map(function(r){
+      var runny = RunnyData.getRunny(r.runnyId);
+      var st = running[r.runnyId];
+      var beforeLevel = st.level, beforeXp = st.xp, stageIndex = st.stageIndex;
+      var beforeNeed = GameEngine.xpToNext(beforeLevel);
+      var beforePct = Math.min(100, Math.round(100 * beforeXp / beforeNeed));
+      GameEngine.applyXp(st, r.xp);
+      var afterNeed = GameEngine.xpToNext(st.level);
+      var afterPct = st.level > beforeLevel ? 100 : Math.min(100, Math.round(100 * st.xp / afterNeed));
+      var extra = bySid[r.sid] || {};
+      return {
+        type: 'session', sid: r.sid, score: r.score, breakdown: r.breakdown, xp: r.xp,
+        runnyId: r.runnyId, runnyName: runny.stages[stageIndex].name,
+        beforeLevel: beforeLevel, afterLevel: st.level, beforePct: beforePct, afterPct: afterPct,
+        itemDrop: extra.itemDrop, eggEvent: extra.eggEvent, raceEvent: extra.raceEvent, levelUp: extra.levelUp
+      };
+    });
+
+    results.recoveryBonuses.forEach(function(rb){
+      built.push({ type: 'recovery', weekKey: rb.weekKey, bonus: rb.bonus, earners: rb.earners });
+    });
+
+    built.push({ type: 'summary', results: results });
+    return built;
+  }
+
+  function renderSyncSlide(idx){
+    var s = syncSlides[idx];
+    var el = document.getElementById('sync-reveal');
+    var html = '';
+
+    if (s.type === 'session') {
+      html += '<p class="sync-slide-eyebrow">Session ' + (idx+1) + ' of ' + syncSlides.length + ' &middot; ' + s.sid + '</p>';
+      html += '<div>' +
+        '<div class="sync-comp-row"><span>Completion &amp; adherence</span><span>' + s.breakdown.completion + ' / 40</span></div>' +
+        '<div class="sync-comp-row"><span>Execution accuracy</span><span>' + s.breakdown.execution + ' / 30</span></div>' +
+        '<div class="sync-comp-row"><span>Progress / improvement</span><span>' + s.breakdown.progress + ' / 20</span></div>' +
+        '<div class="sync-comp-row"><span>Effort alignment</span><span>' + s.breakdown.effort + ' / 10</span></div>' +
+        '<div class="sync-comp-total"><span>Score</span><span>' + s.score + ' / 100</span></div>' +
+      '</div>';
+      html += '<p class="sync-xp-line">+<strong>' + s.xp + ' XP</strong> to ' + s.runnyName + '</p>';
+      html += '<div class="xp-bar-track"><div class="xp-bar-fill" id="sync-slide-xp-fill" style="width:' + s.beforePct + '%"></div></div>';
+      html += '<p class="sync-slide-level-label" id="sync-slide-level-label">Lv ' + s.beforeLevel + '</p>';
+      html += '<div id="sync-slide-popups"></div>';
+    } else if (s.type === 'recovery') {
+      html += '<p class="sync-slide-eyebrow">Weekly Recovery Bonus</p>';
+      html += '<div class="sync-recovery-box">' + ItemArt.renderSlothMascotSVG(44) + '<span>Week of ' + s.weekKey + ': +' + s.bonus + ' XP split across ' + s.earners.length + ' Runny/Runnies who trained that week.</span></div>';
+    } else if (s.type === 'summary') {
+      var r = s.results;
+      html += '<p class="sync-slide-eyebrow">All done</p>';
+      html += '<p class="sync-summary-line"><strong>' + r.ratedSessions.length + '</strong> session(s) synced this time.</p>';
+      if (r.evolutionReady.length) {
+        html += '<p class="sync-summary-line">Ready to evolve: ' + r.evolutionReady.map(function(id){ var rn=RunnyData.getRunny(id); return rn.stages[gameState.owned[id].stageIndex].name; }).join(', ') + ' &mdash; check its card above!</p>';
+      }
+      if (!r.ratedSessions.length && !r.recoveryBonuses.length) {
+        html += '<p class="sync-summary-line">Nothing new to process &mdash; you\'re all caught up.</p>';
+      }
+    }
+
+    el.innerHTML = html;
+    renderSyncNav();
+
+    if (s.type === 'session') {
+      var fill = document.getElementById('sync-slide-xp-fill');
+      var label = document.getElementById('sync-slide-level-label');
+      setTimeout(function(){
+        fill.style.width = s.afterPct + '%';
+        if (s.afterLevel > s.beforeLevel) label.textContent = 'Lv ' + s.afterLevel;
+      }, 120);
+
+      var popupDelay = 650;
+      var popupsEl = document.getElementById('sync-slide-popups');
+      if (s.levelUp) {
+        setTimeout(function(){
+          popupsEl.insertAdjacentHTML('beforeend', '<div class="sync-popup levelup" id="sync-pu-level">🎉 Level up! ' + s.beforeLevel + ' → ' + s.afterLevel + '</div>');
+          requestAnimationFrame(function(){ document.getElementById('sync-pu-level').classList.add('show'); });
+        }, popupDelay);
+        popupDelay += 350;
+      }
+      if (s.itemDrop) {
+        setTimeout(function(){
+          popupsEl.insertAdjacentHTML('beforeend', '<div class="sync-popup item" id="sync-pu-item">✨ Found: ' + syncItemDropLabel(s.itemDrop) + '</div>');
+          requestAnimationFrame(function(){ document.getElementById('sync-pu-item').classList.add('show'); });
+        }, popupDelay);
+        popupDelay += 350;
+      }
+      if (s.eggEvent) {
+        setTimeout(function(){
+          popupsEl.insertAdjacentHTML('beforeend', '<div class="sync-popup item" id="sync-pu-egg">🥚 ' + syncEggEventLabel(s.eggEvent) + '</div>');
+          requestAnimationFrame(function(){ document.getElementById('sync-pu-egg').classList.add('show'); });
+        }, popupDelay);
+        popupDelay += 350;
+      }
+      if (s.raceEvent) {
+        setTimeout(function(){
+          burstConfetti();
+          var msg = (s.raceEvent.isNewPB ? '🏆 New PB! ' : '🏁 Race complete! ') + '+' + s.raceEvent.trophiesAwarded + ' trophy/trophies';
+          if (s.raceEvent.gotStar) msg += ' — ⭐ Finishron earned a permanent Star!';
+          popupsEl.insertAdjacentHTML('beforeend', '<div class="sync-popup race" id="sync-pu-race">' + msg + '</div>');
+          requestAnimationFrame(function(){ document.getElementById('sync-pu-race').classList.add('show'); });
+        }, popupDelay);
+      }
+    }
+  }
+
+  function renderSyncNav(){
+    var el = document.getElementById('sync-reveal');
+    el.insertAdjacentHTML('beforeend',
+      '<div class="sync-nav-row">' +
+        '<button class="sync-nav-btn" id="sync-slide-prev" ' + (syncSlideIndex===0?'disabled':'') + '>&larr; Prev</button>' +
+        '<span class="sync-slide-counter">' + (syncSlideIndex+1) + ' / ' + syncSlides.length + '</span>' +
+        '<button class="sync-nav-btn primary" id="sync-slide-next">' + (syncSlideIndex===syncSlides.length-1?'Done':'Next →') + '</button>' +
+      '</div>'
+    );
+    document.getElementById('sync-slide-prev').addEventListener('click', function(){ if (syncSlideIndex>0){ syncSlideIndex--; renderSyncSlide(syncSlideIndex); } });
+    document.getElementById('sync-slide-next').addEventListener('click', function(){
+      if (syncSlideIndex < syncSlides.length-1) { syncSlideIndex++; renderSyncSlide(syncSlideIndex); }
+      else { document.getElementById('sync-reveal').style.display = 'none'; render(); }
+    });
+  }
+
+  document.getElementById('sync-btn').addEventListener('click', function(){
+    var beforeSnapshot = JSON.parse(JSON.stringify(gameState.owned));
+    var results = GameEngine.processSync(gameState, SESSION_ACTUALS, RECOVERY_WEEKLY);
+    GameEngine.updateStreak(gameState, computeSyncWeeklyCompletion(), todayStr());
+    syncSlides = buildSyncSlides(results, beforeSnapshot);
+    syncSlideIndex = 0;
+    document.getElementById('sync-reveal').style.display = 'block';
+    renderSyncSlide(0);
+    render();
+    PlanSync.save('plan-gamification', gameState);
+  });
 
   // ---- CSS-3D tilt-on-hover (mouse-driven perspective rotate) ----
   function attachTilt(el, maxDeg){
@@ -282,7 +582,7 @@ a.back-link{font-family:var(--font-mono);font-size:12px;color:var(--ink-mute);te
       el.innerHTML =
         '<div class="runny-card locked">' +
           '<div class="runny-portrait-lg">' + RunnyArt.renderRunnySVG(species.id, 0, {size:96}) + '</div>' +
-          '<span class="category-badge" style="--tile-color:' + catColor + '">' + RunnyData.CATEGORIES[species.category].label + '</span>' +
+          '<span class="category-badge" style="--tile-color:' + catColor + '">' + categoryShortLabel(species.category) + '</span>' +
           '<p class="runny-card-name">' + species.stages[0].name + '</p>' +
           '<p class="runny-card-meta">' + eggNote + '</p>' +
         '</div>';
@@ -341,7 +641,7 @@ a.back-link{font-family:var(--font-mono);font-size:12px;color:var(--ink-mute);te
     el.innerHTML =
       '<div class="runny-card">' +
         '<div class="runny-portrait-lg">' + RunnyArt.renderRunnySVG(species.id, owned.stageIndex, {size:110, shiny: !!owned.shiny}) + '</div>' +
-        '<span class="category-badge" style="--tile-color:' + catColor + '">' + RunnyData.CATEGORIES[species.category].label + '</span>' +
+        '<span class="category-badge" style="--tile-color:' + catColor + '">' + categoryShortLabel(species.category) + '</span>' +
         '<p class="runny-card-name">' + stage.name + '</p>' +
         '<p class="runny-card-meta">Lv ' + owned.level + ' &middot; Stage ' + (owned.stageIndex+1) + ' of ' + species.stages.length + ' &middot; ' + GameEngine.totalMultiplier(owned.level, owned.stageIndex).toFixed(2) + '&times; total</p>' +
         '<div class="xp-bar-track"><div class="xp-bar-fill" style="width:' + pct + '%"></div></div>' +
@@ -493,7 +793,13 @@ a.back-link{font-family:var(--font-mono);font-size:12px;color:var(--ink-mute);te
     var id = btn.getAttribute('data-id');
     if (action === 'chooseStarter') {
       GameEngine.collectRunny(gameState, id);
-      GameEngine.setActiveRunny(gameState, id, todayStr());
+      // Backdated on purpose: this is the very first Runny ever picked (only
+      // reachable when owned/activeRunnyHistory are both empty), so it should
+      // retroactively cover any session logged before today — there's no
+      // earlier active Runny to have "unfairly" credited instead. A later
+      // switch via 'setActive' below stays stamped with today's real date,
+      // since by then there IS a meaningful prior history to respect.
+      GameEngine.setActiveRunny(gameState, id, '2000-01-01');
       PlanSync.save('plan-gamification', gameState);
       render();
     } else if (action === 'setActive') {

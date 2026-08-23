@@ -40,11 +40,12 @@
 }
 *{box-sizing:border-box}
 body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--font-body);line-height:1.6;-webkit-font-smoothing:antialiased}
-.wrap{max-width:720px;margin:0 auto;padding:28px 20px 90px}
+.wrap{max-width:720px;margin:0 auto;padding:76px 20px 90px}
 .eyebrow{font-family:var(--font-mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-mute);margin:0 0 8px}
 h1{font-family:var(--font-display);font-weight:600;font-size:clamp(24px,4.5vw,32px);margin:0 0 6px}
 .subhead{font-size:13.5px;color:var(--ink-soft);margin:0 0 22px}
-a.back-link{font-family:var(--font-mono);font-size:12px;color:var(--ink-mute);text-decoration:none}
+.back-btn{position:fixed;top:16px;left:16px;z-index:50;display:inline-flex;align-items:center;gap:6px;font-family:var(--font-mono);font-size:12.5px;font-weight:500;color:var(--ink-soft);text-decoration:none;background:var(--paper-raised);border:1px solid var(--line);border-radius:999px;padding:9px 16px;box-shadow:var(--shadow-md);transition:transform .15s var(--ease), box-shadow .15s var(--ease), background .15s var(--ease)}
+.back-btn:hover{transform:translateY(-1px);background:var(--paper)}
 
 .carousel{display:flex;align-items:center;gap:12px;margin-bottom:6px}
 .carousel-btn{flex:none;width:38px;height:38px;border-radius:50%;border:1px solid var(--line);background:var(--paper-raised);color:var(--ink);font-size:16px;cursor:pointer}
@@ -67,8 +68,8 @@ a.back-link{font-family:var(--font-mono);font-size:12px;color:var(--ink-mute);te
 </head>
 <body>
 <div class="wrap">
-  <a class="back-link" href="training_hub.html">&larr; Back to Training Hub</a>
-  <p class="eyebrow" style="margin-top:14px">Hall of Fame</p>
+  <a href="training_hub.html" class="back-btn">&larr; Back to Training Hub</a>
+  <p class="eyebrow">Hall of Fame</p>
   <h1>Every plan you've finished</h1>
   <p class="subhead">A permanent trophy case &mdash; each completed plan's final Team Power and evolved roster, kept forever across every future race.</p>
 
