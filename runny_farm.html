@@ -211,6 +211,14 @@ h1{font-family:var(--font-display);font-weight:600;font-size:clamp(24px,4.5vw,32
   var gameState = null;
   var runnyIndex = 0;
   var itemIndex = 0;
+  var hasJumpedToActiveRunny = false;
+
+  function indexForRunnyId(id){
+    for (var i=0;i<RunnyData.RUNNIES.length;i++){
+      if (RunnyData.RUNNIES[i].id === id) return i;
+    }
+    return -1;
+  }
 
   // Item Silo shows the 4 fixed core/shard types always, plus one card per
   // species with at least 1 egg in progress (dynamic — appears/disappears as
@@ -800,6 +808,9 @@ h1{font-family:var(--font-display);font-weight:600;font-size:clamp(24px,4.5vw,32
       // switch via 'setActive' below stays stamped with today's real date,
       // since by then there IS a meaningful prior history to respect.
       GameEngine.setActiveRunny(gameState, id, '2000-01-01');
+      var pickedIdx = indexForRunnyId(id);
+      if (pickedIdx !== -1) runnyIndex = pickedIdx;
+      hasJumpedToActiveRunny = true;
       PlanSync.save('plan-gamification', gameState);
       render();
     } else if (action === 'setActive') {
@@ -847,6 +858,15 @@ h1{font-family:var(--font-display);font-weight:600;font-size:clamp(24px,4.5vw,32
   render();
   PlanSync.watch('plan-gamification', function (val) {
     gameState = GameEngine.normalizeGameState(val);
+    // Land on whichever Runny is actually active, not always the roster's
+    // first entry — but only on this page load's first real data, so it
+    // doesn't yank the carousel away from wherever the user has since
+    // navigated to on a later re-render (e.g. after Evolve or a Sync).
+    if (!hasJumpedToActiveRunny && gameState.activeRunnyId) {
+      var activeIdx = indexForRunnyId(gameState.activeRunnyId);
+      if (activeIdx !== -1) runnyIndex = activeIdx;
+      hasJumpedToActiveRunny = true;
+    }
     render();
   });
 })();
