@@ -190,7 +190,7 @@ footer.hub-note strong{color:var(--ink)}
 <button id="sprachbox-fab" aria-label="Add an idea" title="Got an idea?">&#128172;</button>
 <div id="sprachbox-panel">
   <p class="sprachbox-label">Got an idea?</p>
-  <textarea id="sprachbox-text" maxlength="500" placeholder="Type it here — Claude picks these up into the Idea Hub next time you're in a chat. (500 char max)"></textarea>
+  <textarea id="sprachbox-text" maxlength="5000" placeholder="Type it here — Claude picks these up into the Idea Hub next time you're in a chat. (5000 char max)"></textarea>
   <div class="sprachbox-actions">
     <button class="sprachbox-btn cancel" id="sprachbox-cancel">Cancel</button>
     <button class="sprachbox-btn submit" id="sprachbox-submit">Send</button>
@@ -502,13 +502,13 @@ footer.hub-note strong{color:var(--ink)}
     setTimeout(function(){ panel.classList.remove('open'); }, 180);
   });
   document.getElementById('sprachbox-submit').addEventListener('click', function(){
-    var text = textarea.value.trim().slice(0, 500);
+    var text = textarea.value.trim().slice(0, 5000);
     if (!text) return;
-    // Soft client-side cap — real protection against a determined actor
-    // needs a Firebase rules-level validation, see Gamification Sandbox
-    // README.md "Security note" for the exact rule to apply at Phase 5.
-    if (ideaInbox.length >= 50) {
-      sentNote.textContent = 'Inbox is full (50) — ask Claude to clear it into the Idea Hub first.';
+    // Soft client-side cap — the Firebase rules-level validation (see
+    // Gamification Sandbox README.md "Security note") is the real backstop
+    // against a determined actor; keep it in sync with this 25 if changed.
+    if (ideaInbox.length >= 25) {
+      sentNote.textContent = 'Inbox is full (25) — ask Claude to clear it into the Idea Hub first.';
       sentNote.style.display = 'block';
       return;
     }
