@@ -379,7 +379,7 @@ footer.note strong{color:var(--ink)}
       <p class="km-delta" id="km-delta"></p>
       <p class="progress-caption">
         <span><span class="swatch" style="background:var(--c-long)"></span>Actual km run (Garmin)</span>
-        <span><span class="swatch" style="background:var(--ink)"></span>marker: where the plan expects you today</span>
+        <span><span class="swatch" style="background:var(--ink)"></span>marker: planned total for sessions completed so far</span>
       </p>
     </div>
 
@@ -1706,7 +1706,6 @@ footer.note strong{color:var(--ink)}
   var total = ids.length;
   var state = {};
 
-  var DAY_CUM = [["2026-08-10", 12.0], ["2026-08-11", 12.0], ["2026-08-12", 22.0], ["2026-08-13", 22.0], ["2026-08-14", 34.0], ["2026-08-15", 34.0], ["2026-08-16", 48.0], ["2026-08-17", 61.0], ["2026-08-18", 73.0], ["2026-08-19", 73.0], ["2026-08-20", 73.0], ["2026-08-21", 86.0], ["2026-08-22", 86.0], ["2026-08-23", 102.0], ["2026-08-24", 116.0], ["2026-08-25", 116.0], ["2026-08-26", 130.0], ["2026-08-27", 130.0], ["2026-08-28", 144.0], ["2026-08-29", 144.0], ["2026-08-30", 162.0], ["2026-08-31", 173.0], ["2026-09-01", 173.0], ["2026-09-02", 184.0], ["2026-09-03", 184.0], ["2026-09-04", 195.0], ["2026-09-05", 195.0], ["2026-09-06", 210.0], ["2026-09-07", 225.0], ["2026-09-08", 225.0], ["2026-09-09", 240.0], ["2026-09-10", 240.0], ["2026-09-11", 255.0], ["2026-09-12", 255.0], ["2026-09-13", 274.0], ["2026-09-14", 290.0], ["2026-09-15", 290.0], ["2026-09-16", 305.0], ["2026-09-17", 305.0], ["2026-09-18", 321.0], ["2026-09-19", 321.0], ["2026-09-20", 342.0], ["2026-09-21", 358.0], ["2026-09-22", 358.0], ["2026-09-23", 368.0], ["2026-09-24", 368.0], ["2026-09-25", 384.0], ["2026-09-26", 384.0], ["2026-09-27", 406.0], ["2026-09-28", 418.0], ["2026-09-29", 418.0], ["2026-09-30", 429.0], ["2026-10-01", 429.0], ["2026-10-02", 441.0], ["2026-10-03", 441.0], ["2026-10-04", 458.0], ["2026-10-05", 474.0], ["2026-10-06", 474.0], ["2026-10-07", 491.0], ["2026-10-08", 491.0], ["2026-10-09", 507.0], ["2026-10-10", 507.0], ["2026-10-11", 530.0], ["2026-10-12", 547.0], ["2026-10-13", 547.0], ["2026-10-14", 563.0], ["2026-10-15", 563.0], ["2026-10-16", 580.0], ["2026-10-17", 580.0], ["2026-10-18", 605.0], ["2026-10-19", 611.0], ["2026-10-20", 611.0], ["2026-10-21", 615.0], ["2026-10-22", 615.0], ["2026-10-23", 618.0], ["2026-10-24", 618.0], ["2026-10-25", 639.1]];
   var TOTAL_PLANNED_KM = 639;
   var ACTUAL_SESSION_KM = {"w1-easy1": 12.0, "w1-quality": 8.6, "w1-easy2": 12.0, "w1-long": 15.2, "w2-easy1": 13.0, "w2-quality": 8.2, "w2-easy2": 13.0, "w2-long": 16.0, "w3-easy1": 14.1, "w3-quality": 11.5, "w3-easy2": 14.0, "w3-long": 18.0, "w4-quality": 10.3, "w4-easy1": 11.1};
   var ACTUAL_KM = 183.8;
@@ -1739,21 +1738,27 @@ footer.note strong{color:var(--ink)}
   }
   highlightCurrentWeek();
 
-  function plannedKmToDate(){
-    var t = new Date();
-    var todayStr = t.getFullYear() + '-' + String(t.getMonth()+1).padStart(2,'0') + '-' + String(t.getDate()).padStart(2,'0');
-    var days = DAY_CUM;
-    if(todayStr <= days[0][0]) return 0;
-    if(todayStr >= days[days.length-1][0]) return days[days.length-1][1];
-    var result = 0;
-    for(var i=0;i<days.length;i++){
-      if(days[i][0] <= todayStr) result = days[i][1]; else break;
-    }
-    return result;
+  // Planned total for exactly the sessions actually completed so far (by sid,
+  // via SESSION_ACTUALS[sid].plannedDistanceKm), not a calendar-date lookup.
+  // Deliberately date-agnostic: a calendar-based version (comparing actual-by-date
+  // against a fixed day-by-day planned curve) reads as falsely "ahead of pace"
+  // whenever a session gets run earlier in the week than its default slot, since
+  // it credits that day's real progress against a curve that doesn't expect the
+  // reordered session yet. Andri caught this 1 Sep 2026 (week 4: quality pulled
+  // from Wed to Mon put ~11 km of "future" volume on the board a day before the
+  // old calendar curve accounted for it). Session-identity comparison is immune
+  // to within-week reordering by construction.
+  function plannedKmForCompleted(){
+    var total = 0;
+    Object.keys(SESSION_ACTUALS).forEach(function(sid){
+      var s = SESSION_ACTUALS[sid];
+      if(!s.isExtra && s.plannedDistanceKm) total += s.plannedDistanceKm;
+    });
+    return total;
   }
 
   function updateKmProgress(){
-    var planned = plannedKmToDate();
+    var planned = plannedKmForCompleted();
     var actualPct = Math.min(100, (ACTUAL_KM / TOTAL_PLANNED_KM) * 100);
     var plannedPct = Math.min(100, (planned / TOTAL_PLANNED_KM) * 100);
     var fill = document.getElementById('km-fill');
@@ -1763,16 +1768,16 @@ footer.note strong{color:var(--ink)}
     var delta = document.getElementById('km-delta');
     if(fill) fill.style.width = actualPct + '%';
     if(marker) marker.style.left = plannedPct + '%';
-    if(marker) marker.title = 'On-pace target: ' + Math.round(planned) + ' km by today';
+    if(marker) marker.title = 'Planned for sessions completed so far: ' + Math.round(planned) + ' km';
     if(text) text.textContent = Math.round(ACTUAL_KM) + ' / ' + TOTAL_PLANNED_KM + ' km run';
     if(asof) asof.textContent = 'as of ' + ACTUAL_KM_ASOF;
     if(delta){
       var diff = ACTUAL_KM - planned;
       var rounded = Math.round(Math.abs(diff));
       delta.classList.remove('ahead','behind');
-      if(rounded === 0) delta.textContent = 'Right on pace (target ' + Math.round(planned) + ' km today)';
-      else if(diff > 0){ delta.textContent = rounded + ' km ahead of pace (target ' + Math.round(planned) + ' km today)'; delta.classList.add('ahead'); }
-      else{ delta.textContent = rounded + ' km behind pace (target ' + Math.round(planned) + ' km today)'; delta.classList.add('behind'); }
+      if(rounded === 0) delta.textContent = 'Right on plan (' + Math.round(planned) + ' km planned for sessions done)';
+      else if(diff > 0){ delta.textContent = rounded + ' km ahead of plan (' + Math.round(planned) + ' km planned for sessions done)'; delta.classList.add('ahead'); }
+      else{ delta.textContent = rounded + ' km behind plan (' + Math.round(planned) + ' km planned for sessions done)'; delta.classList.add('behind'); }
     }
   }
   updateKmProgress();
