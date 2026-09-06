@@ -39,11 +39,13 @@ var SESSION_ACTUALS = {
   'w3-long': { date: '2026-08-30', category: 'long', plannedDistanceKm: 18, distanceKm: 18.0, avgPaceSecPerKm: 323, avgHr: 145, targetHrLow: 138, targetHrHigh: 152, feel: 100, raceTimeTrend: null, checked: true },
   'w4-quality': { date: '2026-08-31', category: 'quality', plannedDistanceKm: 10, distanceKm: 10.3, avgPaceSecPerKm: 300, avgHr: 157, targetHrLow: 169, targetHrHigh: 183, feel: 100, raceTimeTrend: 'improved', checked: true },
   'w4-easy1': { date: '2026-09-01', category: 'easy', plannedDistanceKm: 11, distanceKm: 11.1, avgPaceSecPerKm: 317, avgHr: 139, targetHrLow: 138, targetHrHigh: 152, feel: 100, raceTimeTrend: null, checked: true },
-  'w4-easy2': { date: '2026-09-03', category: 'easy', plannedDistanceKm: 11, distanceKm: 7.5, avgPaceSecPerKm: 286, avgHr: 153, targetHrLow: 152, targetHrHigh: 169, feel: 100, raceTimeTrend: null, checked: true }
+  'w4-easy2': { date: '2026-09-03', category: 'easy', plannedDistanceKm: 11, distanceKm: 7.5, avgPaceSecPerKm: 286, avgHr: 153, targetHrLow: 152, targetHrHigh: 169, feel: 100, raceTimeTrend: null, checked: true },
+  'w4-long': { date: '2026-09-06', category: 'long', plannedDistanceKm: 15, distanceKm: 15.0, avgPaceSecPerKm: 316, avgHr: 143, targetHrLow: 138, targetHrHigh: 152, feel: 75, raceTimeTrend: 'improved', checked: true }
 };
 
 var RECOVERY_WEEKLY = {
   '2026-08-10': 73,
   '2026-08-17': 50,
-  '2026-08-24': 84
+  '2026-08-24': 84,
+  '2026-08-31': 68
 };
