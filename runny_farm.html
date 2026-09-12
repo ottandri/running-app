@@ -125,7 +125,7 @@ h1{font-family:var(--font-display);font-weight:600;font-size:clamp(24px,4.5vw,32
 .sync-tile-status.synced{background:var(--paper);color:var(--ink-mute);border:1px solid var(--line)}
 .sync-empty{font-size:13px;color:var(--ink-mute);font-style:italic;margin:0 0 12px}
 
-.sync-row{display:flex;align-items:center;gap:12px;margin:16px 0 0}
+.sync-row{display:flex;align-items:center;gap:12px;margin:16px 0}
 .sync-btn{font-family:var(--font-mono);font-size:13.5px;font-weight:600;color:#fff;background:var(--accent);border:none;padding:11px 20px;border-radius:999px;cursor:pointer;transition:filter .15s var(--ease), transform .15s var(--ease)}
 .sync-btn:hover{filter:brightness(1.08)}
 .sync-btn:active{transform:scale(.97)}
@@ -195,12 +195,12 @@ h1{font-family:var(--font-display);font-weight:600;font-size:clamp(24px,4.5vw,32
     <div class="sync-section">
       <p class="section-label">Sync</p>
       <p class="section-hint">Every session logged from a data sync, and whether it's fed into your Runnies yet.</p>
-      <div id="sync-tiles"></div>
       <div class="sync-row">
         <button class="sync-btn" id="sync-btn">Sync</button>
         <span class="sync-ready-badge" id="sync-ready-badge"></span>
       </div>
       <div id="sync-reveal"></div>
+      <div id="sync-tiles"></div>
     </div>
   </div>
 </div>
