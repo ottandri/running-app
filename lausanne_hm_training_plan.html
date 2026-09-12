@@ -1776,6 +1776,13 @@ footer.note strong{color:var(--ink)}
   }
   highlightCurrentWeek();
 
+  document.querySelectorAll('.overview-card').forEach(function(a){
+    a.addEventListener('click', function(){
+      var details = document.getElementById(a.getAttribute('href').slice(1));
+      if(details) details.open = true;
+    });
+  });
+
   // Planned total for exactly the sessions actually completed so far (by sid,
   // via SESSION_ACTUALS[sid].plannedDistanceKm), not a calendar-date lookup.
   // Deliberately date-agnostic: a calendar-based version (comparing actual-by-date
