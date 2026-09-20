@@ -232,30 +232,31 @@ footer.note strong{color:var(--ink)}
 
     <div class="predict-card">
       <p class="stat-label">Predicted half marathon &middot; Garmin</p>
-      <p class="stat-num">1:30:38</p>
-      <p class="stat-note">today, 12 Sep &middot; 8 Aug baseline was 1:32:27 &middot; goal 1:29:59</p>
+      <p class="stat-num">1:30:33</p>
+      <p class="stat-note">today, 20 Sep &middot; 8 Aug baseline was 1:32:27 &middot; goal 1:29:59</p>
       <svg class="predict-chart" viewBox="0 0 260 60" preserveAspectRatio="none" aria-hidden="true">
         <line x1="8" y1="46.5" x2="252" y2="46.5" class="predict-goal-line"/>
         <line x1="8" y1="13.9" x2="252" y2="13.9" class="predict-baseline-line"/>
-        <polyline points="8.0,13.9 49.9,13.7 63.8,15.7 70.7,15.4 77.7,15.2 91.6,19.0 112.6,21.4 119.5,21.6 133.5,20.5 147.4,20.1 161.4,22.5 168.4,25.1 175.4,25.8 189.2,28.0 210.1,30.9 224.1,33.1 238.1,36.1 252.0,37.9" class="predict-line"/>
+        <polyline points="8.0,13.9 42.1,13.7 53.4,15.7 59.0,15.4 64.7,15.2 76.0,19.0 93.1,21.4 98.8,21.6 110.2,20.5 121.5,20.1 132.9,22.5 138.6,25.1 144.3,25.8 155.5,28.0 172.5,30.9 183.9,33.1 195.3,36.1 206.6,37.9 252.0,39.0" class="predict-line"/>
         <circle cx="8.0" cy="13.9" r="3" class="predict-dot"/>
-        <circle cx="49.9" cy="13.7" r="3" class="predict-dot"/>
-        <circle cx="63.8" cy="15.7" r="3" class="predict-dot"/>
-        <circle cx="70.7" cy="15.4" r="3" class="predict-dot"/>
-        <circle cx="77.7" cy="15.2" r="3" class="predict-dot"/>
-        <circle cx="91.6" cy="19.0" r="3" class="predict-dot"/>
-        <circle cx="112.6" cy="21.4" r="3" class="predict-dot"/>
-        <circle cx="119.5" cy="21.6" r="3" class="predict-dot"/>
-        <circle cx="133.5" cy="20.5" r="3" class="predict-dot"/>
-        <circle cx="147.4" cy="20.1" r="3" class="predict-dot"/>
-        <circle cx="161.4" cy="22.5" r="3" class="predict-dot"/>
-        <circle cx="168.4" cy="25.1" r="3" class="predict-dot"/>
-        <circle cx="175.4" cy="25.8" r="3" class="predict-dot"/>
-        <circle cx="189.2" cy="28.0" r="3" class="predict-dot"/>
-        <circle cx="210.1" cy="30.9" r="3" class="predict-dot"/>
-        <circle cx="224.1" cy="33.1" r="3" class="predict-dot"/>
-        <circle cx="238.1" cy="36.1" r="3" class="predict-dot"/>
-        <circle cx="252.0" cy="37.9" r="3.5" class="predict-dot predict-dot-latest"/>
+        <circle cx="42.1" cy="13.7" r="3" class="predict-dot"/>
+        <circle cx="53.4" cy="15.7" r="3" class="predict-dot"/>
+        <circle cx="59.0" cy="15.4" r="3" class="predict-dot"/>
+        <circle cx="64.7" cy="15.2" r="3" class="predict-dot"/>
+        <circle cx="76.0" cy="19.0" r="3" class="predict-dot"/>
+        <circle cx="93.1" cy="21.4" r="3" class="predict-dot"/>
+        <circle cx="98.8" cy="21.6" r="3" class="predict-dot"/>
+        <circle cx="110.2" cy="20.5" r="3" class="predict-dot"/>
+        <circle cx="121.5" cy="20.1" r="3" class="predict-dot"/>
+        <circle cx="132.9" cy="22.5" r="3" class="predict-dot"/>
+        <circle cx="138.6" cy="25.1" r="3" class="predict-dot"/>
+        <circle cx="144.3" cy="25.8" r="3" class="predict-dot"/>
+        <circle cx="155.5" cy="28.0" r="3" class="predict-dot"/>
+        <circle cx="172.5" cy="30.9" r="3" class="predict-dot"/>
+        <circle cx="183.9" cy="33.1" r="3" class="predict-dot"/>
+        <circle cx="195.3" cy="36.1" r="3" class="predict-dot"/>
+        <circle cx="206.6" cy="37.9" r="3" class="predict-dot"/>
+        <circle cx="252.0" cy="39.0" r="3.5" class="predict-dot predict-dot-latest"/>
       </svg>
       <div class="predict-chart-labels"><span>8 Aug &middot; plan start</span><span>12 Sep &middot; today</span></div>
       <p class="progress-caption">
@@ -1077,10 +1078,11 @@ footer.note strong{color:var(--ink)}
           <div class="tile-name">Easy ride (bike)</div>
         </div>
       </div>
-      <div class="tile-dist">60 min</div>
+      <div class="tile-dist">60 min <span class="tile-actual">(actual 46 min, indoor bike)</span></div>
       <div class="tile-row"><span class="tag">Locker / conversational effort</span></div>
 
       <p class="tile-tip">Swapped for this week’s quality session, same reasoning — the goal is arriving at Friday’s GA1 pain-free to make the call on Saturday’s Greifenseelauf.</p>
+      <p class="tile-actual">Actual: 18.0 km indoor cycling, 45:30, HR avg 117 bpm (max 129) — genuinely easy, Monday’s bike leg was skipped.</p>
     </div>
       <div class="tile tile-strength" data-sid="w6-str1">
       <label class="tile-check"><input type="checkbox" data-sid="w6-str1" aria-label="Mark Strength done"><span class="box"></span></label>
@@ -1115,10 +1117,11 @@ footer.note strong{color:var(--ink)}
           <div class="tile-name">Easy run (GA1)</div>
         </div>
       </div>
-      <div class="tile-dist">8 km</div>
+      <div class="tile-dist">8 km <span class="tile-actual">(actual 5.9 km)</span></div>
       <div class="tile-row"><span class="tag hr">HR 138–152 bpm</span><span class="tag pace">5:15–6:15/km</span><span class="tag time">~0:49 h</span></div>
 
       <p class="tile-tip">Shortened to 8 km and moved here — a light pre-race shakeout ahead of tomorrow’s Greifenseelauf.</p>
+      <p class="tile-actual">Actual: 5.9 km, avg 6:20/km, HR avg 144 bpm (max 165), 37:24 total — cut shorter still, right in the HR band.</p>
     </div>
       <div class="tile tile-long tile-race" data-sid="w6-long">
       <label class="tile-check"><input type="checkbox" data-sid="w6-long" aria-label="Mark Greifenseelauf Half Marathon done"><span class="box"></span></label>
@@ -1129,10 +1132,11 @@ footer.note strong{color:var(--ink)}
           <div class="tile-name">Greifenseelauf Half Marathon — training effort</div>
         </div>
       </div>
-      <div class="tile-dist">21.1 km</div>
+      <div class="tile-dist">21.1 km <span class="tile-actual">(actual 21.3 km)</span></div>
       <div class="tile-row"><span class="tag hr">HR 138–165 bpm on the easy bookends</span><span class="tag pace">≈4:45–6:15/km + 8 km @ 4:10–4:25/km</span><span class="tag time">~1:38–1:50 h</span></div>
       <div class="tile-row"><span class="tag">5 weeks before Lausanne — this week's long run</span></div>
       <p class="tile-tip">Uster — 6.55 km easy (allowed up into mid/high GA2, not capped at pure GA1 — real race tempo, and the 8 km block is already carrying the hard stimulus), then 8 km at genuine goal pace (4:10–4:25/km), then 6.55 km easing back to the finish. Same shape as your plan's own pace-block long runs, just inside a real race: rehearse pacing discipline and fueling under real race conditions without grinding out the whole 21.1 km hard.</p>
+      <p class="tile-actual">Actual: 21.3 km, 1:40:06 total, HR avg 176 bpm (max 192). By segment: 6.55 km opening at 4:43/km (HR ~166 — a touch hot for the “easy” bookend), 8.0 km goal-pace block at 4:28/km (HR ~182, target was 4:10–4:25/km — slower than aimed despite high effort, on a hilly 350 m-climb course), 6.77 km closing at 4:56/km (HR ~180 — never really eased off). Feel 100/100. Ran as a genuine hard race throughout rather than a paced sandwich, which tracks given the bib.</p>
     </div>
       <div class="tile tile-rest">
       <div class="tile-head">
@@ -1735,9 +1739,9 @@ footer.note strong{color:var(--ink)}
   var state = {};
 
   var TOTAL_PLANNED_KM = 602;
-  var ACTUAL_SESSION_KM = {"w1-easy1": 12.0, "w1-quality": 8.6, "w1-easy2": 12.0, "w1-long": 15.2, "w2-easy1": 13.0, "w2-quality": 8.2, "w2-easy2": 13.0, "w2-long": 16.0, "w3-easy1": 14.1, "w3-quality": 11.5, "w3-easy2": 14.0, "w3-long": 18.0, "w4-quality": 10.3, "w4-easy1": 11.1, "w4-easy2": 7.5, "w4-long": 15.0, "w5-quality": 12.4, "w5-easy1": 13.5, "w5-easy2": 15.0, "w5-long": 19.1};
-  var ACTUAL_KM = 266.3;
-  var ACTUAL_KM_ASOF = '12 Sep 2026';
+  var ACTUAL_SESSION_KM = {"w1-easy1": 12.0, "w1-quality": 8.6, "w1-easy2": 12.0, "w1-long": 15.2, "w2-easy1": 13.0, "w2-quality": 8.2, "w2-easy2": 13.0, "w2-long": 16.0, "w3-easy1": 14.1, "w3-quality": 11.5, "w3-easy2": 14.0, "w3-long": 18.0, "w4-quality": 10.3, "w4-easy1": 11.1, "w4-easy2": 7.5, "w4-long": 15.0, "w5-quality": 12.4, "w5-easy1": 13.5, "w5-easy2": 15.0, "w5-long": 19.1, "w6-quality": 18.0, "w6-easy1": 5.9, "w6-long": 21.3};
+  var ACTUAL_KM = 293.5;
+  var ACTUAL_KM_ASOF = '19 Sep 2026';
 
   function updateCountdown(){
     var raceDay = new Date(2026, 9, 25);
