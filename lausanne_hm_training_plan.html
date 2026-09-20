@@ -26,7 +26,7 @@
   --peak:#B8791A; --peak-tint:#F5EBDA;
   --peaked:#9C2B54; --peaked-tint:#F5E1EA;
   --taper:#2B6B4A; --taper-tint:#E4EFE8;
-  --c-easy:#1F7A6C; --c-strength:#6D4C9E; --c-quality:#C93B1D; --c-long:#A6740F; --c-rest:#8C897F;
+  --c-easy:#1F7A6C; --c-strength:#6D4C9E; --c-quality:#C93B1D; --c-long:#A6740F; --c-rest:#8C897F; --c-mobility:#2E78A8;
   --radius:14px;
   --shadow-sm:0 1px 2px rgba(28,27,25,0.05), 0 3px 8px rgba(28,27,25,0.05);
   --shadow-md:0 2px 5px rgba(28,27,25,0.06), 0 10px 24px rgba(28,27,25,0.09);
@@ -42,7 +42,7 @@
     --peak:#E8B65C; --peak-tint:#3A2E18;
     --peaked:#E896B4; --peaked-tint:#3A1E28;
     --taper:#7FC49E; --taper-tint:#1E3327;
-    --c-easy:#5FCDB0; --c-strength:#B79AE0; --c-quality:#F08F5E; --c-long:#EBB84C; --c-rest:#8C897F;
+    --c-easy:#5FCDB0; --c-strength:#B79AE0; --c-quality:#F08F5E; --c-long:#EBB84C; --c-rest:#8C897F; --c-mobility:#78BDE8;
     --shadow-sm:0 1px 2px rgba(0,0,0,0.3), 0 3px 10px rgba(0,0,0,0.25);
     --shadow-md:0 2px 6px rgba(0,0,0,0.35), 0 12px 28px rgba(0,0,0,0.32);
   }
@@ -106,6 +106,7 @@ table.zone-table td.mono{font-family:var(--font-mono);font-variant-numeric:tabul
 .progress-fill{height:100%;background:linear-gradient(90deg, var(--accent) 0%, #D4623F 100%);width:0%;transition:width .5s var(--ease)}
 .progress-track.km-track{overflow:visible}
 .progress-fill.km-fill{background:linear-gradient(90deg, var(--c-long) 0%, #C99A2E 100%);border-radius:4px}
+.progress-fill.mob-fill{background:var(--c-mobility)}
 .progress-marker{position:absolute;top:-4px;bottom:-4px;width:2px;background:var(--ink);left:0%;transition:left .5s var(--ease)}
 .progress-marker::after{content:'';position:absolute;top:-3px;left:50%;transform:translateX(-50%);width:6px;height:6px;border-radius:50%;background:var(--ink)}
 .progress-caption{font-size:11.5px;color:var(--ink-mute);margin:8px 0 0;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
@@ -139,6 +140,7 @@ details.week[open] .chev{transform:rotate(45deg)}
 .tile-quality{--tile-color:var(--c-quality);grid-column:1 / -1}
 .tile-long{--tile-color:var(--c-long);border-color:var(--tile-color);grid-column:1 / -1}
 .tile-rest{--tile-color:var(--c-rest);background:transparent;border-style:dashed;border-left-style:solid;opacity:.85}
+.tile-mobility{--tile-color:var(--c-mobility);background:transparent;border-style:dashed;border-left-style:solid}
 .tile-race{grid-column:1/-1;border:2px solid var(--c-long)}
 .tile-head{display:flex;align-items:center;gap:10px}
 .tile-icon{width:32px;height:32px;border-radius:50%;flex:none;display:flex;align-items:center;justify-content:center;color:var(--tile-color, var(--ink-mute));background:color-mix(in srgb, var(--tile-color, var(--ink-mute)) 15%, var(--paper-raised))}
@@ -161,6 +163,8 @@ details.week[open] .chev{transform:rotate(45deg)}
 .tag.fuel{background:var(--taper-tint);border-color:var(--taper);color:var(--taper)}
 .badge-peak{background:var(--peaked-tint);color:var(--peaked);border-color:var(--peaked)}
 .tile-tip{font-size:12.5px;color:var(--ink-mute);margin:2px 0 0;font-style:italic;line-height:1.5}
+.mob-link{color:var(--c-mobility);font-style:normal;font-weight:600;text-decoration:none;white-space:nowrap}
+.mob-link:hover{text-decoration:underline}
 .quality-note{font-size:12.5px;color:var(--ink-soft);background:var(--paper);border-left:3px solid var(--c-quality);border-radius:0 8px 8px 0;padding:8px 10px;margin:0}
 .alt-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:4px}
 .alt-card{border:1px solid var(--line);border-radius:10px;padding:12px;display:flex;flex-direction:column;gap:5px;background:var(--paper)}
@@ -222,7 +226,7 @@ footer.note strong{color:var(--ink)}
   <div class="hero">
     <p class="eyebrow">Training plan &middot; 8 Aug &ndash; 25 Oct 2026</p>
     <h1>Lausanne Half Marathon</h1>
-    <p class="hero-sub">11 weeks, 4 runs a week, 2 strength sessions. Polarized 80/20 intensity, progressive long runs 14&rarr;25 km, a deload every 4 weeks, and an 8-day taper into race day.</p>
+    <p class="hero-sub">11 weeks, 4 runs a week, 2 strength sessions and, from week 7, 3 short mobility sessions. Polarized 80/20 intensity, progressive long runs 14&rarr;25 km, a deload every 4 weeks, and an 8-day taper into race day.</p>
 
     <div class="stat-row">
       <div class="stat"><p class="stat-label">Race day</p><p class="stat-num">25 Oct</p><p class="stat-note" id="days-out">&ndash;</p></div>
@@ -258,7 +262,7 @@ footer.note strong{color:var(--ink)}
         <circle cx="206.6" cy="37.9" r="3" class="predict-dot"/>
         <circle cx="252.0" cy="39.0" r="3.5" class="predict-dot predict-dot-latest"/>
       </svg>
-      <div class="predict-chart-labels"><span>8 Aug &middot; plan start</span><span>12 Sep &middot; today</span></div>
+      <div class="predict-chart-labels"><span>8 Aug &middot; plan start</span><span>20 Sep &middot; today</span></div>
       <p class="progress-caption">
         <span><span class="swatch" style="background:var(--c-long)"></span>Predicted time</span>
         <span><span class="swatch" style="background:var(--ink-mute);border-radius:0;height:2px;width:10px"></span>Baseline 8 Aug (1:32:27)</span>
@@ -348,6 +352,7 @@ footer.note strong{color:var(--ink)}
     <div class="legend">
       <span class="legend-item"><span class="legend-dot" style="background:var(--c-easy)"></span>Easy</span>
       <span class="legend-item"><span class="legend-dot" style="background:var(--c-strength)"></span>Strength</span>
+      <span class="legend-item"><span class="legend-dot" style="background:var(--c-mobility)"></span>Mobility</span>
       <span class="legend-item"><span class="legend-dot" style="background:var(--c-quality)"></span>Quality</span>
       <span class="legend-item"><span class="legend-dot" style="background:var(--c-long)"></span>Long run</span>
       <span class="legend-item"><span class="legend-dot" style="background:var(--c-rest)"></span>Rest</span>
@@ -371,9 +376,55 @@ footer.note strong{color:var(--ink)}
       <p class="zone-source"><strong>Polarized 80/20:</strong> roughly 80% of weekly running time stays in REG/GA1/GA2 (genuinely easy to steady), and about 20% is spent at EB/INT (genuinely hard) &mdash; deliberately minimizing time in the mushy "medium-hard" zone most recreational runners default to. It's the pattern most elite endurance athletes, Kipchoge included, actually train by.</p>
     </details>
 
+    <details class="zones" id="mobility-routines">
+      <summary>Mobility routines A &amp; B &middot; 20 min each<span></span></summary>
+      <p class="zone-source" style="border-top:none">Three short sessions a week &mdash; Mon &middot; Wed &middot; Fri (race week: Tue + Thu) &mdash; in the evening or right after training, never in the hour before a quality or long run. Stretch to mild tension only, never into pain. They tick off just for you: they don't count toward the sessions bar and earn nothing on the Runny Farm.</p>
+      <div class="zone-table-wrap">
+      <table class="zone-table">
+        <tr><th colspan="3">Routine A &mdash; lower legs &amp; hamstrings</th></tr>
+        <tr><th>Exercise</th><th>Hold</th><th>Cue</th></tr>
+        <tr><td>Ankle circles</td><td class="mono">30 s &times; 2</td><td>Seated, slow full circles both ways</td></tr>
+        <tr><td>Calf stretch, knee bent (soleus)</td><td class="mono">75 s &times; 2</td><td>Hands on a wall, back knee bent, heel down &mdash; gentle</td></tr>
+        <tr><td>Calf stretch, knee straight</td><td class="mono">45 s &times; 2</td><td>Skip while the Achilles is sore</td></tr>
+        <tr><td>Knee-to-wall ankle rocks</td><td class="mono">45 s &times; 2</td><td>Skip while the Achilles is sore; small, controlled range</td></tr>
+        <tr><td>Quad stretch, standing</td><td class="mono">45 s &times; 2</td><td>Heel to glute, knees together, stand tall</td></tr>
+        <tr><td>Foot &amp; toe mobility</td><td class="mono">45 s &times; 2</td><td>Toe-extension stretch, then gentle arch rolling</td></tr>
+        <tr><td>Hamstring stretch, lying</td><td class="mono">75 s &times; 2</td><td>Towel around the foot, leg up, soft knee</td></tr>
+        <tr><td>Figure-4 glute stretch</td><td class="mono">75 s &times; 2</td><td>Ankle on the opposite knee, draw the thigh in</td></tr>
+        <tr><td>Knee-to-chest</td><td class="mono">60 s &times; 2</td><td>Lying, one knee in, other leg long</td></tr>
+        <tr><td>Spinal twist</td><td class="mono">45 s &times; 2</td><td>Lying, knees dropped to one side, shoulders down</td></tr>
+        <tr><td>Cat-cow</td><td class="mono">60 s</td><td>Slow, breathe with the movement</td></tr>
+        <tr><td>Child's pose</td><td class="mono">60 s</td><td>Long exhales; towel under the ankles if they pinch</td></tr>
+      </table>
+      <table class="zone-table">
+        <tr><th colspan="3">Routine B &mdash; hips, quads &amp; spine</th></tr>
+        <tr><th>Exercise</th><th>Hold</th><th>Cue</th></tr>
+        <tr><td>Cat-cow</td><td class="mono">60 s</td><td>Slow spine warm-up</td></tr>
+        <tr><td>Thoracic rotation</td><td class="mono">45 s &times; 2</td><td>On all fours, hand behind the head, rotate the elbow up</td></tr>
+        <tr><td>Lunging hip-flexor stretch</td><td class="mono">75 s &times; 2</td><td>Squeeze the back glute, ribs down</td></tr>
+        <tr><td>Hip-flexor + quad stretch</td><td class="mono">60 s &times; 2</td><td>Rear foot up on a chair or couch</td></tr>
+        <tr><td>Pigeon pose</td><td class="mono">75 s &times; 2</td><td>Figure-4 on your back if the knees complain</td></tr>
+        <tr><td>90/90 hip switches</td><td class="mono">60 s &times; 2</td><td>Sit tall, lean over the front shin</td></tr>
+        <tr><td>Butterfly</td><td class="mono">90 s</td><td>Soles together, hinge from the hips</td></tr>
+        <tr><td>Side lunge (cossack)</td><td class="mono">45 s &times; 2</td><td>Sink to one side, other leg straight</td></tr>
+        <tr><td>Straddle forward fold</td><td class="mono">90 s</td><td>Legs wide, walk the hands forward, no bouncing</td></tr>
+        <tr><td>Spinal twist</td><td class="mono">60 s &times; 2</td><td>Lying, knees dropped to one side, shoulders down</td></tr>
+        <tr><td>Cobra</td><td class="mono">45 s</td><td>Gentle; hips on the floor, no pinch in the low back</td></tr>
+        <tr><td>Child's pose</td><td class="mono">75 s</td><td>Long exhales</td></tr>
+      </table>
+      </div>
+      <p class="zone-source"><strong>Achilles:</strong> stretching is useful mobility work, but it isn't the treatment for a sore Achilles &mdash; physio-guided calf loading is. While it's sore: skip the two marked drills, never stretch into pain, and don't roll or press on the tendon itself.</p>
+      <p class="zone-source"><strong>On your watch:</strong> both routines are on Garmin as 20-minute Strength-profile workouts using Garmin's own stretch exercises, with a hold timer per step (each side is its own step). They're added to your calendar for the next 7 days at every check-in.</p>
+    </details>
+
     <div class="progress-wrap">
       <div class="progress-label"><span id="progress-text">0 / 64 sessions logged</span><span id="progress-pct">0%</span></div>
       <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+    </div>
+
+    <div class="progress-wrap">
+      <div class="progress-label"><span id="mob-progress-text">0 / 14 mobility sessions</span><span id="mob-progress-pct">0%</span></div>
+      <div class="progress-track"><div class="progress-fill mob-fill" id="mob-progress-fill"></div></div>
     </div>
 
     <div class="progress-wrap">
@@ -1181,6 +1232,19 @@ footer.note strong{color:var(--ink)}
 
       <p class="tile-tip">Swapped for GA1 — Achilles flared up again after Saturday's race, so no running this week until it settles. The bike helped last week; leaning on it again.</p>
     </div>
+      <div class="tile tile-mobility" data-sid="w7-mob1">
+      <label class="tile-check"><input type="checkbox" data-sid="w7-mob1" aria-label="Mark Mobility A done"><span class="box"></span></label>
+      <div class="tile-head">
+        <span class="tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="1"/><path d="m9 20 3-6 3 6"/><path d="m6 8 6 2 6-2"/><path d="M12 10v4"/></svg></span>
+        <div class="tile-headtext">
+          <div class="tile-day">Monday</div>
+          <div class="tile-name">Mobility A — lower legs &amp; hamstrings</div>
+        </div>
+      </div>
+      <div class="tile-dist">20 min</div>
+      <div class="tile-row"><span class="tag">Evening or after training</span><span class="tag">Pain-free range only</span></div>
+      <p class="tile-tip">Calves, ankles, hamstrings, glutes. Achilles still sore: skip the two drills marked &ldquo;skip if Achilles sore&rdquo;, mild tension only. <a class="mob-link" href="#mobility-routines">Exercises &darr;</a></p>
+      </div>
       <div class="tile tile-strength" data-sid="w7-str1">
       <label class="tile-check"><input type="checkbox" data-sid="w7-str1" aria-label="Mark Strength done"><span class="box"></span></label>
       <div class="tile-head">
@@ -1207,6 +1271,19 @@ footer.note strong{color:var(--ink)}
 
       <p class="tile-tip">The 5K time trial is off entirely this week — an all-out effort is exactly the wrong test for an Achilles that's already flared. It'll keep; the fitness isn't going anywhere in one week.</p>
     </div>
+      <div class="tile tile-mobility" data-sid="w7-mob2">
+      <label class="tile-check"><input type="checkbox" data-sid="w7-mob2" aria-label="Mark Mobility B done"><span class="box"></span></label>
+      <div class="tile-head">
+        <span class="tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="1"/><path d="m9 20 3-6 3 6"/><path d="m6 8 6 2 6-2"/><path d="M12 10v4"/></svg></span>
+        <div class="tile-headtext">
+          <div class="tile-day">Wednesday</div>
+          <div class="tile-name">Mobility B — hips, quads &amp; spine</div>
+        </div>
+      </div>
+      <div class="tile-dist">20 min</div>
+      <div class="tile-row"><span class="tag">Evening or after training</span><span class="tag">Pain-free range only</span></div>
+      <p class="tile-tip">Hips, quads, adductors, spine &mdash; no calf or Achilles loading at all, so it&rsquo;s fine while the Achilles is sore. <a class="mob-link" href="#mobility-routines">Exercises &darr;</a></p>
+      </div>
       <div class="tile tile-strength" data-sid="w7-str2">
       <label class="tile-check"><input type="checkbox" data-sid="w7-str2" aria-label="Mark Strength done"><span class="box"></span></label>
       <div class="tile-head">
@@ -1233,6 +1310,19 @@ footer.note strong{color:var(--ink)}
 
       <p class="tile-tip">Swapped for GA2, same reasoning as Monday.</p>
     </div>
+      <div class="tile tile-mobility" data-sid="w7-mob3">
+      <label class="tile-check"><input type="checkbox" data-sid="w7-mob3" aria-label="Mark Mobility A done"><span class="box"></span></label>
+      <div class="tile-head">
+        <span class="tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="1"/><path d="m9 20 3-6 3 6"/><path d="m6 8 6 2 6-2"/><path d="M12 10v4"/></svg></span>
+        <div class="tile-headtext">
+          <div class="tile-day">Friday</div>
+          <div class="tile-name">Mobility A — lower legs &amp; hamstrings</div>
+        </div>
+      </div>
+      <div class="tile-dist">20 min</div>
+      <div class="tile-row"><span class="tag">Evening or after training</span><span class="tag">Pain-free range only</span></div>
+      <p class="tile-tip">Same as Monday &mdash; keep the two Achilles-flagged calf drills out until it settles. <a class="mob-link" href="#mobility-routines">Exercises &darr;</a></p>
+      </div>
       <div class="tile tile-rest">
       <div class="tile-head">
         <span class="tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></span>
@@ -1290,6 +1380,19 @@ footer.note strong{color:var(--ink)}
       
       <p class="tile-tip">GA1, unchanged — save the effort for Wednesday and Sunday.</p>
     </div>
+      <div class="tile tile-mobility" data-sid="w8-mob1">
+      <label class="tile-check"><input type="checkbox" data-sid="w8-mob1" aria-label="Mark Mobility A done"><span class="box"></span></label>
+      <div class="tile-head">
+        <span class="tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="1"/><path d="m9 20 3-6 3 6"/><path d="m6 8 6 2 6-2"/><path d="M12 10v4"/></svg></span>
+        <div class="tile-headtext">
+          <div class="tile-day">Monday</div>
+          <div class="tile-name">Mobility A — lower legs &amp; hamstrings</div>
+        </div>
+      </div>
+      <div class="tile-dist">20 min</div>
+      <div class="tile-row"><span class="tag">Evening or after training</span><span class="tag">Pain-free range only</span></div>
+      <p class="tile-tip">Calves, ankles, hamstrings, glutes. Mild tension only; skip the two Achilles-flagged drills if it&rsquo;s still sore. <a class="mob-link" href="#mobility-routines">Exercises &darr;</a></p>
+      </div>
       <div class="tile tile-strength" data-sid="w8-str1">
       <label class="tile-check"><input type="checkbox" data-sid="w8-str1" aria-label="Mark Strength done"><span class="box"></span></label>
       <div class="tile-head">
@@ -1328,6 +1431,19 @@ footer.note strong{color:var(--ink)}
         </div>
       </div>
     </div>
+      <div class="tile tile-mobility" data-sid="w8-mob2">
+      <label class="tile-check"><input type="checkbox" data-sid="w8-mob2" aria-label="Mark Mobility B done"><span class="box"></span></label>
+      <div class="tile-head">
+        <span class="tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="1"/><path d="m9 20 3-6 3 6"/><path d="m6 8 6 2 6-2"/><path d="M12 10v4"/></svg></span>
+        <div class="tile-headtext">
+          <div class="tile-day">Wednesday</div>
+          <div class="tile-name">Mobility B — hips, quads &amp; spine</div>
+        </div>
+      </div>
+      <div class="tile-dist">20 min</div>
+      <div class="tile-row"><span class="tag">Evening or after training</span><span class="tag">Pain-free range only</span></div>
+      <p class="tile-tip">Hips, quads, adductors, spine. Evening or after training &mdash; never in the hour before a quality or long run. <a class="mob-link" href="#mobility-routines">Exercises &darr;</a></p>
+      </div>
       <div class="tile tile-strength" data-sid="w8-str2">
       <label class="tile-check"><input type="checkbox" data-sid="w8-str2" aria-label="Mark Strength done"><span class="box"></span></label>
       <div class="tile-head">
@@ -1354,6 +1470,19 @@ footer.note strong{color:var(--ink)}
       
       <p class="tile-tip">GA2 — the one “moderate” day of the week, deliberately kept to just one.</p>
     </div>
+      <div class="tile tile-mobility" data-sid="w8-mob3">
+      <label class="tile-check"><input type="checkbox" data-sid="w8-mob3" aria-label="Mark Mobility A done"><span class="box"></span></label>
+      <div class="tile-head">
+        <span class="tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="1"/><path d="m9 20 3-6 3 6"/><path d="m6 8 6 2 6-2"/><path d="M12 10v4"/></svg></span>
+        <div class="tile-headtext">
+          <div class="tile-day">Friday</div>
+          <div class="tile-name">Mobility A — lower legs &amp; hamstrings</div>
+        </div>
+      </div>
+      <div class="tile-dist">20 min</div>
+      <div class="tile-row"><span class="tag">Evening or after training</span><span class="tag">Pain-free range only</span></div>
+      <p class="tile-tip">Calves, ankles, hamstrings, glutes &mdash; loosen up before the weekend. Skip the two Achilles-flagged drills if it&rsquo;s still sore. <a class="mob-link" href="#mobility-routines">Exercises &darr;</a></p>
+      </div>
       <div class="tile tile-rest">
       <div class="tile-head">
         <span class="tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></span>
@@ -1411,6 +1540,19 @@ footer.note strong{color:var(--ink)}
       
       <p class="tile-tip">GA1, unchanged — save the effort for Sunday.</p>
     </div>
+      <div class="tile tile-mobility" data-sid="w9-mob1">
+      <label class="tile-check"><input type="checkbox" data-sid="w9-mob1" aria-label="Mark Mobility A done"><span class="box"></span></label>
+      <div class="tile-head">
+        <span class="tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="1"/><path d="m9 20 3-6 3 6"/><path d="m6 8 6 2 6-2"/><path d="M12 10v4"/></svg></span>
+        <div class="tile-headtext">
+          <div class="tile-day">Monday</div>
+          <div class="tile-name">Mobility A — lower legs &amp; hamstrings</div>
+        </div>
+      </div>
+      <div class="tile-dist">20 min</div>
+      <div class="tile-row"><span class="tag">Evening or after training</span><span class="tag">Pain-free range only</span></div>
+      <p class="tile-tip">Calves, ankles, hamstrings, glutes. Mild tension only; skip the two Achilles-flagged drills if it&rsquo;s still sore. <a class="mob-link" href="#mobility-routines">Exercises &darr;</a></p>
+      </div>
       <div class="tile tile-strength" data-sid="w9-str1">
       <label class="tile-check"><input type="checkbox" data-sid="w9-str1" aria-label="Mark Strength done"><span class="box"></span></label>
       <div class="tile-head">
@@ -1449,6 +1591,19 @@ footer.note strong{color:var(--ink)}
         </div>
       </div>
     </div>
+      <div class="tile tile-mobility" data-sid="w9-mob2">
+      <label class="tile-check"><input type="checkbox" data-sid="w9-mob2" aria-label="Mark Mobility B done"><span class="box"></span></label>
+      <div class="tile-head">
+        <span class="tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="1"/><path d="m9 20 3-6 3 6"/><path d="m6 8 6 2 6-2"/><path d="M12 10v4"/></svg></span>
+        <div class="tile-headtext">
+          <div class="tile-day">Wednesday</div>
+          <div class="tile-name">Mobility B — hips, quads &amp; spine</div>
+        </div>
+      </div>
+      <div class="tile-dist">20 min</div>
+      <div class="tile-row"><span class="tag">Evening or after training</span><span class="tag">Pain-free range only</span></div>
+      <p class="tile-tip">Hips, quads, adductors, spine. Evening or after training &mdash; never in the hour before a quality or long run. <a class="mob-link" href="#mobility-routines">Exercises &darr;</a></p>
+      </div>
       <div class="tile tile-strength" data-sid="w9-str2">
       <label class="tile-check"><input type="checkbox" data-sid="w9-str2" aria-label="Mark Strength done"><span class="box"></span></label>
       <div class="tile-head">
@@ -1475,6 +1630,19 @@ footer.note strong{color:var(--ink)}
       
       <p class="tile-tip">GA2 — the one “moderate” day of the week.</p>
     </div>
+      <div class="tile tile-mobility" data-sid="w9-mob3">
+      <label class="tile-check"><input type="checkbox" data-sid="w9-mob3" aria-label="Mark Mobility A done"><span class="box"></span></label>
+      <div class="tile-head">
+        <span class="tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="1"/><path d="m9 20 3-6 3 6"/><path d="m6 8 6 2 6-2"/><path d="M12 10v4"/></svg></span>
+        <div class="tile-headtext">
+          <div class="tile-day">Friday</div>
+          <div class="tile-name">Mobility A — lower legs &amp; hamstrings</div>
+        </div>
+      </div>
+      <div class="tile-dist">20 min</div>
+      <div class="tile-row"><span class="tag">Evening or after training</span><span class="tag">Pain-free range only</span></div>
+      <p class="tile-tip">Calves, ankles, hamstrings, glutes &mdash; loosen up before the weekend. Skip the two Achilles-flagged drills if it&rsquo;s still sore. <a class="mob-link" href="#mobility-routines">Exercises &darr;</a></p>
+      </div>
       <div class="tile tile-rest">
       <div class="tile-head">
         <span class="tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></span>
@@ -1532,6 +1700,19 @@ footer.note strong{color:var(--ink)}
       
       <p class="tile-tip">Still real volume this week — this is the peak week, but Monday stays true GA1.</p>
     </div>
+      <div class="tile tile-mobility" data-sid="w10-mob1">
+      <label class="tile-check"><input type="checkbox" data-sid="w10-mob1" aria-label="Mark Mobility A done"><span class="box"></span></label>
+      <div class="tile-head">
+        <span class="tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="1"/><path d="m9 20 3-6 3 6"/><path d="m6 8 6 2 6-2"/><path d="M12 10v4"/></svg></span>
+        <div class="tile-headtext">
+          <div class="tile-day">Monday</div>
+          <div class="tile-name">Mobility A — lower legs &amp; hamstrings</div>
+        </div>
+      </div>
+      <div class="tile-dist">20 min</div>
+      <div class="tile-row"><span class="tag">Evening or after training</span><span class="tag">Pain-free range only</span></div>
+      <p class="tile-tip">Calves, ankles, hamstrings, glutes. Mild tension only; skip the two Achilles-flagged drills if it&rsquo;s still sore. <a class="mob-link" href="#mobility-routines">Exercises &darr;</a></p>
+      </div>
       <div class="tile tile-strength" data-sid="w10-str1">
       <label class="tile-check"><input type="checkbox" data-sid="w10-str1" aria-label="Mark Strength done"><span class="box"></span></label>
       <div class="tile-head">
@@ -1570,6 +1751,19 @@ footer.note strong{color:var(--ink)}
         </div>
       </div>
     </div>
+      <div class="tile tile-mobility" data-sid="w10-mob2">
+      <label class="tile-check"><input type="checkbox" data-sid="w10-mob2" aria-label="Mark Mobility B done"><span class="box"></span></label>
+      <div class="tile-head">
+        <span class="tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="1"/><path d="m9 20 3-6 3 6"/><path d="m6 8 6 2 6-2"/><path d="M12 10v4"/></svg></span>
+        <div class="tile-headtext">
+          <div class="tile-day">Wednesday</div>
+          <div class="tile-name">Mobility B — hips, quads &amp; spine</div>
+        </div>
+      </div>
+      <div class="tile-dist">20 min</div>
+      <div class="tile-row"><span class="tag">Evening or after training</span><span class="tag">Pain-free range only</span></div>
+      <p class="tile-tip">Hips, quads, adductors, spine. Evening or after training &mdash; never in the hour before a quality or long run. <a class="mob-link" href="#mobility-routines">Exercises &darr;</a></p>
+      </div>
       <div class="tile tile-strength" data-sid="w10-str2">
       <label class="tile-check"><input type="checkbox" data-sid="w10-str2" aria-label="Mark Strength done"><span class="box"></span></label>
       <div class="tile-head">
@@ -1596,6 +1790,19 @@ footer.note strong{color:var(--ink)}
       
       <p class="tile-tip">GA2 — the last one at this volume before the taper begins.</p>
     </div>
+      <div class="tile tile-mobility" data-sid="w10-mob3">
+      <label class="tile-check"><input type="checkbox" data-sid="w10-mob3" aria-label="Mark Mobility A done"><span class="box"></span></label>
+      <div class="tile-head">
+        <span class="tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="1"/><path d="m9 20 3-6 3 6"/><path d="m6 8 6 2 6-2"/><path d="M12 10v4"/></svg></span>
+        <div class="tile-headtext">
+          <div class="tile-day">Friday</div>
+          <div class="tile-name">Mobility A — lower legs &amp; hamstrings</div>
+        </div>
+      </div>
+      <div class="tile-dist">20 min</div>
+      <div class="tile-row"><span class="tag">Evening or after training</span><span class="tag">Pain-free range only</span></div>
+      <p class="tile-tip">Calves, ankles, hamstrings, glutes &mdash; loosen up before the weekend. Skip the two Achilles-flagged drills if it&rsquo;s still sore. <a class="mob-link" href="#mobility-routines">Exercises &darr;</a></p>
+      </div>
       <div class="tile tile-rest">
       <div class="tile-head">
         <span class="tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></span>
@@ -1649,7 +1856,20 @@ footer.note strong{color:var(--ink)}
           <div class="tile-dist">6 km</div>
           <div class="tile-row"><span class="tag hr">HR 138–152 bpm</span><span class="tag pace">5:15–6:15/km</span><span class="tag time">~37 min</span></div>
           <p class="tile-tip">Normal easy run — nothing new, nothing hard.</p>
-        </div><div class="tile tile-quality " data-sid="w11-s1">
+        </div>
+      <div class="tile tile-mobility" data-sid="w11-mob1">
+      <label class="tile-check"><input type="checkbox" data-sid="w11-mob1" aria-label="Mark Mobility B done"><span class="box"></span></label>
+      <div class="tile-head">
+        <span class="tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="1"/><path d="m9 20 3-6 3 6"/><path d="m6 8 6 2 6-2"/><path d="M12 10v4"/></svg></span>
+        <div class="tile-headtext">
+          <div class="tile-day">Tuesday</div>
+          <div class="tile-name">Mobility B — hips, quads &amp; spine</div>
+        </div>
+      </div>
+      <div class="tile-dist">20 min</div>
+      <div class="tile-row"><span class="tag">Light &mdash; stop at first tension</span></div>
+      <p class="tile-tip">Race week: keep it light &mdash; stop at the first tension and skip anything unfamiliar. <a class="mob-link" href="#mobility-routines">Exercises &darr;</a></p>
+      </div><div class="tile tile-quality " data-sid="w11-s1">
           <label class="tile-check"><input type="checkbox" data-sid="w11-s1" aria-label="Mark Shakeout + strides done"><span class="box"></span></label>
           <div class="tile-head">
             <span class="tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></span>
@@ -1661,7 +1881,20 @@ footer.note strong{color:var(--ink)}
           <div class="tile-dist">4 km</div>
           <div class="tile-row"><span class="tag hr">HR 138–152 bpm, brief spikes on strides</span><span class="tag pace">Easy + 4×20s strides</span><span class="tag time">~26 min</span></div>
           <p class="tile-tip">A few strides to keep the legs sharp — stop the moment they feel heavy.</p>
-        </div><div class="tile tile-easy " data-sid="w11-s2">
+        </div>
+      <div class="tile tile-mobility" data-sid="w11-mob2">
+      <label class="tile-check"><input type="checkbox" data-sid="w11-mob2" aria-label="Mark Mobility A done"><span class="box"></span></label>
+      <div class="tile-head">
+        <span class="tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="1"/><path d="m9 20 3-6 3 6"/><path d="m6 8 6 2 6-2"/><path d="M12 10v4"/></svg></span>
+        <div class="tile-headtext">
+          <div class="tile-day">Thursday</div>
+          <div class="tile-name">Mobility A — lower legs &amp; hamstrings</div>
+        </div>
+      </div>
+      <div class="tile-dist">20 min</div>
+      <div class="tile-row"><span class="tag">Light &mdash; stop at first tension</span></div>
+      <p class="tile-tip">Last one before the race, gentle only &mdash; nothing new, nothing deep. No stretching session after today. <a class="mob-link" href="#mobility-routines">Exercises &darr;</a></p>
+      </div><div class="tile tile-easy " data-sid="w11-s2">
           <label class="tile-check"><input type="checkbox" data-sid="w11-s2" aria-label="Mark Openers done"><span class="box"></span></label>
           <div class="tile-head">
             <span class="tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></span>
@@ -1700,7 +1933,7 @@ footer.note strong{color:var(--ink)}
     </details>  </div>
 
   <footer class="note">
-    <strong>Your default week:</strong> Mon GA1 easy &middot; Tue strength &middot; Wed quality (track access) &middot; Thu strength &middot; Fri GA2 steady (track access) &middot; Sat rest &middot; Sun long run. Swap freely when life intervenes &mdash; just try to keep Saturday clear and the long run on Sunday, since those two anchor the whole week's recovery. Tick sessions off as you go; that state is saved on this device only.<br><br>
+    <strong>Your default week:</strong> Mon GA1 easy &middot; Tue strength &middot; Wed quality (track access) &middot; Thu strength &middot; Fri GA2 steady (track access) &middot; Sat rest &middot; Sun long run. Swap freely when life intervenes &mdash; just try to keep Saturday clear and the long run on Sunday, since those two anchor the whole week's recovery. On top of that, three 20-minute mobility sessions (Mon, Wed, Fri &mdash; Tue and Thu in race week) go in the evening or right after training, never in the hour before a hard session, and are tracked separately. Tick sessions off as you go; that state syncs across your devices.<br><br>
     <strong>Structure at a glance.</strong> Deload weeks land every 4 weeks (4 and 8) &mdash; your lab report actually suggests an even more conservative 2:1 cycle given your workload, worth considering if week 4 doesn't feel like enough of a reset. Half-marathon-pace work enters the long run from week 4 (seven weeks out) and builds to the peak session in week 10. Taper is 8 days exactly: from Sunday of week 10 through race day.<br><br>
     <strong>Fueling.</strong> Any long run tagged "Fuel from 15 km" is a rehearsal for race-day nutrition &mdash; aim for 30&ndash;60 g carbs/hour from that point, whatever gel or drink you plan to use on the day. Don't try anything new in the final 1&ndash;2 weeks.<br><br>
     <strong>Marathon, spring 2027.</strong> This block is the first step toward 80&nbsp;km weeks &mdash; the threshold work here is exactly what closes your marathon PR-to-prediction gap too. Once you've got a date, ask and I'll build the dedicated block straight off the back of this one.<br><br>
@@ -1711,7 +1944,7 @@ footer.note strong{color:var(--ink)}
     <div class="confetti-layer" id="confetti-layer" aria-hidden="true"></div>
     <p class="complete-eyebrow" id="complete-eyebrow">Finished the block?</p>
     <h2 class="complete-title" id="complete-title">Mark this plan complete</h2>
-    <p class="complete-sub" id="complete-sub">11 weeks, 602 km, one race. When you've crossed the finish line, make it official.</p>
+    <p class="complete-sub" id="complete-sub">11 weeks, one race. When you've crossed the finish line, make it official.</p>
     <button class="complete-btn" id="complete-btn" type="button">
       <span class="complete-btn-icon" id="complete-btn-icon">&#127942;</span>
       <span id="complete-btn-label">Mark plan complete</span>
@@ -1724,6 +1957,9 @@ footer.note strong{color:var(--ink)}
 (function(){
   var ids = ["w1-easy1", "w1-str1", "w1-quality", "w1-str2", "w1-easy2", "w1-long", "w2-easy1", "w2-str1", "w2-quality", "w2-str2", "w2-easy2", "w2-long", "w3-easy1", "w3-str1", "w3-quality", "w3-str2", "w3-easy2", "w3-long", "w4-easy1", "w4-str1", "w4-quality", "w4-str2", "w4-easy2", "w4-long", "w5-easy1", "w5-str1", "w5-quality", "w5-str2", "w5-easy2", "w5-long", "w6-easy1", "w6-str1", "w6-quality", "w6-str2", "w6-easy2", "w6-long", "w7-easy1", "w7-str1", "w7-quality", "w7-str2", "w7-easy2", "w7-long", "w8-easy1", "w8-str1", "w8-quality", "w8-str2", "w8-easy2", "w8-long", "w9-easy1", "w9-str1", "w9-quality", "w9-str2", "w9-easy2", "w9-long", "w10-easy1", "w10-str1", "w10-quality", "w10-str2", "w10-easy2", "w10-long", "w11-s0", "w11-s1", "w11-s2", "w11-s3"];
   var total = ids.length;
+  // Mobility sessions are tickable but deliberately kept out of `ids`/`total` (the main
+  // sessions bar) and never given SESSION_ACTUALS entries, so the Runny Farm ignores them.
+  var mobIds = ["w7-mob1", "w7-mob2", "w7-mob3", "w8-mob1", "w8-mob2", "w8-mob3", "w9-mob1", "w9-mob2", "w9-mob3", "w10-mob1", "w10-mob2", "w10-mob3", "w11-mob1", "w11-mob2"];
   var state = {};
 
   var TOTAL_PLANNED_KM = 538;
@@ -1761,6 +1997,13 @@ footer.note strong{color:var(--ink)}
   document.querySelectorAll('.overview-card').forEach(function(a){
     a.addEventListener('click', function(){
       var details = document.getElementById(a.getAttribute('href').slice(1));
+      if(details) details.open = true;
+    });
+  });
+
+  document.querySelectorAll('.mob-link').forEach(function(a){
+    a.addEventListener('click', function(){
+      var details = document.getElementById('mobility-routines');
       if(details) details.open = true;
     });
   });
@@ -1827,6 +2070,24 @@ footer.note strong{color:var(--ink)}
     if(fill) fill.style.width = pct + '%';
     if(text) text.textContent = done + ' / ' + total + ' sessions logged';
     if(pctEl) pctEl.textContent = pct + '%';
+
+    var mobDone = 0;
+    mobIds.forEach(function(id){
+      var cb = document.querySelector('input[data-sid="'+id+'"]');
+      if(!cb) return;
+      var isDone = !!state[id];
+      cb.checked = isDone;
+      var tile = cb.closest('.tile');
+      if(tile) tile.classList.toggle('done', isDone);
+      if(isDone) mobDone++;
+    });
+    var mobPct = mobIds.length ? Math.round((mobDone/mobIds.length)*100) : 0;
+    var mobFill = document.getElementById('mob-progress-fill');
+    var mobText = document.getElementById('mob-progress-text');
+    var mobPctEl = document.getElementById('mob-progress-pct');
+    if(mobFill) mobFill.style.width = mobPct + '%';
+    if(mobText) mobText.textContent = mobDone + ' / ' + mobIds.length + ' mobility sessions';
+    if(mobPctEl) mobPctEl.textContent = mobPct + '%';
   }
 
   function save(){
@@ -1941,18 +2202,18 @@ footer.note strong{color:var(--ink)}
 
   var PLAN_ID = 'lausanne-hm-2026';
   var PLAN_META = {
-    weeks: 11, km: 602,
+    weeks: 11,
     incomplete: {
       eyebrow: 'Finished the block?',
       title: 'Mark this plan complete',
-      sub: '11 weeks, 602 km, one race. When you\u2019ve crossed the finish line, make it official.',
+      sub: '11 weeks, one race. When you\u2019ve crossed the finish line, make it official.',
       icon: '\ud83c\udfc6',
       label: 'Mark plan complete'
     },
     complete: {
       eyebrow: 'Plan complete',
       title: 'Well run.',
-      sub: '11 weeks, 602 km, Lausanne done.',
+      sub: '11 weeks, Lausanne done.',
       icon: '\u21ba',
       label: 'Reopen plan'
     }
