@@ -1946,19 +1946,14 @@ footer.note strong{color:var(--ink)}
     <strong>Your default week:</strong> Mon GA1 easy &middot; Tue strength &middot; Wed quality (track access) &middot; Thu strength &middot; Fri GA2 steady (track access) &middot; Sat rest &middot; Sun long run. Swap freely when life intervenes &mdash; just try to keep Saturday clear and the long run on Sunday, since those two anchor the whole week's recovery. On top of that, three 20-minute mobility sessions (Mon, Wed, Fri &mdash; Tue and Thu in race week) go in the evening or right after training, never in the hour before a hard session, and are tracked separately. Tick sessions off as you go; that state syncs across your devices.<br><br>
     <strong>Structure at a glance.</strong> Deload weeks land every 4 weeks (4 and 8) &mdash; your lab report actually suggests an even more conservative 2:1 cycle given your workload, worth considering if week 4 doesn't feel like enough of a reset. Half-marathon-pace work enters the long run from week 4 (seven weeks out) and builds to the peak session in week 10. Taper is 8 days exactly: from Sunday of week 10 through race day.<br><br>
     <strong>Fueling.</strong> Any long run tagged "Fuel from 15 km" is a rehearsal for race-day nutrition &mdash; aim for 30&ndash;60 g carbs/hour from that point, whatever gel or drink you plan to use on the day. Don't try anything new in the final 1&ndash;2 weeks.<br><br>
-    <strong>Marathon, spring 2027.</strong> This block is the first step toward 80&nbsp;km weeks &mdash; the threshold work here is exactly what closes your marathon PR-to-prediction gap too. Once you've got a date, ask and I'll build the dedicated block straight off the back of this one.<br><br>
+    <strong>Marathon, spring 2027.</strong> That buildup is now underway as its own plan &mdash; see <a href="zurich_marathon_training_plan.html">Zurich Marathon, 11 Apr 2027</a> on the Training Hub.<br><br>
     <strong>Check-ins.</strong> After any session, or whenever, just tell me how it went or say &ldquo;check my data&rdquo; &mdash; I'll pull your training load, HRV and sleep, and adjust what's ahead.
   </footer>
 
-  <div class="complete-section" id="complete-section">
-    <div class="confetti-layer" id="confetti-layer" aria-hidden="true"></div>
-    <p class="complete-eyebrow" id="complete-eyebrow">Finished the block?</p>
-    <h2 class="complete-title" id="complete-title">Mark this plan complete</h2>
-    <p class="complete-sub" id="complete-sub">11 weeks, one race. When you've crossed the finish line, make it official.</p>
-    <button class="complete-btn" id="complete-btn" type="button">
-      <span class="complete-btn-icon" id="complete-btn-icon">&#127942;</span>
-      <span id="complete-btn-label">Mark plan complete</span>
-    </button>
+  <div class="complete-section">
+    <p class="complete-eyebrow">Plan discontinued</p>
+    <h2 class="complete-title">Not this time.</h2>
+    <p class="complete-sub">Six solid weeks, then an Achilles flare-up ended it before race day. Onward to Zurich.</p>
     <a class="hub-link" href="training_hub.html">&larr; Back to Training Hub</a>
   </div>
 </div>
@@ -2143,8 +2138,6 @@ footer.note strong{color:var(--ink)}
   // 'plan-gamification' from inside the watch callback below, or directly
   // from a deliberate user action (tapping Sync).
   var runnyState = null;
-  var hallOfFameEntries = [];
-  PlanSync.watch('hall-of-fame', function(val){ hallOfFameEntries = val || []; });
 
   // Sync itself now lives entirely on the Runny Farm (runny_farm.html) —
   // this page only displays the active-Runny widget, a nudge link when
@@ -2209,96 +2202,9 @@ footer.note strong{color:var(--ink)}
     runnyState = GameEngine.normalizeGameState(val);
     renderRunny();
   });
-
-  var PLAN_ID = 'lausanne-hm-2026';
-  var PLAN_META = {
-    weeks: 11,
-    incomplete: {
-      eyebrow: 'Finished the block?',
-      title: 'Mark this plan complete',
-      sub: '11 weeks, one race. When you\u2019ve crossed the finish line, make it official.',
-      icon: '\ud83c\udfc6',
-      label: 'Mark plan complete'
-    },
-    complete: {
-      eyebrow: 'Plan complete',
-      title: 'Well run.',
-      sub: '11 weeks, Lausanne done.',
-      icon: '\u21ba',
-      label: 'Reopen plan'
-    }
-  };
-  var CONFETTI_COLORS = ['#1F7A6C','#6D4C9E','#C93B1D','#A6740F','#2B6B4A'];
-
-  function applyCompleteUI(isComplete, completedAt){
-    var m = isComplete ? PLAN_META.complete : PLAN_META.incomplete;
-    document.getElementById('complete-eyebrow').textContent = m.eyebrow;
-    document.getElementById('complete-title').textContent = m.title;
-    var sub = m.sub;
-    if(isComplete && completedAt){
-      sub += ' Marked complete ' + new Date(completedAt).toLocaleDateString(undefined,{day:'numeric',month:'short',year:'numeric'}) + '.';
-    }
-    document.getElementById('complete-sub').textContent = sub;
-    document.getElementById('complete-btn-icon').textContent = m.icon;
-    document.getElementById('complete-btn-label').textContent = m.label;
-    document.getElementById('complete-section').classList.toggle('is-complete', isComplete);
-  }
-
-  function burstConfetti(){
-    var layer = document.getElementById('confetti-layer');
-    if(!layer) return;
-    var count = 46;
-    for(var i=0;i<count;i++){
-      var piece = document.createElement('span');
-      piece.className = 'confetti-piece';
-      piece.style.left = (Math.random()*100) + '%';
-      piece.style.background = CONFETTI_COLORS[i % CONFETTI_COLORS.length];
-      piece.style.animationDelay = (Math.random()*0.25) + 's';
-      piece.style.animationDuration = (1.6 + Math.random()*1.0) + 's';
-      piece.style.setProperty('--drift', (Math.random()*140-70) + 'px');
-      piece.style.setProperty('--rot', (Math.random()*520-260) + 'deg');
-      layer.appendChild(piece);
-    }
-    setTimeout(function(){ layer.innerHTML = ''; }, 2900);
-  }
-
-  (function initComplete(){
-    var registry = {};
-    PlanSync.watch('plan-registry', function(val){
-      registry = val || {};
-      var entry = registry[PLAN_ID] || {};
-      applyCompleteUI(entry.status === 'completed', entry.completedAt);
-    });
-
-    document.getElementById('complete-btn').addEventListener('click', function(){
-      var wasComplete = registry[PLAN_ID] && registry[PLAN_ID].status === 'completed';
-      if(wasComplete){
-        registry[PLAN_ID] = { status: 'active', completedAt: null };
-        applyCompleteUI(false, null);
-      }else{
-        var now = new Date().toISOString();
-        registry[PLAN_ID] = { status: 'completed', completedAt: now };
-        applyCompleteUI(true, now);
-        burstConfetti();
-        // Runnies: snapshot the final roster into the permanent Hall of Fame
-        // the moment a plan is marked complete (only on the forward transition).
-        if (runnyState && runnyState.activeRunnyId && Object.keys(runnyState.owned).length) {
-          var runnyRoster = Object.keys(runnyState.owned).map(function(id){
-            var o = runnyState.owned[id];
-            return { runnyId: id, level: o.level, stageIndex: o.stageIndex };
-          });
-          hallOfFameEntries = hallOfFameEntries.concat([{
-            planId: PLAN_ID,
-            completedAt: now,
-            teamPower: GameEngine.teamPower(runnyState),
-            roster: runnyRoster
-          }]);
-          PlanSync.save('hall-of-fame', hallOfFameEntries);
-        }
-      }
-      PlanSync.save('plan-registry', registry);
-    });
-  })();
+  // This plan is discontinued for good (see the closing banner above) \u2014 no
+  // "mark complete"/reopen UI here anymore, so there's nothing that can flip
+  // the registry's 'discontinued' status set from the Training Hub.
 })();
 </script>
 </body>
