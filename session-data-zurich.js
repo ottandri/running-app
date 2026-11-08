@@ -24,5 +24,7 @@
 //   };
 //   RECOVERY_WEEKLY['YYYY-MM-DD' (Monday)] = 0-100;
 
-var SESSION_ACTUALS = {};
+var SESSION_ACTUALS = {
+  'zm-w1-easy1': { date: '2026-11-08', category: 'easy', plannedDistanceKm: 6, distanceKm: 6.0, avgPaceSecPerKm: 389, avgHr: 145, targetHrLow: 138, targetHrHigh: 152, feel: 100, raceTimeTrend: null, checked: true }
+};
 var RECOVERY_WEEKLY = {};

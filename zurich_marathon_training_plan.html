@@ -495,9 +495,10 @@ footer.note strong{color:var(--ink)}
           <div class="tile-name">Easy run (GA1)</div>
         </div>
       </div>
-      <div class="tile-dist">6 km</div>
+      <div class="tile-dist">6 km <span class="tile-actual">(actual 6.0 km)</span></div>
       <div class="tile-row"><span class="tag">HR 138–152 bpm</span><span class="tag">5:15–6:15/km</span><span class="tag">~0.6 h</span></div>
       <p class="tile-tip">Pure GA1 — if you can&#x27;t hold a conversation, you&#x27;re going too fast.</p>
+      <p class="tile-actual">Actual (run a day early, Sun 8 Nov): 6.0 km, avg 6:29/km on a hilly route (+229 m), HR avg 145 bpm, 38:55 total.</p>
       </div>
       <div class="tile tile-mobility" data-sid="zm-w1-mob1">
       <label class="tile-check"><input type="checkbox" data-sid="zm-w1-mob1" aria-label="Mark Mobility A done"><span class="box"></span></label>
@@ -3737,9 +3738,9 @@ footer.note strong{color:var(--ink)}
   var state = {};
 
   var TOTAL_PLANNED_KM = 1002.6;
-  var ACTUAL_SESSION_KM = {};
-  var ACTUAL_KM = 0;
-  var ACTUAL_KM_ASOF = 'not yet synced';
+  var ACTUAL_SESSION_KM = { 'zm-w1-easy1': 6.0 };
+  var ACTUAL_KM = 6.0;
+  var ACTUAL_KM_ASOF = '8 Nov 2026';
 
   function updateCountdown(){
     var raceDay = new Date(2027, 3, 11);
