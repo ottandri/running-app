@@ -59,6 +59,10 @@ h1{font-family:var(--font-display);font-weight:600;font-size:clamp(28px,5vw,42px
 .stat-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:16px;overflow:hidden;box-shadow:var(--shadow-sm)}
 .stat{background:var(--paper-raised);padding:18px 18px}
 .predict-card{background:var(--paper-raised);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow-sm);padding:18px 20px;margin-top:12px}
+.plan-closed-banner{background:transparent;border:1px dashed var(--c-rest);border-left:3px solid var(--c-rest);border-radius:12px;padding:14px 18px;margin-top:14px}
+.plan-closed-banner p{margin:0;font-size:13.5px;line-height:1.55;color:var(--ink-soft)}
+.plan-closed-banner p+p{margin-top:6px}
+.plan-closed-banner .closed-label{font-family:var(--font-mono);font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--c-rest);display:block;margin-bottom:6px}
 .predict-chart{display:block;width:100%;height:52px;margin:10px 0 4px}
 .predict-goal-line{stroke:var(--taper);stroke-width:1.5;stroke-dasharray:4 3}
 .predict-baseline-line{stroke:var(--ink-mute);stroke-width:1.1}
@@ -227,6 +231,12 @@ footer.note strong{color:var(--ink)}
     <p class="eyebrow">Training plan &middot; 8 Aug &ndash; 25 Oct 2026</p>
     <h1>Lausanne Half Marathon</h1>
     <p class="hero-sub">11 weeks, 4 runs a week, 2 strength sessions and, from week 7, 3 short mobility sessions. Polarized 80/20 intensity, progressive long runs 14&rarr;25 km, a deload every 4 weeks, and an 8-day taper into race day.</p>
+
+    <div class="plan-closed-banner">
+      <span class="closed-label">Plan discontinued &middot; 20 Sep 2026</span>
+      <p>Training went cleanly through week 6, including the Greifenseelauf Half Marathon tune-up race (21.3&nbsp;km, 1:40:06). Achilles pain returned afterward and worsened, so week 7 became a no-running bike-recovery week and the plan paused there &mdash; the Lausanne Half Marathon on 25 Oct 2026 was never attempted. Weeks 7&ndash;11 below are left exactly as originally prescribed, as a historical record.</p>
+      <p>Fully recovered now. Training has moved on to a new goal &mdash; see the <a href="training_hub.html">Training Hub</a> for the current plan.</p>
+    </div>
 
     <div class="stat-row">
       <div class="stat"><p class="stat-label">Race day</p><p class="stat-num">25 Oct</p><p class="stat-note" id="days-out">&ndash;</p></div>
@@ -1976,7 +1986,7 @@ footer.note strong{color:var(--ink)}
     if(!el) return;
     if(diffDays > 0) el.textContent = diffDays + ' days out';
     else if(diffDays === 0) el.textContent = 'Race day';
-    else el.textContent = 'Race complete';
+    else el.textContent = 'Not attempted — plan discontinued';
   }
   updateCountdown();
 

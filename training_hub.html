@@ -89,8 +89,10 @@ h1.hub-title{font-family:var(--font-display);font-weight:600;font-size:clamp(30p
 .plan-card{position:relative;background:var(--paper-raised);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow-sm);padding:20px 22px;display:flex;flex-direction:column;gap:10px;transition:transform .18s var(--ease), box-shadow .18s var(--ease)}
 .plan-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-md)}
 .plan-card.is-completed{background:linear-gradient(180deg, var(--taper-tint) 0%, var(--paper-raised) 60%);border-color:var(--taper)}
+.plan-card.is-discontinued{background:var(--paper);border-color:var(--line);opacity:.78}
 .plan-badge{position:absolute;top:16px;right:16px;font-family:var(--font-mono);font-size:10px;letter-spacing:.04em;text-transform:uppercase;padding:3px 9px;border-radius:999px;background:var(--paper);border:1px solid var(--line);color:var(--ink-mute)}
 .plan-card.is-completed .plan-badge{background:var(--taper);border-color:var(--taper);color:#fff}
+.plan-card.is-discontinued .plan-badge{background:var(--ink-mute);border-color:var(--ink-mute);color:var(--paper)}
 .plan-name{font-family:var(--font-display);font-size:19px;font-weight:600;padding-right:70px;margin:0}
 .plan-meta{font-family:var(--font-mono);font-size:12.5px;color:var(--ink-soft);margin:0;display:flex;flex-direction:column;gap:3px}
 .plan-progress-note{font-size:12.5px;color:var(--ink-mute);margin:0}
@@ -175,11 +177,11 @@ footer.hub-note strong{color:var(--ink)}
   <div class="empty-state" id="active-empty" style="display:none">No active plans right now &mdash; start one and it'll show up here.</div>
 
   <div class="section-head">
-    <h2>Completed plans</h2>
+    <h2>Finished plans</h2>
     <span class="section-count" id="completed-count"></span>
   </div>
   <div class="plan-grid" id="completed-grid"></div>
-  <div class="empty-state" id="completed-empty" style="display:none">Nothing here yet &mdash; finish a plan and it'll land in this section.</div>
+  <div class="empty-state" id="completed-empty" style="display:none">Nothing here yet &mdash; plans that are completed or discontinued land here.</div>
 
   <footer class="hub-note">
     <strong>Adding a new plan?</strong> Ask Claude to build it, then add one entry to the <code>PLANS</code> array at the top of this file's script (id, name, race, dates, goal, and the filename) &mdash; it'll appear here automatically. Completion status is saved on this device via this page's local storage, shared with each plan file's own &ldquo;mark complete&rdquo; button.<br><br>
@@ -350,33 +352,41 @@ footer.hub-note strong{color:var(--ink)}
       : null;
   }
 
-  function cardHtml(plan, completed){
-    var badge = completed ? 'Completed' : 'Active';
-    var metaExtra = completed && completedDateFor(plan)
-      ? '<p class="plan-progress-note">Finished ' + completedDateFor(plan) + '</p>'
-      : '<p class="plan-progress-note">' + plan.weeks + '-week block \u00b7 goal ' + plan.goal + '</p>';
-    var toggleLabel = completed ? 'Reopen' : 'Mark complete';
+  function cardHtml(plan){
+    var status = statusFor(plan);
+    var discontinued = status === 'discontinued';
+    var completed = status === 'completed';
+    var badge = completed ? 'Completed' : discontinued ? 'Discontinued' : 'Active';
+    var metaExtra;
+    if (completed && completedDateFor(plan)) {
+      metaExtra = '<p class="plan-progress-note">Finished ' + completedDateFor(plan) + '</p>';
+    } else if (discontinued) {
+      var note = (registry[plan.id] && registry[plan.id].note) || 'Discontinued';
+      metaExtra = '<p class="plan-progress-note">' + note + '</p>';
+    } else {
+      metaExtra = '<p class="plan-progress-note">' + plan.weeks + '-week block \u00b7 goal ' + plan.goal + '</p>';
+    }
+    var cardClass = completed ? ' is-completed' : discontinued ? ' is-discontinued' : '';
+    var actions = '<a class="plan-open-btn" href="' + plan.href + '">Open plan</a>' +
+      (discontinued ? '' : '<button class="plan-toggle" data-toggle="' + plan.id + '">' + (completed ? 'Reopen' : 'Mark complete') + '</button>');
     return '' +
-      '<div class="plan-card' + (completed ? ' is-completed' : '') + '" data-plan-id="' + plan.id + '">' +
+      '<div class="plan-card' + cardClass + '" data-plan-id="' + plan.id + '">' +
         '<span class="plan-badge">' + badge + '</span>' +
         '<p class="plan-name">' + plan.name + '</p>' +
         '<p class="plan-meta"><span>' + plan.race + '</span><span>' + plan.raceDate + '</span></p>' +
         metaExtra +
-        '<div class="plan-actions">' +
-          '<a class="plan-open-btn" href="' + plan.href + '">Open plan</a>' +
-          '<button class="plan-toggle" data-toggle="' + plan.id + '">' + toggleLabel + '</button>' +
-        '</div>' +
+        '<div class="plan-actions">' + actions + '</div>' +
       '</div>';
   }
 
   function render(){
     var activeGrid = document.getElementById('active-grid');
     var completedGrid = document.getElementById('completed-grid');
-    var activePlans = PLANS.filter(function(p){ return statusFor(p) !== 'completed'; });
-    var completedPlans = PLANS.filter(function(p){ return statusFor(p) === 'completed'; });
+    var activePlans = PLANS.filter(function(p){ return statusFor(p) === 'active'; });
+    var completedPlans = PLANS.filter(function(p){ return statusFor(p) !== 'active'; });
 
-    activeGrid.innerHTML = activePlans.map(function(p){ return cardHtml(p, false); }).join('');
-    completedGrid.innerHTML = completedPlans.map(function(p){ return cardHtml(p, true); }).join('');
+    activeGrid.innerHTML = activePlans.map(cardHtml).join('');
+    completedGrid.innerHTML = completedPlans.map(cardHtml).join('');
 
     document.getElementById('active-count').textContent = activePlans.length;
     document.getElementById('completed-count').textContent = completedPlans.length;
