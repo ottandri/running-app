@@ -136,6 +136,13 @@ h1{font-family:var(--font-display);font-weight:600;font-size:clamp(24px,4.5vw,32
 .sync-tile-status{font-family:var(--font-mono);font-size:11px;padding:3px 9px;border-radius:999px;white-space:nowrap}
 .sync-tile-status.done{background:var(--taper-tint);color:var(--taper)}
 .sync-tile-status.synced{background:var(--paper);color:var(--ink-mute);border:1px solid var(--line)}
+.sync-more{margin:4px 0 12px}
+.sync-more>summary{list-style:none;cursor:pointer;display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:var(--ink-soft);padding:8px 14px;border:1px dashed var(--line-strong);border-radius:999px;background:var(--paper-raised);user-select:none}
+.sync-more>summary::-webkit-details-marker{display:none}
+.sync-more>summary:hover{color:var(--ink);border-color:var(--ink-mute)}
+.sync-more-plus{display:inline-block;font-size:16px;line-height:1;transition:transform .15s ease}
+.sync-more[open]>summary .sync-more-plus{transform:rotate(45deg)}
+.sync-more-body{margin-top:10px}
 .sync-empty{font-size:13px;color:var(--ink-mute);font-style:italic;margin:0 0 12px}
 
 .sync-row{display:flex;align-items:center;gap:12px;margin:16px 0}
@@ -305,11 +312,29 @@ h1{font-family:var(--font-display);font-weight:600;font-size:clamp(24px,4.5vw,32
     });
   }
 
+  // Newest first; only the latest SYNC_VISIBLE_COUNT tiles show by default,
+  // the rest sit in a collapsed "+ N older sessions" box (Andri, 8 Nov 2026).
+  var SYNC_VISIBLE_COUNT = 10;
+  var syncOlderOpen = false;
+
+  function sortedSyncSids(){
+    var keys = Object.keys(SESSION_ACTUALS);
+    return keys.map(function(sid, i){ return { sid: sid, i: i }; })
+      .sort(function(a, b){
+        var da = SESSION_ACTUALS[a.sid].date || '', db = SESSION_ACTUALS[b.sid].date || '';
+        if (da !== db) return da < db ? 1 : -1;
+        return b.i - a.i; // same day: later-listed entry first
+      })
+      .map(function(x){ return x.sid; });
+  }
+
   function renderSyncTiles(){
-    var sids = Object.keys(SESSION_ACTUALS);
+    var sids = sortedSyncSids();
     var el = document.getElementById('sync-tiles');
     if (!sids.length) { el.innerHTML = '<p class="sync-empty">No session data yet — this fills in after your next data sync.</p>'; return; }
-    el.innerHTML = sids.map(function(sid){
+    var prevDetails = el.querySelector('details.sync-more');
+    if (prevDetails) syncOlderOpen = prevDetails.open;
+    var tileHtml = sids.map(function(sid){
       var s = SESSION_ACTUALS[sid];
       var processed = gameState.processedSessionIds.indexOf(sid) !== -1;
       var distText = s.distanceKm != null ? (s.distanceKm + ' km') : 'strength session';
@@ -320,7 +345,16 @@ h1{font-family:var(--font-display);font-weight:600;font-size:clamp(24px,4.5vw,32
         '<div><p class="sync-tile-name">' + sid + (s.isRace ? ' 🏁' : '') + extraBadge + '</p><p class="sync-tile-meta">' + s.date + ' &middot; ' + distText + scoreText + '</p></div>' +
         '<span class="sync-tile-status ' + (processed ? 'synced' : 'done') + '">' + (processed ? 'Synced' : 'Ready to sync') + '</span>' +
       '</div>';
-    }).join('');
+    });
+    var html = tileHtml.slice(0, SYNC_VISIBLE_COUNT).join('');
+    var older = tileHtml.slice(SYNC_VISIBLE_COUNT);
+    if (older.length) {
+      html += '<details class="sync-more"' + (syncOlderOpen ? ' open' : '') + '>' +
+        '<summary><span class="sync-more-plus" aria-hidden="true">+</span> ' + older.length + ' older session' + (older.length > 1 ? 's' : '') + '</summary>' +
+        '<div class="sync-more-body">' + older.join('') + '</div>' +
+      '</details>';
+    }
+    el.innerHTML = html;
   }
 
   function renderSyncReadyBadge(){
