@@ -229,8 +229,19 @@ footer.note strong{color:var(--ink)}
 
     <div class="predict-card">
       <p class="stat-label">Predicted marathon &middot; Garmin</p>
-      <p class="stat-num">&ndash;</p>
-      <p class="stat-note">No check-ins yet &mdash; the first sync adds a baseline point here.</p>
+      <p class="stat-num">3:38:36</p>
+      <p class="stat-note">baseline, 8 Nov (after the first run back) &middot; goal 3:30:00</p>
+      <svg class="predict-chart" viewBox="0 0 260 60" preserveAspectRatio="none" aria-hidden="true">
+        <line x1="8" y1="46.5" x2="252" y2="46.5" class="predict-goal-line"/>
+        <line x1="8" y1="13.9" x2="252" y2="13.9" class="predict-baseline-line"/>
+        <circle cx="8.0" cy="13.9" r="3.5" class="predict-dot predict-dot-latest"/>
+      </svg>
+      <div class="predict-chart-labels"><span>8 Nov &middot; baseline</span><span>8 Nov &middot; today</span></div>
+      <p class="progress-caption">
+        <span><span class="swatch" style="background:var(--c-long)"></span>Predicted time</span>
+        <span><span class="swatch" style="background:var(--ink-mute);border-radius:0;height:2px;width:10px"></span>Baseline 8 Nov (3:38:36)</span>
+        <span><span class="swatch" style="background:var(--taper);border-radius:0;height:2px;width:10px"></span>Goal 3:30:00</span>
+      </p>
       <p class="predict-footnote">Snapshot as of each check-in, not live &mdash; same mechanism as the Lausanne plan used.</p>
     </div>
 
