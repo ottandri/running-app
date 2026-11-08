@@ -313,8 +313,9 @@ h1{font-family:var(--font-display);font-weight:600;font-size:clamp(24px,4.5vw,32
   }
 
   // Newest first; only the latest SYNC_VISIBLE_COUNT tiles show by default,
-  // the rest sit in a collapsed "+ N older sessions" box (Andri, 8 Nov 2026).
-  var SYNC_VISIBLE_COUNT = 10;
+  // the rest sit in a collapsed "+ N older sessions" box (Andri, 8 Nov 2026 —
+  // first 10, then reduced to 5 at his request).
+  var SYNC_VISIBLE_COUNT = 5;
   var syncOlderOpen = false;
 
   function sortedSyncSids(){
